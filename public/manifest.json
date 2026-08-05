@@ -1,0 +1,16 @@
+{
+  "name": "Mithradevi T Portfolio",
+  "short_name": "Mithradevi T",
+  "description": "Senior UX Designer Portfolio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafcfd",
+  "theme_color": "#fafcfd",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

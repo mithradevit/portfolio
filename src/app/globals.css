@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fafcfd;
+  --foreground: #32404f;
+  --foreground-light: rgb(50 64 79 / 60%);
+  --primary: #e65f2e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-foreground-light: var(--foreground-light);
+  --color-primary: var(--primary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-serif);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  body * {
+    cursor: none !important;
+  }
+}
+
+/* Rachel's system redefines h1/h3 as serif display type and h4 as an
+   uppercase mono "label" role (nav links, dates, metadata) rather than a
+   real heading level. h2/p stay plain sans. */
+h1,
+h3 {
+  font-family: var(--font-serif), serif;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 2.75rem;
+  line-height: 1.1;
+}
+
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 3.5rem;
+  }
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+h3 {
+  font-size: 1.325rem;
+}
+
+h4 {
+  font-family: var(--font-mono), monospace;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+
+.italic {
+  font-style: italic;
+}
+
+@keyframes vinyl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
