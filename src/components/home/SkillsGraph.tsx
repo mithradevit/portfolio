@@ -13,12 +13,14 @@ import { skillClusters } from "@/content/skills";
  * hydration.
  */
 
-const WIDTH = 1100;
-const HEIGHT = 700;
+const WIDTH = 1200;
+const HEIGHT = 920;
 const CX = WIDTH / 2;
 const CY = HEIGHT / 2;
-const HUB_RX = 265;
-const HUB_RY = 170;
+const HUB_RX = 330;
+const HUB_RY = 250;
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
 
 /** Small LCG so jitter is stable across renders and between server/client. */
 function seededRandom(seed: number) {
@@ -67,7 +69,7 @@ const layout: LaidOutCluster[] = (() => {
       const t = m === 1 ? 0.5 : (j + 0.5) / m;
       const angle = hubAngle - spread / 2 + t * spread;
       // Staggered rings + jitter keep neighbouring labels off each other.
-      const radius = 88 + (j % rings) * 38 + rand() * 8;
+      const radius = 100 + (j % rings) * 40 + rand() * 8;
       return {
         name,
         x: hx + Math.cos(angle) * radius,
@@ -92,15 +94,18 @@ const layout: LaidOutCluster[] = (() => {
   // layout alone can't guarantee this once clusters differ in size, and
   // overlapping text is the one thing that makes a graph look broken. Runs
   // once at module load, so it costs nothing at render.
-  const LABEL_H = 15;
-  const CHAR_W = 5.6;
-  const PAD = 4;
+  // Generous gaps: labels that merely *don't* overlap still read as collided,
+  // especially when neighbours belong to different clusters.
+  const LABEL_H = 32;
+  // Measured against rendered text: skill labels average ~6.1px/char and peak
+  // near 7.4, so estimate high rather than let labels creep together.
+  const CHAR_W = 6.8;
+  const PAD = 11;
 
   type Movable = { name: string; x: number; y: number; hx: number; hy: number; fixed?: boolean };
   const nodes: Movable[] = laid.flatMap((c) =>
     c.skills.map((s) => ({ name: s.name, x: s.x, y: s.y, hx: c.x, hy: c.y })),
   );
-  const skillCount = nodes.length;
   // Cluster labels are anchored — they push skills away but never move.
   for (const c of laid) {
     nodes.push({
@@ -116,60 +121,89 @@ const layout: LaidOutCluster[] = (() => {
   // character than the 11px proportional skill labels.
   const halfW = (n: Movable) => (n.name.length * (n.fixed ? 7.8 : CHAR_W)) / 2 + PAD;
 
-  for (let pass = 0; pass < 120; pass++) {
-    let moved = false;
+  // Damped force solver. An earlier version applied separation and then hard-
+  // clamped each node back onto its hub ring, which just undid the separation
+  // and oscillated forever. Here both act as forces and are summed, so the
+  // system settles into a compromise instead of fighting itself.
+  const MIN_R = 96;
+  const MAX_R = 205;
+
+  for (let pass = 0; pass < 600; pass++) {
+    const fx = new Array(nodes.length).fill(0);
+    const fy = new Array(nodes.length).fill(0);
+    let worst = 0;
+
     for (let a = 0; a < nodes.length; a++) {
       for (let b = a + 1; b < nodes.length; b++) {
         const n1 = nodes[a];
         const n2 = nodes[b];
-        // Labels sit just below their node, so compare boxes at y + 16.
+        if (n1.fixed && n2.fixed) continue;
+
         const dx = n2.x - n1.x;
         const dy = n2.y - n1.y;
         const overlapX = halfW(n1) + halfW(n2) - Math.abs(dx);
         const overlapY = LABEL_H - Math.abs(dy);
         if (overlapX <= 0 || overlapY <= 0) continue;
 
-        if (n1.fixed && n2.fixed) continue;
-        moved = true;
+        worst = Math.max(worst, Math.min(overlapX, overlapY));
 
-        // Fixed nodes don't budge, so the movable one absorbs the whole push.
-        const w1 = n1.fixed ? 0 : n2.fixed ? 1 : 0.5;
-        const w2 = n2.fixed ? 0 : n1.fixed ? 1 : 0.5;
-
-        // Push apart along whichever axis needs the least movement.
+        // Resolve along whichever axis is cheaper to separate on.
         if (overlapX / (halfW(n1) + halfW(n2)) < overlapY / LABEL_H) {
-          const push = (overlapX + 1) * (dx >= 0 ? 1 : -1);
-          n1.x -= push * w1;
-          n2.x += push * w2;
+          const push = (overlapX / 2 + 0.5) * (dx >= 0 ? 1 : -1);
+          fx[a] -= push;
+          fx[b] += push;
         } else {
-          const push = (overlapY + 1) * (dy >= 0 ? 1 : -1);
-          n1.y -= push * w1;
-          n2.y += push * w2;
+          const push = (overlapY / 2 + 0.5) * (dy >= 0 ? 1 : -1);
+          fy[a] -= push;
+          fy[b] += push;
         }
       }
     }
-    if (!moved) break;
 
-    // Tether back toward the hub so clusters stay legible as clusters.
-    for (const n of nodes) {
+    // Soft spring back onto the hub's ring — a nudge, not a hard constraint.
+    for (let k = 0; k < nodes.length; k++) {
+      const n = nodes[k];
       if (n.fixed) continue;
-      const d = Math.hypot(n.x - n.hx, n.y - n.hy);
-      const max = 190;
-      if (d > max) {
-        n.x = n.hx + ((n.x - n.hx) / d) * max;
-        n.y = n.hy + ((n.y - n.hy) / d) * max;
+      const dx = n.x - n.hx;
+      const dy = n.y - n.hy;
+      const d = Math.hypot(dx, dy) || 1;
+      const target = Math.min(Math.max(d, MIN_R), MAX_R);
+      if (target !== d) {
+        fx[k] += ((dx / d) * (target - d)) * 0.35;
+        fy[k] += ((dy / d) * (target - d)) * 0.35;
       }
+    }
+
+    if (worst < 0.5) break;
+
+    // Damping keeps the solver from overshooting into a new collision.
+    for (let k = 0; k < nodes.length; k++) {
+      if (nodes[k].fixed) continue;
+      nodes[k].x += fx[k] * 0.5;
+      nodes[k].y += fy[k] * 0.5;
     }
   }
 
-  // Write relaxed positions back.
+  // Write relaxed positions back, rounded.
+  //
+  // Rounding matters: Math.cos/sin/hypot are not guaranteed bit-identical
+  // across JS engines, so Node and the browser can disagree in the last
+  // decimal place. React serialises those into SVG attributes and reports a
+  // hydration mismatch. Two decimals is far below one pixel and makes the
+  // server and client markup byte-identical.
   let k = 0;
   for (const c of laid) {
     for (const s of c.skills) {
-      s.x = nodes[k].x;
-      s.y = nodes[k].y;
+      s.x = round2(nodes[k].x);
+      s.y = round2(nodes[k].y);
       k++;
     }
+    c.x = round2(c.x);
+    c.y = round2(c.y);
+    c.labelX = round2(c.labelX);
+    c.labelY = round2(c.labelY);
+    c.edgeX = round2(c.edgeX);
+    c.edgeY = round2(c.edgeY);
   }
 
   return laid;
