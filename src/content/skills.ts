@@ -1,5 +1,89 @@
 // Real data, sourced from Mithradevi's current resume PDF (Aug 2026).
 
+// The same skills as `skillGroups` below, grouped into thematic clusters for
+// the Obsidian-style graph on the homepage. Add a skill to a cluster and the
+// graph lays it out automatically — no coordinates to maintain by hand.
+export type SkillCluster = {
+  id: string;
+  label: string;
+  skills: string[];
+};
+
+export const skillClusters: SkillCluster[] = [
+  {
+    id: "research",
+    label: "Research & Insight",
+    skills: [
+      "User Research",
+      "Usability Testing",
+      "UX Audit",
+      "A/B Testing",
+      "Journey Mapping",
+      "Market Analysis",
+      "Storyboards",
+    ],
+  },
+  {
+    id: "strategy",
+    label: "Strategy & Systems",
+    skills: [
+      "Product Strategy",
+      "UX Strategy",
+      "Design Thinking",
+      "Systems Thinking",
+      "Design Systems",
+      "DesignOps",
+      "0→1 Product Design",
+    ],
+  },
+  {
+    id: "craft",
+    label: "Design Craft",
+    skills: [
+      "Product Design",
+      "UX/UI Design",
+      "Interaction Design",
+      "Prototyping",
+      "Wireframes",
+      "User Flows",
+    ],
+  },
+  {
+    id: "visual",
+    label: "Visual & Narrative",
+    skills: [
+      "Responsive Design",
+      "Motion Graphics",
+      "Data Visualization",
+      "UX Writing",
+      "Branding",
+    ],
+  },
+  {
+    id: "domains",
+    label: "Domain Depth",
+    skills: [
+      "Human-AI Interaction",
+      "Ethical AI Design",
+      "Enterprise UX",
+      "B2B SaaS",
+      "IoT & Connected Devices",
+      "Accessibility (WCAG 2.1)",
+    ],
+  },
+  {
+    id: "leadership",
+    label: "Leadership",
+    skills: [
+      "Cross-Functional Leadership",
+      "Stakeholder Management",
+      "Design Mentorship",
+      "People Management",
+      "Storytelling",
+    ],
+  },
+];
+
 export const skillGroups = [
   {
     label: "Design & Prototyping",

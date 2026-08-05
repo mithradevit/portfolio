@@ -4,6 +4,7 @@ import { projects } from "@/content/projects";
 import { ExperienceTimeline } from "@/components/work/ExperienceTimeline";
 import { ProjectGrid } from "@/components/work/ProjectGrid";
 import { ToolsRow } from "@/components/home/ToolsRow";
+import { SkillsGraph } from "@/components/home/SkillsGraph";
 import { Reveal } from "@/components/motion/Reveal";
 import { VinylPlayer } from "@/components/home/VinylPlayer";
 
@@ -25,6 +26,10 @@ export default function HomePage() {
 
         <div className="pt-16 pb-8">
           <ToolsRow />
+        </div>
+
+        <div className="pt-8 pb-8">
+          <SkillsGraph />
         </div>
       </Reveal>
 

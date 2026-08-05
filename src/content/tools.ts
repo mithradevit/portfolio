@@ -15,8 +15,8 @@ const FIGMA_ICON_PATH =
 
 export const tools: Tool[] = [
   { name: "Figma", color: "#F24E1E", iconPath: FIGMA_ICON_PATH },
-  { name: "Higgsfield" },
-  { name: "Adobe Firefly" },
+  { name: "Higgsfield", color: "#6366F1" },
+  { name: "Adobe Firefly", color: "#FA0F00" },
   {
     name: "Claude",
     color: "#D97757",
@@ -35,22 +35,22 @@ export const tools: Tool[] = [
     color: "#0055FF",
     iconPath: "M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z",
   },
-  { name: "Figma Make", color: "#F24E1E" },
-  { name: "Figma Agents", color: "#F24E1E" },
-  { name: "Adobe Creative Cloud" },
-  { name: "Photoshop" },
-  { name: "After Effects" },
-  { name: "Illustrator" },
-  { name: "InDesign" },
-  { name: "Microsoft 365 Copilot" },
-  { name: "ChatGPT" },
+  { name: "Figma Make", color: "#F24E1E", iconPath: FIGMA_ICON_PATH },
+  { name: "Figma Agents", color: "#F24E1E", iconPath: FIGMA_ICON_PATH },
+  { name: "Adobe Creative Cloud", color: "#DA1F26" },
+  { name: "Photoshop", color: "#31A8FF" },
+  { name: "After Effects", color: "#9999FF" },
+  { name: "Illustrator", color: "#FF9A00" },
+  { name: "InDesign", color: "#FF3366" },
+  { name: "Microsoft 365 Copilot", color: "#0078D4" },
+  { name: "ChatGPT", color: "#10A37F" },
   {
     name: "Gemini",
     color: "#8E75B2",
     iconPath:
       "M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81",
   },
-  { name: "Google Stitch" },
+  { name: "Google Stitch", color: "#4285F4" },
   {
     name: "Replit",
     color: "#F26207",
@@ -63,7 +63,7 @@ export const tools: Tool[] = [
     iconPath:
       "M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23",
   },
-  { name: "Lovable" },
+  { name: "Lovable", color: "#FF4D4D" },
   {
     name: "Obsidian",
     color: "#7C3AED",
