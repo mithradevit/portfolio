@@ -1,14 +1,17 @@
-import { funProjects, funTagline } from "@/content/fun-projects";
+import { funProjects, funTagline, funHero } from "@/content/fun-projects";
 import { writingPosts, substackUrl } from "@/content/writing";
 import { WritingList } from "@/components/fun/WritingList";
 import { FunProjectCard } from "@/components/fun/FunProjectCard";
+import { PixelHero } from "@/components/fun/PixelHero";
 import { Reveal } from "@/components/motion/Reveal";
 
 export default function FunPage() {
   return (
     <div className="flex w-full flex-col items-center gap-16 p-6">
       <Reveal className="flex w-full max-w-[1800px] flex-col gap-16">
-        <h1 className="max-w-[700px] pt-8 lg:pt-[16vh]">{funTagline}</h1>
+        <PixelHero image={funHero.image} alt={funHero.alt}>
+          <h1>{funTagline}</h1>
+        </PixelHero>
 
         <div className="flex flex-col gap-6">
           <h4>Projects & Hackathons</h4>

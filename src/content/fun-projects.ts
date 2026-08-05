@@ -5,6 +5,13 @@
 export const funTagline =
   "I lose sleep to hackathons, AI experiments, & problems that come with too many tabs open.";
 
+// The image revealed by the pixel-grid hero at the top of the Fun page.
+// Swap `image` for any file in public/images/fun/.
+export const funHero = {
+  image: "/images/fun/fun-hero.png",
+  alt: "A collage of two vivid figurative paintings of crowded social scenes",
+};
+
 export type FunProject = {
   title: string;
   description: string;
