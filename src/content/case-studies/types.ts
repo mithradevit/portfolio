@@ -11,4 +11,6 @@ export type CaseStudy = {
   team: string;
   skills: string[];
   sections: CaseStudySection[];
+  /** Live product, full write-up, repo — rendered as buttons under the header. */
+  links?: { label: string; href: string }[];
 };

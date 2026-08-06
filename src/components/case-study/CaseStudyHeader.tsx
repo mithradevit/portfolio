@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { Project } from "@/content/projects";
 import type { CaseStudy } from "@/content/case-studies";
 
@@ -12,11 +11,7 @@ export function CaseStudyHeader({
 }) {
   return (
     <div className="flex w-full flex-col gap-8">
-      <Link href="/" data-cursor="pointer" className="text-foreground-light flex w-fit items-center gap-2 hover:text-primary">
-        <ArrowLeft size={14} />
-        <h4>Back to Work</h4>
-      </Link>
-
+      {/* Back lives in CaseStudyNav now, so it stays on screen while reading. */}
       <div className="flex flex-col gap-2">
         <h1>{project.title}</h1>
         <h4 className="text-foreground-light">
@@ -37,6 +32,27 @@ export function CaseStudyHeader({
         <MetaField label="Team" value={caseStudy.team} />
         <MetaField label="Skills" value={caseStudy.skills.join(", ")} />
       </div>
+
+      {caseStudy.links && caseStudy.links.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {caseStudy.links.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="pointer"
+              className="group border-foreground/10 text-foreground-light hover:border-primary/40 hover:text-primary flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[12px] tracking-wide uppercase transition-colors duration-300"
+            >
+              {link.label}
+              <ArrowUpRight
+                size={13}
+                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

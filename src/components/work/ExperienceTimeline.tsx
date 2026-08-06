@@ -24,9 +24,10 @@ export function ExperienceTimeline({ entries }: { entries: ExperienceEntry[] }) 
         {entries.map((entry, i) => (
           <div
             key={`${entry.company}-${entry.role}-${i}`}
-            className="group border-foreground/10 hover:border-primary/30 flex flex-col gap-0.5 border-b py-3 transition-colors duration-300 last:border-b-0 sm:flex-row sm:items-baseline sm:gap-4"
+            className="group flex flex-col gap-0.5 py-2 sm:grid sm:grid-cols-[68px_minmax(0,200px)_1fr] sm:items-baseline sm:gap-4"
           >
-            <div className="group-hover:text-primary min-w-[220px] font-medium transition-colors duration-300">
+            <h4 className="text-foreground-light shrink-0">{entry.year}</h4>
+            <div className="group-hover:text-primary text-[15px] transition-colors duration-300">
               {entry.companyUrl ? (
                 <a href={entry.companyUrl} target="_blank" rel="noopener noreferrer">
                   {entry.company}
@@ -35,8 +36,7 @@ export function ExperienceTimeline({ entries }: { entries: ExperienceEntry[] }) 
                 entry.company
               )}
             </div>
-            <p className="text-foreground-light flex-1 text-[15px]">{entry.role}</p>
-            <h4 className="text-foreground-light shrink-0">{entry.year}</h4>
+            <p className="text-foreground-light text-[15px]">{entry.role}</p>
           </div>
         ))}
       </div>

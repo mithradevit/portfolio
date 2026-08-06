@@ -1,15 +1,11 @@
 import { profile } from "@/content/profile";
-import { LiveTime } from "./LiveTime";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
 /** Short bio plus the tag pills that summarise what she works on. */
 export function IntroBlock() {
   return (
     <div className="flex w-full max-w-[720px] flex-col gap-5">
-      <div className="flex items-center justify-between gap-4">
-        <ScrambleText as="h4" text="About" delay={0.1} scrambleOnHover />
-        <LiveTime />
-      </div>
+      <ScrambleText as="h4" text="About" delay={0.1} scrambleOnHover />
 
       <div className="flex flex-col gap-3">
         {profile.bio.map((paragraph, i) => (

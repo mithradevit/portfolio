@@ -5,6 +5,36 @@
   --foreground: #32404f;
   --foreground-light: rgb(50 64 79 / 60%);
   --primary: #e65f2e;
+  color-scheme: light;
+}
+
+/* Dark theme.
+ *
+ * The ink/paper relationship is inverted rather than literally negated: pure
+ * white on pure black vibrates, so the page sits on a desaturated slate that
+ * echoes the light theme's --foreground, and the type is a warm off-white.
+ * --primary is left alone — it already clears 4.5:1 on both grounds.
+ *
+ * Two selectors, deliberately: `[data-theme]` is the explicit user choice and
+ * must win in both directions, while the media query covers the first paint
+ * for anyone who has never touched the toggle. */
+:root[data-theme="dark"] {
+  --background: #1b2027;
+  --foreground: #e9edf1;
+  --foreground-light: rgb(233 237 241 / 60%);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #1b2027;
+    --foreground: #e9edf1;
+    --foreground-light: rgb(233 237 241 / 60%);
+    --glass-fill: rgb(255 255 255 / 6%);
+    --glass-border: rgb(255 255 255 / 12%);
+    --glass-highlight: rgb(255 255 255 / 16%);
+    color-scheme: dark;
+  }
 }
 
 @theme inline {
@@ -39,6 +69,9 @@ body {
 h1,
 h3 {
   font-family: var(--font-serif), serif;
+  /* Regular, not the browser's default bold — the reference sets display type
+     at book weight and lets size carry the emphasis. */
+  font-weight: 400;
   letter-spacing: -0.02em;
 }
 
@@ -47,7 +80,24 @@ h1 {
   line-height: 1.1;
 }
 
-@media (min-width: 1024px) {
+/* The reference holds 2.75rem all the way down, which overflows a 360px phone
+   at these word lengths. Step the display sizes down instead of letting the
+   hero wrap to six lines. */
+@media (max-width: 639px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.175rem;
+  }
+}
+
+@media (min-width: 1200px) {
   h1 {
     font-size: 3.5rem;
   }
@@ -67,12 +117,111 @@ h4 {
   font-family: var(--font-mono), monospace;
   text-transform: uppercase;
   font-weight: 400;
-  font-size: 0.8125rem;
-  letter-spacing: 0.02em;
+}
+
+/* The reference runs one body size for everything that isn't display type:
+   labels, paragraphs and links all sit at 15px, with h4/p muted. */
+h4,
+p {
+  color: var(--foreground-light);
+  font-size: 15px;
+}
+
+a {
+  font-size: 15px;
 }
 
 .italic {
   font-style: italic;
+}
+
+/* Marquee for the tools row. The track holds the list twice, so translating
+   exactly -50% lands on an identical frame and the loop is seamless. */
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.marquee-track {
+  width: max-content;
+  animation: marquee-left 42s linear infinite;
+}
+
+.marquee-track-reverse {
+  animation-name: marquee-right;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* iMessage-style bubble tails.
+ *
+ * Two pseudo-elements, the standard trick: a quarter-round in the bubble's own
+ * colour flares out from the bottom corner, then a second one in the page
+ * colour bites a curve out of it, leaving the tapered curl iOS draws. Using
+ * `background: inherit` means the tail follows the bubble through its hover
+ * colour change and through the dark theme without a second declaration. */
+.bubble {
+  position: relative;
+  border-radius: 20px;
+}
+
+.bubble::before,
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 20px;
+}
+
+/* The mask has to be wide enough to reach the bubble's edge, or the flare's
+   square outer corner survives and reads as a tab rather than a tail. */
+.bubble-in::before {
+  left: -7px;
+  width: 20px;
+  background: inherit;
+  border-bottom-right-radius: 16px 14px;
+}
+
+.bubble-in::after {
+  left: -26px;
+  width: 26px;
+  background: var(--background);
+  border-bottom-right-radius: 10px;
+}
+
+.bubble-out::before {
+  right: -7px;
+  width: 20px;
+  background: inherit;
+  border-bottom-left-radius: 16px 14px;
+}
+
+.bubble-out::after {
+  right: -26px;
+  width: 26px;
+  background: var(--background);
+  border-bottom-left-radius: 10px;
 }
 
 @keyframes vinyl-spin {

@@ -18,12 +18,27 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#fafcfd",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafcfd" },
+    { media: "(prefers-color-scheme: dark)", color: "#1b2027" },
+  ],
 };
+
+/**
+ * Applies the saved theme before first paint.
+ *
+ * This has to be a blocking inline script in <head>: any React-based approach
+ * runs after hydration, by which point the browser has already painted the
+ * default theme and a dark-mode visitor sees a white flash.
+ */
+const themeScript = `try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light"){document.documentElement.dataset.theme=t}}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${fontVariables} antialiased`}>
+    <html lang="en" className={`${fontVariables} antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="flex min-h-screen flex-col">
         <MotionConfig reducedMotion="user">
           <ChatOpenProvider>

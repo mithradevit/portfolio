@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { profile } from "@/content/profile";
 import { cn } from "@/lib/cn";
 import { ChatButton } from "@/components/chat/ChatButton";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
   { href: "/", label: "Work" },
@@ -27,7 +28,7 @@ export function Header() {
     >
       <div className="relative flex w-full max-w-[1800px] items-center gap-6">
         <Link href="/" className="flex flex-col gap-0 sm:flex-row sm:gap-4" data-cursor="pointer">
-          <h4 className="text-foreground font-medium">{profile.name}</h4>
+          <h4 className="text-foreground! font-medium!">{profile.name}</h4>
           <h4>{profile.title}</h4>
         </Link>
 
@@ -40,9 +41,12 @@ export function Header() {
                   key={link.href}
                   href={link.href}
                   data-cursor="pointer"
-                  className={cn(active ? "text-primary" : "hover:text-primary")}
                 >
-                  <h4>{link.label}</h4>
+                  {/* The colour lives on the h4: the global `h4 { color }` rule
+                      is unlayered, so it beats a colour inherited from the link. */}
+                  <h4 className={cn(active ? "text-primary!" : "hover:text-primary!")}>
+                    {link.label}
+                  </h4>
                 </Link>
               );
             })}
@@ -51,12 +55,16 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="pointer"
-              className="hover:text-primary"
             >
-              <h4>Resume</h4>
+              <h4 className="hover:text-primary!">Resume</h4>
             </a>
           </div>
+          <ThemeToggle />
           <ChatButton variant="desktop" />
+        </div>
+
+        <div className="ml-auto md:hidden">
+          <ThemeToggle />
         </div>
 
         <button

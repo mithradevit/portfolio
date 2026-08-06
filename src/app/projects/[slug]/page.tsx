@@ -3,6 +3,7 @@ import { projects } from "@/content/projects";
 import { getCaseStudy } from "@/content/case-studies";
 import { CaseStudyHeader } from "@/components/case-study/CaseStudyHeader";
 import { CaseStudySection } from "@/components/case-study/CaseStudySection";
+import { CaseStudyNav } from "@/components/case-study/CaseStudyNav";
 import { Reveal } from "@/components/motion/Reveal";
 
 export function generateStaticParams() {
@@ -19,12 +20,19 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
   }
 
   return (
-    <div className="flex w-full flex-col items-center p-6">
-      <Reveal className="flex w-full max-w-[900px] flex-col gap-16 py-8">
-        <CaseStudyHeader project={project} caseStudy={caseStudy} />
-        {caseStudy.sections.map((section, i) => (
-          <CaseStudySection key={i} section={section} />
-        ))}
+    <div className="flex w-full justify-center p-6">
+      <Reveal className="grid w-full max-w-[1200px] grid-cols-1 gap-12 py-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-16">
+        <CaseStudyNav headings={caseStudy.sections.map((s) => s.heading)} />
+
+        {/* Bottom padding lets the final section scroll up into the nav's
+            trigger band — without it the page bottoms out first and the
+            highlight can never reach the last item. */}
+        <div className="flex w-full max-w-[760px] flex-col gap-16 pb-[45vh]">
+          <CaseStudyHeader project={project} caseStudy={caseStudy} />
+          {caseStudy.sections.map((section, i) => (
+            <CaseStudySection key={i} section={section} />
+          ))}
+        </div>
       </Reveal>
     </div>
   );

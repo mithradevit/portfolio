@@ -22,4 +22,21 @@ export const about = {
     { label: "Writer", images: [] as string[] },
     { label: "Photographer", images: [] as string[] },
   ],
+
+  /**
+   * The arc carousel — a separate showcase from the category grid above.
+   * One entry per card, in the order they sit on the arc.
+   * `src: ""` renders a tinted placeholder card carrying just the label, so
+   * the carousel is fully usable before the photos exist — drop files into
+   * `public/images/about/` and fill in the paths.
+   */
+  gallery: [
+    { src: "", alt: "", label: "Designer" },
+    { src: "", alt: "", label: "Builder" },
+    { src: "", alt: "", label: "Writer" },
+    { src: "", alt: "", label: "Photographer" },
+    { src: "", alt: "", label: "Reader" },
+    { src: "", alt: "", label: "Photographer" },
+    { src: "", alt: "", label: "Tinkerer" },
+  ],
 } as const;

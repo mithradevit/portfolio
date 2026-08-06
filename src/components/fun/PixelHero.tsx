@@ -43,9 +43,17 @@ const EASE_COVER = 0.045;
  */
 const STATIC_COVER = 0.62;
 
-/** Site ink and paper, used to pick whichever contrasts better with the art. */
+/** Light-theme ink and paper. These are only the starting values — the real
+ *  pair is read from the CSS tokens at runtime so the hero follows the theme
+ *  toggle instead of assuming a white page. */
 const INK = "#32404f";
 const PAPER = "#fafcfd";
+
+/** Channels out of any computed colour string. */
+function rgbOf(value: string): [number, number, number] {
+  const m = value.match(/\d+(\.\d+)?/g);
+  return m && m.length >= 3 ? [+m[0], +m[1], +m[2]] : [0, 0, 0];
+}
 
 /** WCAG relative luminance from 0-255 sRGB channels. */
 function luminance(r: number, g: number, b: number) {
@@ -60,6 +68,50 @@ const L_INK = luminance(0x32, 0x40, 0x4f);
 const L_PAPER = luminance(0xfa, 0xfc, 0xfd);
 const contrast = (a: number, b: number) =>
   (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+
+/** The two type colours available, sorted by luminance rather than by name:
+ *  in dark mode the *background* is the dark one, so "ink" and "paper" swap
+ *  roles and the contrast maths has to follow. */
+type Palette = {
+  lBg: number;
+  light: string;
+  dark: string;
+  lLight: number;
+  lDark: number;
+  lightRgb: string;
+  darkRgb: string;
+};
+
+const LIGHT_PALETTE: Palette = {
+  lBg: L_PAPER,
+  light: PAPER,
+  dark: INK,
+  lLight: L_PAPER,
+  lDark: L_INK,
+  lightRgb: "250, 252, 253",
+  darkRgb: "10, 14, 18",
+};
+
+function readPalette(): Palette {
+  const cs = getComputedStyle(document.documentElement);
+  const bg = rgbOf(cs.getPropertyValue("--background"));
+  const fg = rgbOf(cs.getPropertyValue("--foreground"));
+  const lBg = luminance(...bg);
+  const lFg = luminance(...fg);
+  const bgIsLighter = lBg >= lFg;
+  const str = (c: [number, number, number]) => c.join(", ");
+  const hex = (c: [number, number, number]) => `rgb(${c.join(",")})`;
+
+  return {
+    lBg,
+    light: hex(bgIsLighter ? bg : fg),
+    dark: hex(bgIsLighter ? fg : bg),
+    lLight: Math.max(lBg, lFg),
+    lDark: Math.min(lBg, lFg),
+    lightRgb: str(bgIsLighter ? bg : fg),
+    darkRgb: str(bgIsLighter ? fg : bg),
+  };
+}
 
 export function PixelHero({
   image,
@@ -87,10 +139,36 @@ export function PixelHero({
   /** Which tiles sit behind the headline block. */
   const textTiles = useRef<number[]>([]);
   const isLightText = useRef(false);
+  /** Theme colours, refreshed whenever the toggle flips `data-theme`. */
+  const palette = useRef<Palette>(LIGHT_PALETTE);
 
   const [grid, setGrid] = useState(INITIAL);
   const { cols: COLS, rows: ROWS } = grid;
   const TILES = COLS * ROWS;
+
+  // Track the theme tokens. The tiles themselves are `bg-background` so they
+  // recolour on their own; this is only for the contrast maths, which needs
+  // the numeric luminances.
+  useEffect(() => {
+    const sync = () => {
+      palette.current = readPalette();
+      isLightText.current = false;
+    };
+    sync();
+
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    media.addEventListener("change", sync);
+
+    return () => {
+      observer.disconnect();
+      media.removeEventListener("change", sync);
+    };
+  }, []);
 
   // Keep tiles square-ish across breakpoints and on resize.
   useEffect(() => {
@@ -220,25 +298,24 @@ export function PixelHero({
       const tiles = textTiles.current;
       if (!lum || !c || !el || tiles.length === 0) return;
 
+      const p = palette.current;
       let sumLum = 0;
       let sumCover = 0;
       for (const i of tiles) {
-        sumLum += c[i] * L_PAPER + (1 - c[i]) * lum[i];
+        sumLum += c[i] * p.lBg + (1 - c[i]) * lum[i];
         sumCover += c[i];
       }
       const avg = sumLum / tiles.length;
       const reveal = 1 - sumCover / tiles.length;
 
-      const cPaper = contrast(L_PAPER, avg);
-      const cInk = contrast(L_INK, avg);
+      const cLight = contrast(p.lLight, avg);
+      const cDark = contrast(p.lDark, avg);
       // Dead zone stops the colour flickering when the two are close.
-      const want = isLightText.current
-        ? !(cInk > cPaper * 1.3)
-        : cPaper > cInk * 1.3;
+      const want = isLightText.current ? !(cDark > cLight * 1.3) : cLight > cDark * 1.3;
 
       if (want !== isLightText.current) {
         isLightText.current = want;
-        el.style.color = want ? PAPER : INK;
+        el.style.color = want ? p.light : p.dark;
       }
 
       // Ramp the halo in quickly — even a little exposed paint hurts legibility.
@@ -247,7 +324,7 @@ export function PixelHero({
         el.style.textShadow = "none";
         return;
       }
-      const tone = want ? "10, 14, 18" : "250, 252, 253";
+      const tone = want ? p.darkRgb : p.lightRgb;
       const a1 = (halo * 0.95).toFixed(2);
       const a2 = (halo * 0.75).toFixed(2);
       el.style.textShadow =
@@ -378,7 +455,10 @@ export function PixelHero({
       <div
         ref={textRef}
         className="pointer-events-none absolute inset-0 flex flex-col justify-center p-6 lg:p-12"
-        style={{ color: INK, transition: "color 0.25s ease-out, text-shadow 0.25s ease-out" }}
+        style={{
+          color: "var(--foreground)",
+          transition: "color 0.25s ease-out, text-shadow 0.25s ease-out",
+        }}
       >
         <div ref={boundsRef} className="max-w-[760px]">
           {children}

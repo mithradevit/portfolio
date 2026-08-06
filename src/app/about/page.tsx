@@ -2,7 +2,9 @@ import { about } from "@/content/about";
 import { profile } from "@/content/profile";
 import { InterestList } from "@/components/about/InterestList";
 import { PhotoGrid } from "@/components/about/PhotoGrid";
+import { ArcCarousel } from "@/components/about/ArcCarousel";
 import { ActivityStrip } from "@/components/home/ActivityStrip";
+import { FaqChat } from "@/components/about/FaqChat";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -32,6 +34,10 @@ export default function AboutPage() {
         <ActivityStrip />
 
         <PhotoGrid categories={about.photoCategories} />
+
+        <ArcCarousel />
+
+        <FaqChat />
       </Reveal>
     </div>
   );

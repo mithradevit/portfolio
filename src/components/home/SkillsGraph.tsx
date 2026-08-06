@@ -217,10 +217,13 @@ export function SkillsGraph() {
     <div className="flex w-full flex-col gap-4">
       <ScrambleText as="h4" text="Skills" delay={0.35} scrambleOnHover />
 
-      <div className="border-foreground/10 w-full overflow-hidden rounded-lg border">
+      {/* Scrolls inside its own box on phones. Scaling a 1200px graph down to a
+          375px screen would render the labels at ~2px; better to keep them
+          legible and let the reader pan. */}
+      <div className="border-foreground/10 w-full overflow-x-auto rounded-lg border sm:overflow-hidden">
         <svg
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-          className="h-auto w-full"
+          className="h-auto w-full min-w-[820px] sm:min-w-0"
           role="img"
           aria-label="A graph of skill clusters and the skills within each"
           onMouseLeave={() => setActive(null)}

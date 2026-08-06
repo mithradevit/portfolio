@@ -14,7 +14,11 @@ export function VinylPlayer() {
     if (!audio) return;
 
     if (isPlaying) {
+      // Stop, not pause: the arm lifts off the record, so resuming mid-track
+      // would contradict what the control is showing. Next click drops the
+      // needle at the start again.
       audio.pause();
+      audio.currentTime = 0;
       setIsPlaying(false);
       return;
     }
@@ -52,6 +56,24 @@ export function VinylPlayer() {
           <>
             <h4 className="text-foreground">{vinylTrack.title}</h4>
             <p className="text-foreground-light text-[12px]">{vinylTrack.artist}</p>
+            {/* Only renders for licences that require credit — see audio.ts. */}
+            {vinylTrack.license && (
+              <p className="text-foreground-light text-[11px]">
+                {vinylTrack.sourceUrl ? (
+                  <a
+                    href={vinylTrack.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor="pointer"
+                    className="text-[11px]! hover:text-primary underline underline-offset-2"
+                  >
+                    {vinylTrack.license}
+                  </a>
+                ) : (
+                  vinylTrack.license
+                )}
+              </p>
+            )}
           </>
         )}
       </div>
