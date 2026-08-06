@@ -1,10 +1,11 @@
 import { tools } from "@/content/tools";
 import { ToolIcon } from "@/components/ui/ToolIcon";
+import { ScrambleText } from "@/components/ui/ScrambleText";
 
 export function ToolsRow() {
   return (
     <div className="flex w-full flex-col gap-4">
-      <h4>Tools</h4>
+      <ScrambleText as="h4" text="Tools" delay={0.3} scrambleOnHover />
       <div className="flex flex-wrap gap-2">
         {tools.map((tool) => (
           <div

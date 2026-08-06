@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { skillClusters } from "@/content/skills";
+import { ScrambleText } from "@/components/ui/ScrambleText";
 
 /**
  * An Obsidian-graph-style view of the skill clusters: category hubs orbited by
@@ -214,7 +215,7 @@ export function SkillsGraph() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <h4>Skills</h4>
+      <ScrambleText as="h4" text="Skills" delay={0.35} scrambleOnHover />
 
       <div className="border-foreground/10 w-full overflow-hidden rounded-lg border">
         <svg

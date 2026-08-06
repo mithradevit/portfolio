@@ -2,6 +2,8 @@ import { about } from "@/content/about";
 import { profile } from "@/content/profile";
 import { InterestList } from "@/components/about/InterestList";
 import { PhotoGrid } from "@/components/about/PhotoGrid";
+import { ActivityStrip } from "@/components/home/ActivityStrip";
+import { ScrambleText } from "@/components/ui/ScrambleText";
 import { Reveal } from "@/components/motion/Reveal";
 
 export default function AboutPage() {
@@ -13,8 +15,10 @@ export default function AboutPage() {
           <div className="flex flex-col gap-6">
             <p className="text-foreground-light max-w-[500px] leading-relaxed">{about.bio}</p>
             <div>
-              <h4 className="mb-2">Outside of work</h4>
-              <InterestList interests={about.interests} />
+              <ScrambleText as="h4" text="Outside of work" delay={0.15} scrambleOnHover />
+              <div className="mt-2">
+                <InterestList interests={about.interests} />
+              </div>
             </div>
             <p className="text-foreground-light text-[15px]">
               {about.contactPrompt}{" "}
@@ -24,6 +28,8 @@ export default function AboutPage() {
             </p>
           </div>
         </div>
+
+        <ActivityStrip />
 
         <PhotoGrid categories={about.photoCategories} />
       </Reveal>

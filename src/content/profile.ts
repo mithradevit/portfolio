@@ -21,12 +21,27 @@ export const profile = {
     "I have a soft spot for data-dense systems, impossible workflows, and problems that come with too many tabs open.",
   ],
 
+  // Drives the live clock in the intro block.
+  timezone: "Asia/Kolkata",
+
+  // Pills under the intro paragraph — the shorthand for what she works on.
+  tags: [
+    "Enterprise UX",
+    "Human-AI interaction",
+    "Design systems",
+    "IoT & connected devices",
+    "0→1 product design",
+    "Accessibility",
+  ],
+
   resumeUrl: "https://drive.google.com/file/d/1E3nt7TDm6jTCg5RmGJRj487b71H2yAhl/view?usp=sharing",
 
   socials: {
     linkedin: "https://linkedin.com/in/mithradevi",
     substack: "https://mithradevi.substack.com",
-    github: "", // TODO: add your GitHub profile URL
+    // Set this to a GitHub username (not a URL) to switch the activity strip on.
+    // Left empty it renders nothing rather than inventing activity.
+    github: "",
     x: "", // TODO: add your X/Twitter profile URL
     devpost: "", // TODO: add your Devpost profile URL
   },
