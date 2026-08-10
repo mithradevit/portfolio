@@ -17,6 +17,13 @@ export type FunProject = {
   description: string;
   event: string;
   image?: string;
+  /** Shown in the detail window's title bar, e.g. "fiestaa.app". */
+  fileLabel: string;
+  /** TODO: FIESTAA and SYNECTICS don't have a confirmed date anywhere in her
+   *  resume or content files — 2023 is a placeholder mid-career guess.
+   *  Correct once she confirms the real year. */
+  year: string;
+  tools: string[];
 };
 
 export const funProjects: FunProject[] = [
@@ -25,12 +32,18 @@ export const funProjects: FunProject[] = [
     description: "Reimagined the food delivery experience through a simplified, scalable interaction model.",
     event: "Hackathon · Winner",
     image: "/images/fun/fiestaa.jpg",
+    fileLabel: "fiestaa.app",
+    year: "2023",
+    tools: ["Figma", "Prototyping"],
   },
   {
     title: "SYNECTICS",
     description: "Designed an interaction-led CBT experience, translating therapeutic principles into intuitive digital interactions.",
     event: "Hackathon · Winner",
     image: "/images/fun/synectics.jpg",
+    fileLabel: "synectics.app",
+    year: "2023",
+    tools: ["Figma", "Interaction Design"],
   },
   {
     title: "Designing with Leverage: The AI-Empowered Designer",
@@ -38,5 +51,8 @@ export const funProjects: FunProject[] = [
       "Planned and led an AI design workshop on AI-native design workflows and designer judgment, using Dotlet — a self-built 0→1 vector product — as a live case study from ideation through AI-assisted development.",
     event: "Friends of Figma · Workshop",
     image: "/images/fun/friends-of-figma.png",
+    fileLabel: "workshop.talk",
+    year: "2026",
+    tools: ["Figma Make", "Claude"],
   },
 ];

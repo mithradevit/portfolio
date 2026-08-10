@@ -2,7 +2,9 @@ import { about } from "@/content/about";
 import { profile } from "@/content/profile";
 import { InterestList } from "@/components/about/InterestList";
 import { PhotoGrid } from "@/components/about/PhotoGrid";
+import { ProfileWindow } from "@/components/about/ProfileWindow";
 import { ArcCarousel } from "@/components/about/ArcCarousel";
+import { MilestoneTimeline, CertificationTimeline } from "@/components/about/MilestoneTimeline";
 import { ActivityStrip } from "@/components/home/ActivityStrip";
 import { FaqChat } from "@/components/about/FaqChat";
 import { ScrambleText } from "@/components/ui/ScrambleText";
@@ -11,11 +13,19 @@ import { Reveal } from "@/components/motion/Reveal";
 export default function AboutPage() {
   return (
     <div className="flex w-full flex-col items-center gap-16 p-6">
-      <Reveal className="flex w-full max-w-[1800px] flex-col gap-16">
-        <div className="grid w-full grid-cols-1 gap-12 pt-8 lg:grid-cols-2 lg:pt-[16vh]">
-          <h1 className="max-w-[600px]">{about.tagline}</h1>
+      {/* 1040px, matching the hero's own grid, so every band below lines up
+          with it. At 1800px the page had no shared left edge and each section
+          sprawled to a different width. */}
+      <Reveal className="flex w-full max-w-[1040px] flex-col gap-28 lg:gap-36">
+        {/* The fold is centred in the viewport rather than pinned under the
+            header — that vertical breathing room is most of what reads as
+            "composed" in the reference. */}
+        <div className="flex min-h-[calc(100svh-140px)] items-center py-8">
+          <ProfileWindow />
+        </div>
+
+        <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between sm:gap-16">
           <div className="flex flex-col gap-6">
-            <p className="text-foreground-light max-w-[500px] leading-relaxed">{about.bio}</p>
             <div>
               <ScrambleText as="h4" text="Outside of work" delay={0.15} scrambleOnHover />
               <div className="mt-2">
@@ -29,13 +39,27 @@ export default function AboutPage() {
               </a>
             </p>
           </div>
+
+          {/* Compact: this row is about the interests list, not the graph —
+              the full-width version stays available via `compact={false}`
+              if it ever needs its own section again. */}
+          <ActivityStrip compact />
         </div>
 
-        <ActivityStrip />
+        {/* These two pairs render visually similar content back to back —
+            two dense rulers, two photo grids — so the shared page rhythm
+            reads as one continuous block rather than four sections. Each
+            pair gets its own tighter internal gap plus a wider gap-36
+            between pairs, so the grouping itself becomes visible. */}
+        <div className="flex flex-col gap-16">
+          <MilestoneTimeline />
+          <CertificationTimeline />
+        </div>
 
-        <PhotoGrid categories={about.photoCategories} />
-
-        <ArcCarousel />
+        <div className="flex flex-col gap-16">
+          <PhotoGrid categories={about.photoCategories} />
+          <ArcCarousel />
+        </div>
 
         <FaqChat />
       </Reveal>

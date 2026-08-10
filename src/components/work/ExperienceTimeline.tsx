@@ -6,7 +6,10 @@ import { ScrambleText } from "@/components/ui/ScrambleText";
 export function ExperienceTimeline({ entries }: { entries: ExperienceEntry[] }) {
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex items-center justify-between gap-4">
+      {/* h-8 to match the About block's header row — the CV button is taller
+          than the label, so without a fixed height the label centres itself
+          lower and the two section headings stop lining up. */}
+      <div className="flex h-8 items-center justify-between gap-4">
         <ScrambleText as="h4" text="Experience" delay={0.2} scrambleOnHover />
         <a
           href={profile.resumeUrl}
@@ -24,7 +27,9 @@ export function ExperienceTimeline({ entries }: { entries: ExperienceEntry[] }) 
         {entries.map((entry, i) => (
           <div
             key={`${entry.company}-${entry.role}-${i}`}
-            className="group flex flex-col gap-0.5 py-2 sm:grid sm:grid-cols-[68px_minmax(0,200px)_1fr] sm:items-baseline sm:gap-4"
+            // 240px for the company: at 200px the longest role title was
+            // pushed into a second line while the column beside it sat empty.
+            className="group flex flex-col gap-0.5 py-2.5 sm:grid sm:grid-cols-[72px_minmax(0,240px)_minmax(0,1fr)] sm:items-baseline sm:gap-6"
           >
             <h4 className="text-foreground-light shrink-0">{entry.year}</h4>
             <div className="group-hover:text-primary text-[15px] transition-colors duration-300">

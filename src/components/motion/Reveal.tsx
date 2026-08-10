@@ -34,8 +34,13 @@ export function Reveal({
 
 /**
  * A slightly richer variant for grid items: fade + a small upward drift,
- * staggered by index. Still restrained — 8px of movement, capped delay — in
+ * staggered by index. Still restrained — 12px of movement, capped delay — in
  * keeping with the source site's minimal motion language.
+ *
+ * Triggered on scroll rather than on mount: most grids sit below the fold, so
+ * an entrance that fires at page load has already finished by the time anyone
+ * scrolls to it. The stagger is by *row* — items sharing a row should arrive
+ * together, not chase each other across the page.
  */
 export function RevealItem({
   children,
@@ -48,9 +53,14 @@ export function RevealItem({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut", delay: Math.min(index * 0.05, 0.3) }}
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+      transition={{
+        duration: 0.5,
+        ease: [0.16, 1, 0.3, 1],
+        delay: Math.min(Math.floor(index / 2) * 0.08, 0.24),
+      }}
       className={className}
     >
       {children}

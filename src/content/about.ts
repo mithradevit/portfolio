@@ -14,6 +14,38 @@ export const about = {
   contactPrompt:
     "Reach out on LinkedIn or by email — I'd love to hear from you.",
 
+  /**
+   * The About hero. `heading` is the italic serif display line; `intro` is one
+   * paragraph per entry; `facts` are the small labelled cards beneath.
+   *
+   * `photos` fills the window frame — the first is what loads, the rest sit in
+   * the thumbnail strip. `src: ""` renders a placeholder tile, so the whole
+   * thing works before the images exist: drop files into
+   * public/images/about/ and fill in the paths.
+   */
+  hero: {
+    heading: "About me",
+    intro: [
+      "I'm a product designer working where the stakes are real — public safety, healthcare, connected devices. The kind of software where a confusing screen isn't an inconvenience, it's a consequence.",
+      "Based in Bangalore, four years into designing for the edges rather than the average: the officer working under duress, the elderly user meeting technology for the first time, the patient at their most vulnerable moment.",
+    ],
+    facts: [
+      { label: "Exploring", emoji: "🛠", text: "AI-native design workflows and building my own tools." },
+      { label: "After hours", emoji: "📷", text: "Reading, illustration, and taking more photos than I post." },
+    ],
+    // TODO: replace each `alt` with what's actually in the photo — these are
+    // read aloud by screen readers and shown if an image fails to load.
+    photos: [
+      { src: "/images/about/p2.webp", alt: "Mithra" },
+      { src: "/images/about/p4.webp", alt: "Mithra" },
+      { src: "/images/about/p5.webp", alt: "Mithra" },
+      { src: "/images/about/p6.webp", alt: "Mithra" },
+      { src: "/images/about/p7.webp", alt: "A bundle of books" },
+      { src: "/images/about/p8.webp", alt: "Dorm vinyl setup with a record player and albums" },
+      { src: "/images/about/p10.webp", alt: "The Career Archetypes by Joel Uili" },
+    ],
+  },
+
   // Each category needs 3 image paths once you add real photos to
   // public/images/about/. Leaving `images` empty renders a placeholder tile.
   photoCategories: [

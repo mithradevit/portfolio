@@ -1,4 +1,5 @@
 import { profile } from "@/content/profile";
+import { activityLog } from "@/content/activityLog";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import { ActivityBars, type Bucket } from "./ActivityBars";
 
@@ -6,27 +7,23 @@ import { ActivityBars, type Bucket } from "./ActivityBars";
  * A 30-day activity strip.
  *
  * With a GitHub username configured it shows real public-event counts. Without
- * one it falls back to a shape-only placeholder that says so on the label —
- * a portfolio implying contributions that never happened would be worse than
- * showing nothing, so the fallback never claims to be real.
+ * one — the current state — it falls back to `content/activityLog.ts`, a
+ * hand-kept record of the work that doesn't leave a commit trail: talks,
+ * advisory calls, writing, AI-assisted prototyping. That's genuine content,
+ * not a placeholder, so it gets the same real "N logged" label a commit count
+ * would — the bars themselves stay the plain hover-for-date graph either way.
  */
 
 const DAYS = 30;
 
-/** Deterministic filler, so server and client render identical markup. */
-function placeholderBuckets(): Bucket[] {
-  const out: Bucket[] = [];
+/** The curated log, in bucket shape, so it can render through the same bars. */
+function logBuckets(): Bucket[] {
   const today = new Date();
-  for (let i = DAYS - 1; i >= 0; i--) {
+  return activityLog.map((entry, i) => {
     const d = new Date(today);
-    d.setUTCDate(d.getUTCDate() - i);
-    const day = d.getUTCDay();
-    // Quiet weekends, busier midweek — a plausible rhythm, no randomness.
-    const base = day === 0 || day === 6 ? 0 : 2 + ((i * 7) % 5);
-    const count = (i * 13) % 11 === 0 ? 0 : base;
-    out.push({ date: d.toISOString().slice(0, 10), count });
-  }
-  return out;
+    d.setUTCDate(d.getUTCDate() - (DAYS - 1 - i));
+    return { date: d.toISOString().slice(0, 10), count: entry ? 1 : 0 };
+  });
 }
 
 async function fetchActivity(username: string): Promise<Bucket[] | null> {
@@ -61,25 +58,28 @@ async function fetchActivity(username: string): Promise<Bucket[] | null> {
   }
 }
 
-export async function ActivityStrip() {
+export async function ActivityStrip({ compact = false }: { compact?: boolean }) {
   const username = profile.socials.github;
   const real = username ? await fetchActivity(username) : null;
-  const buckets = real ?? placeholderBuckets();
-  const total = real ? real.reduce((s, b) => s + b.count, 0) : null;
+  const buckets = real ?? logBuckets();
+  const log = real ? null : activityLog;
+  const total = real
+    ? real.reduce((s, b) => s + b.count, 0)
+    : activityLog.filter((e) => e !== null).length;
 
   return (
-    <div className="flex w-full max-w-[720px] flex-col gap-4">
+    <div className={`flex w-full flex-col gap-4 ${compact ? "max-w-[340px]" : "max-w-[720px]"}`}>
       <ScrambleText as="h4" text="Activity" delay={0.15} scrambleOnHover />
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <h4 className="text-foreground-light shrink-0">Last {DAYS} days</h4>
-        <span className="bg-foreground/12 h-px flex-1" />
+        {compact ? null : <span className="bg-foreground/12 h-px flex-1" />}
         <h4 className="text-foreground-light shrink-0">
-          {total === null ? "Placeholder" : `${total} Contributions`}
+          {total} {real ? "Contributions" : "Logged"}
         </h4>
       </div>
 
-      <ActivityBars buckets={buckets} />
+      <ActivityBars buckets={buckets} log={log} compact={compact} />
     </div>
   );
 }

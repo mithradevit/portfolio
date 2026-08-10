@@ -174,14 +174,116 @@ export const leadership = [
   },
 ] as const;
 
+/**
+ * Licences and certifications, straight from LinkedIn. Newest first.
+ *
+ * `issued` is "YYYY-MM" — the /about timeline plots each one on a real date
+ * axis, so the format matters. Add a certificate here and it appears both in
+ * any list that reads this array and as a mark on the timeline.
+ */
 export const certifications = [
-  { name: "AI Fluency: Framework & Foundation", issuer: "Anthropic" },
-  { name: "Claude Code 101 | Model Context Protocol", issuer: "Anthropic" },
-  { name: "Introduction to Agent + Subagent", issuer: "Anthropic" },
-  { name: "Enterprise Design Thinking Practitioner", issuer: "IBM" },
-  { name: "Enterprise Design Thinking Co-Creator", issuer: "IBM" },
-  { name: "Google UX Design Specialization", issuer: "Google" },
-  { name: "Positive Psychology", issuer: "University of North Carolina" },
+  {
+    name: "AI Fluency for Educators",
+    issuer: "Anthropic",
+    issued: "2026-04",
+    note: "The 4D framework turned outward — built with Prof. Joseph Feller (University College Cork) and Prof. Rick Dakan (Ringling College) for people who have to teach this, not just use it.",
+  },
+  {
+    name: "AI Fluency: Framework & Foundations",
+    issuer: "Anthropic",
+    issued: "2026-03",
+    note: "Anthropic's 4D framework — Delegation, Description, Discernment, Diligence. The vocabulary I'd been missing for why some AI-assisted work lands and some doesn't.",
+  },
+  {
+    name: "Claude 101",
+    issuer: "Anthropic",
+    issued: "2026-03",
+    note: "Prompt construction, constraint-setting, and reading model output critically rather than accepting the first plausible answer.",
+  },
+  {
+    name: "Google UX Design Professional",
+    issuer: "Google",
+    issued: "2025-06",
+    note: "The full seven-course certificate, closed out. Research through high-fidelity delivery, with a portfolio project at every stage.",
+  },
+  {
+    name: "Build Dynamic User Interfaces for Websites",
+    issuer: "Google",
+    issued: "2024-11",
+    note: "Responsive layout and interaction patterns for the web — how a design has to bend across breakpoints without losing its logic.",
+  },
+  {
+    name: "Create High-Fidelity Designs & Prototypes in Figma",
+    issuer: "Google",
+    issued: "2024-11",
+    note: "Taking a validated low-fidelity flow through to a prototype an engineer can build from, and a usability session can actually test.",
+  },
+  {
+    name: "Conduct UX Research & Test Early Concepts",
+    issuer: "Google",
+    issued: "2024-11",
+    note: "Study design, moderation, and synthesis — testing an idea while it's still cheap to be wrong about it.",
+  },
+  {
+    name: "Work with Components in Figma",
+    issuer: "Coursera",
+    issued: "2024-10",
+    note: "Components, variants and properties — the mechanics behind a design system that survives more than one designer.",
+  },
+  {
+    name: "Enterprise Design Thinking Co-Creator",
+    issuer: "IBM",
+    issued: "2024-07",
+    note: "The step past Practitioner: contributing on live engagements and taking the lead, rather than applying the framework to your own work alone.",
+  },
+  {
+    name: "Build Wireframes & Low-Fidelity Prototypes",
+    issuer: "Google",
+    issued: "2024-07",
+    note: "Structure before surface — getting the flow and hierarchy right while it's still a box on a page.",
+  },
+  {
+    name: "Start the UX Design Process: Empathize, Define & Ideate",
+    issuer: "Google",
+    issued: "2023-04",
+    note: "Personas, journey maps and problem statements — the discipline of defining the problem before reaching for a solution.",
+  },
+  {
+    name: "Foundations of User Experience (UX) Design",
+    issuer: "Google",
+    issued: "2023-01",
+    note: "The first of the seven. Started it the month I moved into a full design seat — formalising what the internship had taught by doing.",
+  },
+  {
+    name: "UI / UX",
+    issuer: "Great Learning",
+    issued: "2022-11",
+    note: "First structured UX training, taken five months into the internship to put names to what I was already doing.",
+  },
+  {
+    name: "Enterprise Design Thinking Practitioner",
+    issuer: "IBM",
+    issued: "2022-03",
+    note: "IBM's framework for keeping a team pointed at the user — collaboration, research, synthesis, prototyping and storytelling as one loop.",
+  },
+  {
+    name: "Digital Marketing",
+    issuer: "Udemy",
+    issued: "2022-02",
+    note: "How a product gets found and framed. Useful later for arguing about positioning, not just pixels.",
+  },
+  {
+    name: "Web Development",
+    issuer: "Udemy",
+    issued: "2021-09",
+    note: "HTML, CSS and JavaScript — taken before the first design job, so I'd stop handing engineers work I couldn't reason about.",
+  },
+  {
+    name: "Positive Psychology",
+    issuer: "University of North Carolina",
+    issued: "2020-07",
+    note: "Barbara Fredrickson's course on how positive emotion widens what people notice. The earliest thing here, and the reason I design for states of mind rather than tasks alone.",
+  },
 ] as const;
 
 export const education = {

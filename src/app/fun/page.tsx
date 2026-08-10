@@ -1,7 +1,7 @@
 import { funProjects, funTagline, funHero } from "@/content/fun-projects";
 import { writingPosts, substackUrl } from "@/content/writing";
 import { WritingList } from "@/components/fun/WritingList";
-import { FunProjectCard } from "@/components/fun/FunProjectCard";
+import { FunProjectsGrid } from "@/components/fun/FunProjectsGrid";
 import { PixelHero } from "@/components/fun/PixelHero";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -15,11 +15,7 @@ export default function FunPage() {
 
         <div className="flex flex-col gap-6">
           <h4>Projects & Hackathons</h4>
-          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {funProjects.map((project, i) => (
-              <FunProjectCard key={i} project={project} />
-            ))}
-          </div>
+          <FunProjectsGrid projects={funProjects} />
         </div>
 
         <div className="flex flex-col gap-6">

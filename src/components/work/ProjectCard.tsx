@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "motion/react";
 import type { Project } from "@/content/projects";
 import { cn } from "@/lib/cn";
 
@@ -11,7 +14,14 @@ export function ProjectCard({ project }: { project: Project }) {
       className="group block"
     >
       <div className="flex flex-col gap-2">
-        <div
+        {/* The thumbnail is wiped open from the bottom edge as it scrolls in.
+            `clipPath` rather than height or scale: it animates on the
+            compositor and leaves the hover transform free to do its own job. */}
+        <motion.div
+          initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
+          whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
+          viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
             "border-foreground/10 relative w-full overflow-hidden border transition-all duration-300 ease-in-out",
             project.aspect,
@@ -37,7 +47,7 @@ export function ProjectCard({ project }: { project: Project }) {
             />
           )}
           <div className="bg-background/0 group-hover:bg-background/20 absolute inset-0 transition-colors duration-300 ease-in-out" />
-        </div>
+        </motion.div>
         <div className="mt-1 flex flex-col justify-between gap-0.5 sm:flex-row sm:items-baseline sm:gap-6">
           {/* Wraps on phones; only truncates once the meta sits beside it. */}
           <h3 className="text-foreground min-w-0 sm:truncate">{project.title}</h3>
