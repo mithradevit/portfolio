@@ -1,4 +1,3 @@
-import { ArrowUpRight } from "lucide-react";
 import type { Project } from "@/content/projects";
 import type { CaseStudy } from "@/content/case-studies";
 
@@ -33,26 +32,14 @@ export function CaseStudyHeader({
         <MetaField label="Skills" value={caseStudy.skills.join(", ")} />
       </div>
 
-      {caseStudy.links && caseStudy.links.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {caseStudy.links.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="pointer"
-              className="group border-foreground/10 text-foreground-light hover:border-primary/40 hover:text-primary flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[12px] tracking-wide uppercase transition-colors duration-300"
-            >
-              {link.label}
-              <ArrowUpRight
-                size={13}
-                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              />
-            </a>
-          ))}
-        </div>
+      {caseStudy.nda && (
+        <p className="border-primary/40 text-foreground-light border-l-2 py-1 pl-4 text-[14px] leading-[1.6]">
+          {caseStudy.nda}
+        </p>
       )}
+
+      {/* Links are not rendered here — they sit on the same row as the first
+          section's heading, in CaseStudySection's `trailing` slot. */}
     </div>
   );
 }

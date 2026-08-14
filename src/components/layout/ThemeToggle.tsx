@@ -43,7 +43,7 @@ export function ThemeToggle() {
       data-cursor="pointer"
       aria-label={theme === null ? "Toggle theme" : `Switch to ${isDark ? "light" : "dark"} theme`}
       aria-pressed={isDark}
-      className="border-foreground/10 text-foreground-light hover:border-primary/40 hover:text-primary flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-300"
+      className="text-foreground-light hover:text-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-200"
     >
       {/* Both icons render; opacity/rotation cross-fades them so the swap
           doesn't jump the layout. Hidden from AT — the label above says it. */}

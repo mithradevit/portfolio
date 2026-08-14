@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { projects } from "@/content/projects";
 import { getCaseStudy } from "@/content/case-studies";
 import { CaseStudyHeader } from "@/components/case-study/CaseStudyHeader";
+import { CaseStudyLinks } from "@/components/case-study/CaseStudyLinks";
 import { CaseStudySection } from "@/components/case-study/CaseStudySection";
 import { CaseStudyNav } from "@/components/case-study/CaseStudyNav";
 import { Reveal } from "@/components/motion/Reveal";
@@ -30,7 +31,15 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
         <div className="flex w-full max-w-[760px] flex-col gap-16 pb-[45vh]">
           <CaseStudyHeader project={project} caseStudy={caseStudy} />
           {caseStudy.sections.map((section, i) => (
-            <CaseStudySection key={i} section={section} />
+            <CaseStudySection
+              key={i}
+              section={section}
+              trailing={
+                i === 0 && caseStudy.links?.length ? (
+                  <CaseStudyLinks links={caseStudy.links} />
+                ) : undefined
+              }
+            />
           ))}
         </div>
       </Reveal>

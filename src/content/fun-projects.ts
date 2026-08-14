@@ -29,7 +29,8 @@ export type FunProject = {
 export const funProjects: FunProject[] = [
   {
     title: "FIESTAA",
-    description: "Reimagined the food delivery experience through a simplified, scalable interaction model.",
+    description:
+      "Reimagined food delivery as a shared, social experience instead of a solo transaction. Simplified a cluttered, multi-step order flow into one scalable interaction model built to hold group ordering, splitting and real-time status without adding complexity.",
     event: "Hackathon · Winner",
     image: "/images/fun/fiestaa.jpg",
     fileLabel: "fiestaa.app",
@@ -38,7 +39,8 @@ export const funProjects: FunProject[] = [
   },
   {
     title: "SYNECTICS",
-    description: "Designed an interaction-led CBT experience, translating therapeutic principles into intuitive digital interactions.",
+    description:
+      "Designed an interaction-led CBT experience that turns therapeutic principles — reframing, grounding, guided reflection — into digital moments a user actually feels, not just reads. Built for a hackathon judged on both clinical grounding and interaction quality.",
     event: "Hackathon · Winner",
     image: "/images/fun/synectics.jpg",
     fileLabel: "synectics.app",
@@ -48,7 +50,7 @@ export const funProjects: FunProject[] = [
   {
     title: "Designing with Leverage: The AI-Empowered Designer",
     description:
-      "Planned and led an AI design workshop on AI-native design workflows and designer judgment, using Dotlet — a self-built 0→1 vector product — as a live case study from ideation through AI-assisted development.",
+      "Planned and led a workshop on AI-native design workflows and the judgment they still require. Used Dotlet, a self-built 0→1 vector product, as a live case study — walking the room through ideation to AI-assisted development in real time.",
     event: "Friends of Figma · Workshop",
     image: "/images/fun/friends-of-figma.png",
     fileLabel: "workshop.talk",

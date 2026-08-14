@@ -22,7 +22,18 @@ export const dotlet: CaseStudy = {
       heading: "Overview",
       body: [
         "Dotlet is a browser-based vector tool. You place dots on a grid, they merge into smooth organic shapes in real time, and you export a clean SVG or PNG. No pen tool, no anchor points, no prior experience.",
+        "The gooey filter engine is the whole product: an SVG feGaussianBlur and feColorMatrix pipeline running live in the browser, turning separate dots into one organic shape as you draw, with no rasterisation until export. The skill the tool asks for is placement, which everyone already has.",
         "I built it solo in 10 days for Config Makeathon 2026, entirely inside Figma Make, and later used it as the live case study for a Friends of Figma workshop on AI-native design workflows.",
+      ],
+      videos: [
+        {
+          src: "/videos/dotlet.mp4",
+          width: 1350,
+          height: 872,
+          // TODO: confirm this describes what the clip actually shows — it is
+          // both the caption under the video and the player's accessible name.
+          alt: "Dotlet in use: dots placed on the grid merge into a single smooth shape.",
+        },
       ],
     },
     {
@@ -38,17 +49,175 @@ export const dotlet: CaseStudy = {
       ],
     },
     {
-      heading: "The Solution",
+      heading: "Ideation and Concept Exploration",
+      kicker: "Figma Agent",
       body: [
-        "Dots on a grid, merged automatically. Place two overlapping marks and they flow into one continuous form; pull them apart and the form separates. The skill the tool asks for is placement, which everyone already has.",
-        "The gooey filter engine is the whole product: an SVG feGaussianBlur and feColorMatrix pipeline running live in the browser, turning separate dots into one organic shape as you draw, with no rasterisation until export.",
+        "Before any spec was written, the Figma design agent was used to explore what this tool could feel like.",
+      ],
+      grid: [
+        {
+          title: "Layout testing",
+          body: "Side panel vs floating controls were compared visually. The floating palette direction was chosen — the canvas stays clear, controls appear when needed.",
+          video: {
+            src: "/videos/dotlet-layout-testing.mp4",
+            width: 842,
+            height: 318,
+            // TODO: written from the card's own text, not from watching the
+            // file — this is the player's accessible name.
+            alt: "Side panel and floating control layouts compared side by side.",
+          },
+        },
+        {
+          title: "Branding exploration",
+          body: "Name, colour, and identity were explored with the Figma agent. The sticker-sheet theme — blue #4A7FD4 on soft sky — came from a reference image.",
+          video: {
+            src: "/videos/dotlet-colour-palette.mp4",
+            width: 1600,
+            height: 900,
+            // TODO: written from the card's own text, not from watching the
+            // file — this is the player's accessible name.
+            alt: "The colour palette being pulled from a reference image.",
+          },
+        },
+      ],
+      note: {
+        label: "Learning",
+        body: "Doing this before locking a requirements document meant the FRD was grounded in layout decisions that had already been visually tested — not made in the abstract.",
+      },
+      // TODO: both captions are written from the section's own description of
+      // this exploration, not from watching the files. Correct them if the
+      // clips show something else — each is the caption AND the accessible
+      // name for that player.
+      videos: [
+        {
+          src: "/videos/dotlet-explore-1.mp4",
+          width: 486,
+          height: 500,
+          alt: "Exploration one: the side-panel layout, with controls docked beside the canvas.",
+        },
+        {
+          src: "/videos/dotlet-explore-2.mp4",
+          width: 500,
+          height: 526,
+          alt: "Exploration two: the floating palette, which kept the canvas clear and won out.",
+        },
       ],
     },
     {
-      heading: "Exploring the Interaction",
+      heading: "IA + Features",
       body: [
-        "Before any spec was written, I used the Figma design agent to explore what the tool should feel like — comparing a side panel against floating controls, and testing name, colour, and identity directions ahead of any code.",
-        "The floating palette won: the canvas stays clear and controls surface when needed. Doing this first meant the requirements document was grounded in layouts already tested visually, rather than decisions made in the abstract.",
+        "The whole tool is one screen: a fixed header, an infinite canvas, a draggable palette for the tools you reach for constantly, and a fixed right sidebar for everything you set once and adjust. Nothing is nested more than three levels deep, and there is no navigation to learn.",
+      ],
+      images: [
+        {
+          src: "/images/projects/dotlet/ia-1.webp",
+          width: 1392,
+          height: 1240,
+          alt: "Information architecture, top half: DOTLET splits into a fixed header (logo, Icon/Font mode toggle, account menu with file list), the centre canvas (infinite pan and zoom, snap-to-grid nodes, grid overlay, artwork and background layers), and a draggable floating palette (pen, eraser, move and hand tools, undo/redo, clear, export, zoom level).",
+          caption: "Header, canvas, and floating palette — the surfaces in constant use during drawing.",
+        },
+        {
+          src: "/images/projects/dotlet/ia-2.webp",
+          width: 1228,
+          height: 1238,
+          alt: "Information architecture, bottom half: the fixed right sidebar holds Image to Shape, Layers (artwork and background visibility, add layer), Shapes (8 dot types), Effects (smoothness, sharpness, roughness, shadow opacity, outline mode), Colour (dot, background, recent swatches), Grid (size presets, show toggle), and Export (SVG, copy SVG for Figma, PNG at 3x, copy PNG).",
+          caption: "The right sidebar — settings and export, grouped by how often each one is touched.",
+        },
+      ],
+    },
+    {
+      heading: "How It Did It",
+      body: [
+        "Writing a full Functional Requirements Document before opening Figma Make was the single decision that made everything else go more smoothly.",
+      ],
+      blocks: [
+        {
+          title: "Why the FRD mattered",
+          body: [
+            "Most AI-assisted builds start with a vague prompt and iterate until something looks right. The FRD forced the opposite: define what the tool is, what it does, how it behaves, and what it will never do — before writing any code. Every Figma Make prompt that followed was specific because the spec was specific. The tool built what was actually meant, not what was accidentally implied.",
+          ],
+        },
+        {
+          title: "What changed",
+          body: [
+            "The scope was widened deliberately: from “icon tool” to “icons, logos, custom shapes, symbols, and decorative marks — anything that would otherwise require a path editor.” The grid expanded from 3 presets to 5. The shape palette doubled from 4 types to 8. The entire vocabulary was replaced so that every term in the spec, the UI labels, and the code matched — no ambiguity between what the FRD said and what Figma Make built.",
+          ],
+        },
+        {
+          title: "The out-of-scope list as product reasoning",
+          body: [
+            "Most specs list what to build. This one also listed what not to build — and crucially, why. Every exclusion was written with a reason tied to the product's core premise. That reasoning became the test for every new feature idea that came up during the build.",
+          ],
+          exclusions: [
+            {
+              title: "Freeform path / bezier editing",
+              body: "Reintroduces the exact precision barrier the product exists to remove. If users need a pen tool, they already have a pen tool.",
+            },
+            {
+              title: "AI-generated shape input",
+              body: "Conflicts with a hands-on, skill-free creation model. The tool should respond to what the user places, not generate for them.",
+            },
+            {
+              title: "Raster image import",
+              body: "Outside the defined vector-first workflow. Dotlet creates from scratch — it doesn't convert or embed.",
+            },
+            {
+              title: "Animation / motion export",
+              body: "Dotlet is a static vector tool. Motion would require a second rendering pipeline with no connection to the gooey filter engine.",
+            },
+          ],
+        },
+      ],
+      note: {
+        label: "Governing principle",
+        body: "the product must not reintroduce a technical skill requirement at any stage of the workflow. This rule was written in the FRD before any code was written. It was used again when the Font Builder was evaluated — and it's why the Font Builder was eventually cut.",
+      },
+    },
+    {
+      heading: "Tech stack — what was actually used and why",
+      body: [],
+      blocks: [
+        {
+          body: [],
+          stack: [
+            {
+              name: "Figma Make",
+              color: "#F24E1E",
+              logo: "/images/tech/figma.svg",
+              body: "The entire app was built inside Figma Make — not scaffolded locally then imported. Every feature shipped as a structured, isolated prompt, from first line to final export.",
+            },
+            {
+              name: "Figma Agent",
+              color: "#A259FF",
+              logo: "/images/tech/figma.svg",
+              body: "Ran alongside Make for ideation — layout variations, design decisions, exploratory directions — without spending Make credits on non-code questions.",
+            },
+            {
+              name: "React + TypeScript",
+              color: "#3178C6",
+              logo: "/images/tech/typescript.svg",
+              body: "The default Make project base. Strict typing earned its place across the dot data model, cluster IDs, tool types, and history stack — it caught real bugs in the per-dot colour override added midway.",
+            },
+            {
+              name: "Vite + Tailwind CSS",
+              color: "#646CFF",
+              logo: "/images/tech/vite.svg",
+              body: "Vite's HMR made iterative canvas work practical: dot geometry, filter values, and export logic reflected instantly. Tailwind handled all UI layout and palette styling.",
+            },
+            {
+              name: "Web Audio API — custom sound engine",
+              color: "#E8A33D",
+              glyph: "audio",
+              body: "No sound library — every sound is hand-built synthesis. Draw is pink noise through a bandpass tuned to graphite on paper; erase, a short sine squeak; save, a C5–E5–G5 arpeggio with a long decay. Mute persists via localStorage.",
+            },
+            {
+              name: "SVG filters + Canvas API",
+              color: "#5B7C99",
+              glyph: "vector",
+              body: "The gooey engine is pure SVG — feGaussianBlur and feColorMatrix applied live, with no canvas rasterisation while drawing. Canvas is used only at export, to rasterise into a high-resolution PNG.",
+            },
+          ],
+        },
       ],
     },
     {

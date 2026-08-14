@@ -2,106 +2,186 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { profile } from "@/content/profile";
+import { Sparkles } from "lucide-react";
+import { navItems } from "@/content/nav";
 import { cn } from "@/lib/cn";
-import { ChatButton } from "@/components/chat/ChatButton";
+import { useChatOpen } from "@/components/chat/ChatOpenContext";
 import { ThemeToggle } from "./ThemeToggle";
 
-const navLinks = [
-  { href: "/", label: "Work" },
-  { href: "/fun", label: "Fun" },
-  { href: "/about", label: "About" },
-];
+/**
+ * One segment of the pill.
+ *
+ * The label styling lives here rather than on an h4: the global `h4 { color }`
+ * rule in globals.css is unlayered, so it beats any Tailwind colour utility and
+ * the active state would never show.
+ */
+// Mono uppercase is the design system's label role — the same treatment
+// globals.css gives h4. Set a step below the system's 15px body size: the nav
+// is chrome rather than content, and at 15px the pill outgrew a phone.
+const segment =
+  // text-[13px]! — globals.css sets a bare `a { font-size: 15px }`, and that
+  // unlayered rule beats a plain Tailwind size utility, so the segments would
+  // silently render at 15px without the important suffix.
+  "rounded-full px-2 py-1.5 font-mono text-[13px]! tracking-[0.04em] uppercase transition-colors duration-200 sm:px-3.5 sm:tracking-[0.06em]";
+
+const inactive = "text-foreground-light hover:text-foreground";
+
+/** The raised chip behind the current page. */
+const active = "bg-foreground/[0.08] text-foreground";
+
+/** How close to the top of the viewport the cursor must come to summon the nav. */
+const HOVER_BAND = 110;
+
+/** Above this scroll position the nav stops showing itself unprompted. Keeps it
+ *  present while the reader is still at the top of a page. */
+const TOP_ZONE = 40;
+
+/**
+ * Reveals the nav only when the cursor approaches the top of the window.
+ *
+ * Three escape hatches, because "follow the mouse" alone would strand people:
+ * a coarse pointer (touch) has no cursor to track, so the nav stays put; focus
+ * inside the nav pins it open for keyboard users who tab into it from the page;
+ * and it stays visible while the reader is still at the top of a document,
+ * where a bare page with no navigation reads as broken rather than clean.
+ */
+function useProximityReveal() {
+  const [visible, setVisible] = useState(true);
+  // Refs, not state: these are read inside event handlers on every mousemove
+  // and must not re-subscribe the listeners when they change.
+  const nearTop = useRef(false);
+  const held = useRef(false);
+  const always = useRef(false);
+
+  const sync = useCallback(() => {
+    setVisible(always.current || held.current || nearTop.current || window.scrollY < TOP_ZONE);
+  }, []);
+
+  useEffect(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      always.current = true;
+      setVisible(true);
+      return;
+    }
+
+    const onMove = (e: MouseEvent) => {
+      const near = e.clientY < HOVER_BAND;
+      // Only re-render when the cursor actually crosses the band, rather than
+      // on every one of the hundreds of mousemove events a second.
+      if (near !== nearTop.current) {
+        nearTop.current = near;
+        sync();
+      }
+    };
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("scroll", sync, { passive: true });
+    sync();
+
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", sync);
+    };
+  }, [sync]);
+
+  /** Pins the nav open while the cursor is inside it. */
+  const hold = useCallback(
+    (on: boolean) => {
+      held.current = on;
+      sync();
+    },
+    [sync],
+  );
+
+  return { visible, hold };
+}
+
+/**
+ * Keyboard escape hatch, in CSS rather than JS.
+ *
+ * Motion writes opacity and transform as inline styles, which no ordinary class
+ * can override — hence the `!` on each. Without this a keyboard user tabbing in
+ * from the page lands on a link that is fully focusable but invisible.
+ */
+const focusReveal =
+  "focus-within:opacity-100! focus-within:[transform:none]! focus-within:pointer-events-auto!";
 
 export function Header() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const { open, setOpen } = useChatOpen();
+  const { visible, hold } = useProximityReveal();
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-      className="bg-background border-foreground/10 relative z-50 flex items-center justify-center gap-6 border-b px-6 py-5 lg:h-16"
+    // Sticky rather than fixed: it floats over the page on scroll but still
+    // occupies its own space in flow, so no page needs a compensating
+    // padding-top and the existing 100svh hero maths stay correct.
+    <motion.header
+      initial={{ opacity: 0, y: -8 }}
+      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      onMouseEnter={() => hold(true)}
+      onMouseLeave={() => hold(false)}
+      // Hidden means untouchable: without this the invisible pill would still
+      // swallow clicks aimed at whatever sits underneath it.
+      className={cn(
+        "sticky top-0 z-50 flex justify-center px-4 pt-4 pb-2",
+        !visible && "pointer-events-none",
+        focusReveal,
+      )}
     >
-      <div className="relative flex w-full max-w-[1800px] items-center gap-6">
-        <Link href="/" className="flex flex-col gap-0 sm:flex-row sm:gap-4" data-cursor="pointer">
-          <h4 className="text-foreground! font-medium!">{profile.name}</h4>
-          <h4>{profile.title}</h4>
-        </Link>
-
-        <div className="hidden w-full items-center justify-end gap-8 md:flex">
-          <div className="flex items-center gap-8">
-            {navLinks.map((link) => {
-              const active = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  data-cursor="pointer"
-                >
-                  {/* The colour lives on the h4: the global `h4 { color }` rule
-                      is unlayered, so it beats a colour inherited from the link. */}
-                  <h4 className={cn(active ? "text-primary!" : "hover:text-primary!")}>
-                    {link.label}
-                  </h4>
-                </Link>
-              );
-            })}
+      <nav
+        aria-label="Primary"
+        className={cn(
+          "border-foreground/10 bg-background/80 flex items-center gap-0.5 rounded-full border p-1.5 backdrop-blur-xl",
+          "shadow-[0_1px_2px_rgb(50_64_79_/_6%),0_12px_32px_-14px_rgb(50_64_79_/_30%)]",
+        )}
+      >
+        {navItems.map((item) =>
+          item.external ? (
             <a
-              href={profile.resumeUrl}
+              key={item.href}
+              href={item.href}
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="pointer"
+              className={cn(segment, inactive)}
             >
-              <h4 className="hover:text-primary!">Resume</h4>
+              {item.label}
             </a>
-          </div>
-          <ThemeToggle />
-          <ChatButton variant="desktop" />
-        </div>
+          ) : (
+            <Link
+              key={item.href}
+              href={item.href}
+              data-cursor="pointer"
+              aria-current={pathname === item.href ? "page" : undefined}
+              className={cn(segment, pathname === item.href ? active : inactive)}
+            >
+              {item.label}
+            </Link>
+          ),
+        )}
 
-        <div className="ml-auto md:hidden">
-          <ThemeToggle />
-        </div>
+        {/* Navigation to the left, page utilities to the right. */}
+        <span aria-hidden className="bg-foreground/10 mx-1 h-5 w-px" />
 
         <button
           type="button"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label="Toggle menu"
-          className="flex items-center gap-4 md:hidden"
+          onClick={() => setOpen(!open)}
+          data-cursor="pointer"
+          aria-label="Open MithraLLM chat"
+          aria-expanded={open}
+          className={cn(
+            "text-foreground-light hover:text-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-200",
+            open && "bg-foreground/[0.08] text-foreground",
+          )}
         >
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-            <path d="M4 8H20" stroke="currentColor" strokeWidth="2" />
-            <path d="M4 16H20" stroke="currentColor" strokeWidth="2" />
-          </svg>
+          <Sparkles size={15} strokeWidth={1.5} />
         </button>
-      </div>
 
-      <div
-        className={cn(
-          "border-foreground/10 bg-background absolute top-full right-0 left-0 z-60 border-b p-6 transition-all duration-300 ease-in-out md:hidden",
-          mobileOpen ? "opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
-        )}
-      >
-        <div className="flex flex-col gap-4">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className={cn(pathname === link.href ? "text-primary" : "")}
-            >
-              <h4>{link.label}</h4>
-            </Link>
-          ))}
-          <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">
-            <h4>Resume</h4>
-          </a>
-        </div>
-      </div>
-    </motion.div>
+        <ThemeToggle />
+      </nav>
+    </motion.header>
   );
 }

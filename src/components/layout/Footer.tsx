@@ -32,7 +32,7 @@ export function Footer() {
               <h4>{link.label}</h4>
             </a>
           ))}
-          <a href={`mailto:${profile.email}`} data-cursor="Email" className="hover:text-primary">
+          <a href={`mailto:${profile.email}`} data-cursor="email" className="hover:text-primary">
             <h4>Email</h4>
           </a>
         </div>

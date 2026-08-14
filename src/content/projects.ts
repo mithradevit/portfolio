@@ -16,7 +16,7 @@ export type Project = {
   thumbnailColor: string;
   aspect: string; // Tailwind aspect-ratio class, e.g. "aspect-[16/9]"
   image?: string;
-  cursorLabel: "Case Study" | "Overview";
+  cursorLabel: "case-study" | "overview";
 };
 
 export const projects: Project[] = [
@@ -28,7 +28,7 @@ export const projects: Project[] = [
     year: "2026",
     thumbnailColor: "#2B4C7E",
     aspect: "aspect-[16/9]",
-    cursorLabel: "Case Study",
+    cursorLabel: "case-study",
   },
   {
     slug: "clinical-trial-matching",
@@ -38,7 +38,7 @@ export const projects: Project[] = [
     year: "2025",
     thumbnailColor: "#3E8E7E",
     aspect: "aspect-[8/5]",
-    cursorLabel: "Case Study",
+    cursorLabel: "case-study",
   },
   {
     slug: "pet-health-collar",
@@ -48,7 +48,7 @@ export const projects: Project[] = [
     year: "2025",
     thumbnailColor: "#C97B63",
     aspect: "aspect-[10/7]",
-    cursorLabel: "Case Study",
+    cursorLabel: "case-study",
   },
   {
     slug: "health-ring",
@@ -58,7 +58,7 @@ export const projects: Project[] = [
     year: "2025",
     thumbnailColor: "#8C6FB0",
     aspect: "aspect-[8/5]",
-    cursorLabel: "Overview",
+    cursorLabel: "overview",
   },
   {
     slug: "dotlet",
@@ -69,7 +69,7 @@ export const projects: Project[] = [
     thumbnailColor: "#D4A24C",
     aspect: "aspect-[16/9]",
     image: "/images/projects/dotlet.webp",
-    cursorLabel: "Case Study",
+    cursorLabel: "case-study",
   },
   {
     slug: "elderly-care",
@@ -79,7 +79,7 @@ export const projects: Project[] = [
     year: "2024",
     thumbnailColor: "#6E9887",
     aspect: "aspect-[10/7]",
-    cursorLabel: "Case Study",
+    cursorLabel: "case-study",
   },
   {
     slug: "maternity-clinical-suite",
@@ -89,7 +89,7 @@ export const projects: Project[] = [
     year: "2023",
     thumbnailColor: "#A9647C",
     aspect: "aspect-[8/5]",
-    cursorLabel: "Overview",
+    cursorLabel: "overview",
   },
   {
     slug: "crm-remediation",
@@ -99,6 +99,6 @@ export const projects: Project[] = [
     year: "2026",
     thumbnailColor: "#55677D",
     aspect: "aspect-[16/9]",
-    cursorLabel: "Case Study",
+    cursorLabel: "case-study",
   },
 ];

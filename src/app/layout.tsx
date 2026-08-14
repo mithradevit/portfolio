@@ -7,8 +7,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CustomCursor } from "@/components/cursor/CustomCursor";
 import { ChatOpenProvider } from "@/components/chat/ChatOpenContext";
-import { ChatButton } from "@/components/chat/ChatButton";
 import { ChatPanel } from "@/components/chat/ChatPanel";
+import { VinylPlayer } from "@/components/layout/VinylPlayer";
 
 export const metadata: Metadata = {
   title: `${profile.name} | ${profile.title}`,
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#fafcfd" },
-    { media: "(prefers-color-scheme: dark)", color: "#1b2027" },
+    { media: "(prefers-color-scheme: dark)", color: "#111111" },
   ],
 };
 
@@ -35,7 +35,17 @@ const themeScript = `try{var t=localStorage.getItem("theme");if(t==="dark"||t===
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${fontVariables} antialiased`} suppressHydrationWarning>
+    // `data-scroll-behavior="smooth"` is Next's required opt-in when the html
+    // element sets `scroll-behavior: smooth` (globals.css). Without it Next
+    // warns, and route changes animate the whole page back to the top instead
+    // of jumping — the attribute lets the router force an instant reset while
+    // in-page anchor links stay smooth.
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${fontVariables} antialiased`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
@@ -46,8 +56,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
-            <ChatButton variant="mobile" />
+            {/* The nav carries a chat button at every breakpoint now, so the
+                old fixed mobile button would be a second entry point for the
+                same panel. */}
             <ChatPanel />
+            {/* In the layout rather than a page: it renders on every route, and
+                because the layout does not remount on navigation, a track keeps
+                playing while the visitor moves around the site. */}
+            <VinylPlayer />
           </ChatOpenProvider>
         </MotionConfig>
       </body>

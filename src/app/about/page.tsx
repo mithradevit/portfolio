@@ -13,14 +13,15 @@ import { Reveal } from "@/components/motion/Reveal";
 export default function AboutPage() {
   return (
     <div className="flex w-full flex-col items-center gap-16 p-6">
-      {/* 1040px, matching the hero's own grid, so every band below lines up
-          with it. At 1800px the page had no shared left edge and each section
-          sprawled to a different width. */}
-      <Reveal className="flex w-full max-w-[1040px] flex-col gap-28 lg:gap-36">
+      {/* Same 1800px shell and same `gap-16 lg:gap-24` band rhythm as Home and
+          Fun, so About shares a left edge with the header and footer. The
+          narrower 1040px measure the hero wants is applied by ProfileWindow
+          itself, which centres inside this container. */}
+      <Reveal className="flex w-full max-w-[1800px] flex-col gap-16 lg:gap-24">
         {/* The fold is centred in the viewport rather than pinned under the
             header — that vertical breathing room is most of what reads as
             "composed" in the reference. */}
-        <div className="flex min-h-[calc(100svh-140px)] items-center py-8">
+        <div className="flex min-h-[calc(100svh-140px)] items-center">
           <ProfileWindow />
         </div>
 
@@ -49,14 +50,14 @@ export default function AboutPage() {
         {/* These two pairs render visually similar content back to back —
             two dense rulers, two photo grids — so the shared page rhythm
             reads as one continuous block rather than four sections. Each
-            pair gets its own tighter internal gap plus a wider gap-36
-            between pairs, so the grouping itself becomes visible. */}
-        <div className="flex flex-col gap-16">
+            pair gets a tighter internal gap than the band rhythm separating
+            them, so the grouping itself stays visible. */}
+        <div className="flex flex-col gap-10">
           <MilestoneTimeline />
           <CertificationTimeline />
         </div>
 
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col gap-10">
           <PhotoGrid categories={about.photoCategories} />
           <ArcCarousel />
         </div>

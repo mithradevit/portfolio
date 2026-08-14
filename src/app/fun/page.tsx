@@ -8,7 +8,7 @@ import { Reveal } from "@/components/motion/Reveal";
 export default function FunPage() {
   return (
     <div className="flex w-full flex-col items-center gap-16 p-6">
-      <Reveal className="flex w-full max-w-[1800px] flex-col gap-16">
+      <Reveal className="flex w-full max-w-[1800px] flex-col gap-16 lg:gap-24">
         <PixelHero image={funHero.image} alt={funHero.alt}>
           <h1>{funTagline}</h1>
         </PixelHero>

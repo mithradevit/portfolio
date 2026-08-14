@@ -10,16 +10,16 @@
 
 /* Dark theme.
  *
- * The ink/paper relationship is inverted rather than literally negated: pure
- * white on pure black vibrates, so the page sits on a desaturated slate that
- * echoes the light theme's --foreground, and the type is a warm off-white.
+ * The ink/paper relationship is inverted rather than literally negated: the
+ * page sits on a near-black neutral rather than true #000, and the type is a
+ * warm off-white rather than pure white, so the pair does not vibrate.
  * --primary is left alone — it already clears 4.5:1 on both grounds.
  *
  * Two selectors, deliberately: `[data-theme]` is the explicit user choice and
  * must win in both directions, while the media query covers the first paint
  * for anyone who has never touched the toggle. */
 :root[data-theme="dark"] {
-  --background: #1b2027;
+  --background: #111111;
   --foreground: #e9edf1;
   --foreground-light: rgb(233 237 241 / 60%);
   color-scheme: dark;
@@ -27,7 +27,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --background: #1b2027;
+    --background: #111111;
     --foreground: #e9edf1;
     --foreground-light: rgb(233 237 241 / 60%);
     --glass-fill: rgb(255 255 255 / 6%);
@@ -62,6 +62,19 @@ html {
      scrollbar disappear, the page reflows into that freed space, and
      everything visibly shifts right the instant the overlay opens. */
   scrollbar-gutter: stable;
+
+  /* Anchor jumps — the case-study side nav, any in-page link — glide instead
+     of teleporting. The padding keeps the target clear of the fixed header
+     rather than landing it underneath; it matches the `scroll-mt-24` the
+     case-study sections already carry. */
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 @media (pointer: fine) {
@@ -130,10 +143,18 @@ h4 {
 }
 
 /* The reference runs one body size for everything that isn't display type:
-   labels, paragraphs and links all sit at 15px, with h4/p muted. */
+   labels, paragraphs, list items and links all sit at 15px, with h4/p muted.
+
+   `li` is listed explicitly because it has no browser default that matches —
+   left out, every bullet inherits the 16px root and sits a step above the
+   paragraph right next to it. */
 h4,
 p {
   color: var(--foreground-light);
+  font-size: 15px;
+}
+
+li {
   font-size: 15px;
 }
 
