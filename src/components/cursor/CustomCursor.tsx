@@ -85,6 +85,8 @@ export function CustomCursor() {
   const [ready, setReady] = useState(false);
   const [copied, setCopied] = useState(false);
   const [small, setSmall] = useState(false);
+  /** Once a real touch happens, the cursor stays off for the whole session. */
+  const touchedRef = useRef(false);
 
   const mode = copied ? COPIED : slug ? (LABELS[slug] ?? null) : null;
   const expanded = mode !== null;
@@ -97,15 +99,38 @@ export function CustomCursor() {
   }, []);
 
   useEffect(() => {
-    // Capability, not width. A tablet is wider than 768px but has no pointer to
-    // follow: the dot parks itself wherever the last touch landed and every tap
-    // re-runs the hover animation, which is the stutter this was causing on
-    // iPad. `hover: hover` and `pointer: fine` together mean a real mouse or
-    // trackpad — the only case this component has anything to track.
+    // Decided by what is actually driving the pointer, not by width, the hover
+    // media query, or `maxTouchPoints` — each of which gets this wrong on some
+    // real device:
+    //
+    //   - width: an iPad is wider than the mobile breakpoint.
+    //   - `hover: hover` / `pointer: fine`: iPadOS Safari reports both in
+    //     several configurations, which is why the cursor survived there.
+    //   - `maxTouchPoints`: a Windows laptop with a touchscreen reports 10 and
+    //     still has a mouse, so gating on it would remove the cursor for them.
+    //
+    // `pointerType` is per-event, so a hybrid device gets the cursor while the
+    // mouse is moving and loses it the moment a finger takes over.
     const media = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const onChange = () => setSmall(!media.matches);
+    const onChange = () => {
+      if (!touchedRef.current) setSmall(!media.matches);
+    };
     onChange();
     media.addEventListener("change", onChange);
+
+    const onPointer = (e: PointerEvent) => {
+      if (e.pointerType === "mouse") {
+        touchedRef.current = false;
+        setSmall(false);
+      } else {
+        // Touch or pen: there is no cursor to follow, and leaving the dot
+        // behind is what parked it mid-screen on the iPad.
+        touchedRef.current = true;
+        setSmall(true);
+      }
+    };
+    document.addEventListener("pointerdown", onPointer, { passive: true });
+    document.addEventListener("pointermove", onPointer, { passive: true });
 
     // Position on mousemove, state on mouseover/mouseout. Splitting them means
     // the expensive `closest` walk runs once per element crossed rather than on
@@ -141,7 +166,7 @@ export function CustomCursor() {
     // touch device Safari still synthesises mouse events from taps, so without
     // this guard every tap runs the `closest` walk and a state update for a dot
     // that is never painted.
-    if (media.matches) {
+    if (!small) {
       document.addEventListener("mousemove", onMove);
       document.addEventListener("mouseover", onOver);
       document.addEventListener("mouseout", onOver);
@@ -153,6 +178,8 @@ export function CustomCursor() {
 
     return () => {
       media.removeEventListener("change", onChange);
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("pointermove", onPointer);
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOver);
