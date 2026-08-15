@@ -97,10 +97,15 @@ export function CustomCursor() {
   }, []);
 
   useEffect(() => {
-    const media = window.matchMedia("(max-width: 768px)");
-    const onResize = () => setSmall(media.matches);
-    onResize();
-    window.addEventListener("resize", onResize);
+    // Capability, not width. A tablet is wider than 768px but has no pointer to
+    // follow: the dot parks itself wherever the last touch landed and every tap
+    // re-runs the hover animation, which is the stutter this was causing on
+    // iPad. `hover: hover` and `pointer: fine` together mean a real mouse or
+    // trackpad — the only case this component has anything to track.
+    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const onChange = () => setSmall(!media.matches);
+    onChange();
+    media.addEventListener("change", onChange);
 
     // Position on mousemove, state on mouseover/mouseout. Splitting them means
     // the expensive `closest` walk runs once per element crossed rather than on
@@ -132,16 +137,22 @@ export function CustomCursor() {
     const onLeave = () => setInWindow(false);
     const onEnter = () => setInWindow(true);
 
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseover", onOver);
-    document.addEventListener("mouseout", onOver);
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("mouseup", onUp);
-    document.addEventListener("mouseleave", onLeave);
-    document.addEventListener("mouseenter", onEnter);
+    // Only bind the tracking listeners where there is a pointer to track. On a
+    // touch device Safari still synthesises mouse events from taps, so without
+    // this guard every tap runs the `closest` walk and a state update for a dot
+    // that is never painted.
+    if (media.matches) {
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseover", onOver);
+      document.addEventListener("mouseout", onOver);
+      document.addEventListener("mousedown", onDown);
+      document.addEventListener("mouseup", onUp);
+      document.addEventListener("mouseleave", onLeave);
+      document.addEventListener("mouseenter", onEnter);
+    }
 
     return () => {
-      window.removeEventListener("resize", onResize);
+      media.removeEventListener("change", onChange);
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOver);
@@ -150,7 +161,9 @@ export function CustomCursor() {
       document.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("mouseenter", onEnter);
     };
-  }, []);
+    // Re-runs when pointer capability changes, so plugging a mouse into a
+    // tablet binds the listeners that were skipped on the touch-only pass.
+  }, [small]);
 
   // The email mode copies rather than opening a mail client, and says so.
   useEffect(() => {
