@@ -2,31 +2,54 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CaseStudy } from "@/content/case-studies";
+import { cn } from "@/lib/cn";
 
 type Banner = NonNullable<CaseStudy["sections"][number]["videos"]>[number];
 
 /**
  * One or more clips under a section.
  *
- * A single video runs the full column width. Two or more become a row of equal
- * columns that collapses to a stack on a phone, where side-by-side would leave
- * each clip too small to read.
+ * A single video runs the full column width. Two or more become a two-column
+ * grid that collapses to a stack on a phone, where side-by-side would leave
+ * each clip too small to read. Any clip marked `span: "full"` takes the whole
+ * width — which is what lets a set of mismatched shapes sit together: the
+ * odd-shaped ones go full width and keep their own proportions instead of
+ * being cropped to match a neighbour they were never going to match.
  */
 export function CaseStudyVideos({ videos }: { videos: Banner[] }) {
   if (videos.length === 0) return null;
   if (videos.length === 1) return <CaseStudyBanner banner={videos[0]} />;
 
   // Clips recorded separately are rarely the exact same shape, and a row of
-  // boxes at slightly different heights reads as a mistake. Give them all the
-  // shallowest aspect in the set so the row lines up — `object-cover` takes the
-  // difference off the edges, which is invisible at a few percent.
-  const shared = Math.min(...videos.map((v) => v.width / v.height));
+  // boxes at slightly different heights reads as a mistake. Give the paired
+  // ones the shallowest aspect among themselves so the row lines up —
+  // `object-cover` takes the difference off the edges, which is invisible at a
+  // few percent. Full-width clips are excluded from that calculation: they have
+  // no neighbour to line up with, so they keep their own shape uncropped.
+  const paired = videos.filter((v) => v.span !== "full");
+  const shared = paired.length > 1 ? Math.min(...paired.map((v) => v.width / v.height)) : undefined;
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      {videos.map((video) => (
-        <CaseStudyBanner key={video.src} banner={video} aspect={shared} />
-      ))}
+      {videos.map((video) =>
+        video.span === "full" ? (
+          // A squarer clip given the full width gets taller than everything
+          // around it — a detail shot ends up the largest block on the page,
+          // which reads as emphasis nobody intended. Only genuinely wide clips
+          // run edge to edge; the rest are capped and centred.
+          <div
+            key={video.src}
+            className={cn(
+              "sm:col-span-2",
+              video.width / video.height < 1.8 && "mx-auto w-full max-w-[480px]",
+            )}
+          >
+            <CaseStudyBanner banner={video} />
+          </div>
+        ) : (
+          <CaseStudyBanner key={video.src} banner={video} aspect={shared} />
+        ),
+      )}
     </div>
   );
 }
@@ -48,6 +71,7 @@ export function CaseStudyBanner({ banner, aspect }: { banner: Banner; aspect?: n
   const videoRef = useRef<HTMLVideoElement>(null);
   const [reduced, setReduced] = useState(false);
   const [playing, setPlaying] = useState(true);
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -60,18 +84,35 @@ export function CaseStudyBanner({ banner, aspect }: { banner: Banner; aspect?: n
     return () => media.removeEventListener("change", apply);
   }, []);
 
+  // Playback waits until the clip is near the viewport, and that is a bandwidth
+  // decision more than a battery one: `preload="metadata"` fetches only the
+  // header, but calling play() pulls the whole file. Without this gate every
+  // clip on the page downloads in full the moment it mounts, however far down
+  // the page it sits and whether or not the reader ever scrolls to it.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (playing) {
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "200px" },
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (playing && inView) {
       // A rejected play() is normal — a background tab, or a policy this
-      // browser applies anyway. Swallow it rather than logging an unhandled
-      // rejection on every load.
-      void video.play().catch(() => setPlaying(false));
+      // browser applies anyway. Swallow it rather than latching `playing` off,
+      // which would leave the clip dead for the rest of the visit after one
+      // transient refusal.
+      void video.play().catch(() => {});
     } else {
       video.pause();
     }
-  }, [playing]);
+  }, [playing, inView]);
 
   return (
     <figure className="flex w-full flex-col gap-3">

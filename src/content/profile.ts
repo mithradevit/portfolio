@@ -11,9 +11,9 @@ export const profile = {
 
   // Hero tagline on the homepage. The italicized word renders in the serif
   // accent style, matching the "who *engineers*" pattern.
-  taglineLead: "I'm Mithra, a product designer who turns",
-  taglineAccent: "high-stakes chaos",
-  taglineTail: "into workflows people can trust under pressure.",
+  taglineLead: "I'm Mithra, a Senior Product Designer who makes",
+  taglineAccent: "complex products",
+  taglineTail: "easier to understand, operate, and trust.",
 
   bio: [
     "4+ years designing for domains where getting it wrong has real consequences — Public Safety, Healthcare, IoT.",
@@ -25,14 +25,7 @@ export const profile = {
   timezone: "Asia/Kolkata",
 
   // Pills under the intro paragraph — the shorthand for what she works on.
-  tags: [
-    "Enterprise UX",
-    "Human-AI interaction",
-    "Design systems",
-    "IoT & connected devices",
-    "0→1 product design",
-    "Accessibility",
-  ],
+  tags: ["Public safety", "Healthcare", "Clinical systems", "Connected health", "AI"],
 
   resumeUrl: "https://drive.google.com/file/d/1E3nt7TDm6jTCg5RmGJRj487b71H2yAhl/view?usp=sharing",
 

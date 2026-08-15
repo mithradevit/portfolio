@@ -27,6 +27,12 @@ export type CaseStudySection = {
   body: string[];
   /** A closing takeaway, rendered as a ruled callout after everything else. */
   note?: { label: string; body: string };
+  /** Core flows: a written point with the clip that shows it, side by side. */
+  flows?: {
+    title: string;
+    body: string;
+    video: { src: string; width: number; height: number; alt: string };
+  }[];
   /**
    * Full-width stacked cards, for material too long for the two-up `grid`.
    * `exclusions` renders inside a card as a marked list of things ruled out,
@@ -60,16 +66,30 @@ export type CaseStudySection = {
   /** Several stills, stacked full width in order. Use for diagrams that were
    *  captured in parts and read top to bottom. */
   images?: { src: string; alt: string; width: number; height: number; caption?: string }[];
+  /** Renders `images` edge-to-edge with no matting, border, or corner radius —
+   *  for photographs that are already the finished artefact, as opposed to a
+   *  screenshot that needs a frame to read as UI. */
+  imagesBare?: boolean;
   /**
    * Silent looping videos, rendered under this section's prose. One entry runs
    * full width; two or more sit side by side, stacking on a phone.
+   *
+   * `span: "full"` takes both columns, so a set can mix full-width clips with
+   * paired ones instead of forcing everything into equal halves.
    *
    * `width`/`height` are each video's intrinsic pixels — they reserve the right
    * aspect box so the page doesn't jump when the file loads. Give a `poster`
    * frame if there is one; without it the box is blank until the first frame
    * decodes.
    */
-  videos?: { src: string; width: number; height: number; poster?: string; alt: string }[];
+  videos?: {
+    src: string;
+    width: number;
+    height: number;
+    poster?: string;
+    alt: string;
+    span?: "full";
+  }[];
   /** Numbered callouts rendered beside the mockup — the design decision and the
    *  micro-interaction behind each part of the screen. */
   annotations?: { title: string; body: string }[];
@@ -82,6 +102,11 @@ export type CaseStudySection = {
     body: string;
     video?: { src: string; width: number; height: number; poster?: string; alt: string };
   }[];
+  /**
+   * A masonry wall of finished work — laid out by column, so pins of different
+   * heights stagger instead of aligning into rows. `brand` labels the pin.
+   */
+  pins?: { src: string; width: number; height: number; alt: string; brand?: string }[];
   /** A clearly-marked placeholder for content that needs real data/clearance before publishing. */
   slot?: { label: string; text: string };
 };

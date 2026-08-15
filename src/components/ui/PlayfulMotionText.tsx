@@ -138,63 +138,91 @@ export function PlayfulMotionText({
     };
   }, [enabled]);
 
+  const renderLetter = (item: Char, i: number) => {
+    if (item.char === " ") {
+      return (
+        <span key={i} data-letter aria-hidden className="inline-block">
+          &nbsp;
+        </span>
+      );
+    }
+
+    const center = centers[i];
+    let strength = 0;
+    let dx = 0;
+    let dy = 0;
+
+    if (enabled && pointer && center) {
+      const distX = pointer.x - center.x;
+      const distY = pointer.y - center.y;
+      const distance = Math.hypot(distX, distY);
+      if (distance < radius) {
+        // Falls off smoothly to nothing at the radius edge, so letters
+        // settle rather than snapping back when the cursor leaves range.
+        strength = 1 - distance / radius;
+        const away = distance === 0 ? 1 : -1 / distance;
+        dx = distX * away;
+        dy = distY * away;
+      }
+    }
+
+    if (direction === "up-down") dx = 0;
+    if (direction === "left-right") dy = 0;
+
+    const wobble = jitter(item.seed);
+    const eased = strength * strength;
+
+    return (
+      <motion.span
+        key={i}
+        data-letter
+        aria-hidden
+        className={`inline-block will-change-transform ${item.className ?? ""}`}
+        animate={{
+          x: dx * move * eased,
+          y: dy * move * eased,
+          rotate: wobble * rotate * eased,
+          scale: 1 + (scale - 1) * eased,
+        }}
+        transition={{
+          ...RETURN_TRANSITIONS[returnStyle],
+          delay: strength > 0 ? (1 - strength) * stagger : 0,
+        }}
+      >
+        {item.char}
+      </motion.span>
+    );
+  };
+
+  // Each letter is its own inline-block box, which gives the browser a line-
+  // break opportunity between every pair of letters — not just at spaces —
+  // and it takes those opportunities, splitting words mid-letter. Grouping
+  // consecutive non-space letters into a `whitespace-nowrap` word wrapper
+  // keeps the per-letter animation exactly as it was, but confines line
+  // breaks to the spaces between words, same as ordinary text.
+  const words: Char[][] = [[]];
+  chars.forEach((item) => {
+    if (item.char === " ") words.push([]);
+    else words[words.length - 1].push(item);
+  });
+
+  let cursor = 0;
+  const rendered = words.map((word, w) => {
+    const startsAt = cursor;
+    cursor += word.length;
+    const isLast = w === words.length - 1;
+    const space = isLast ? null : chars[cursor++];
+    return (
+      <span key={w} className="inline-block whitespace-nowrap">
+        {word.map((item, j) => renderLetter(item, startsAt + j))}
+        {space && renderLetter(space, cursor - 1)}
+      </span>
+    );
+  });
+
   return (
     <span ref={ref} className={`relative inline-block ${className ?? ""}`}>
-      {chars.map((item, i) => {
-        if (item.char === " ") {
-          return (
-            <span key={i} data-letter aria-hidden className="inline-block">
-              &nbsp;
-            </span>
-          );
-        }
-
-        const center = centers[i];
-        let strength = 0;
-        let dx = 0;
-        let dy = 0;
-
-        if (enabled && pointer && center) {
-          const distX = pointer.x - center.x;
-          const distY = pointer.y - center.y;
-          const distance = Math.hypot(distX, distY);
-          if (distance < radius) {
-            // Falls off smoothly to nothing at the radius edge, so letters
-            // settle rather than snapping back when the cursor leaves range.
-            strength = 1 - distance / radius;
-            const away = distance === 0 ? 1 : -1 / distance;
-            dx = distX * away;
-            dy = distY * away;
-          }
-        }
-
-        if (direction === "up-down") dx = 0;
-        if (direction === "left-right") dy = 0;
-
-        const wobble = jitter(item.seed);
-        const eased = strength * strength;
-
-        return (
-          <motion.span
-            key={i}
-            data-letter
-            aria-hidden
-            className={`inline-block will-change-transform ${item.className ?? ""}`}
-            animate={{
-              x: dx * move * eased,
-              y: dy * move * eased,
-              rotate: wobble * rotate * eased,
-              scale: 1 + (scale - 1) * eased,
-            }}
-            transition={{
-              ...RETURN_TRANSITIONS[returnStyle],
-              delay: strength > 0 ? (1 - strength) * stagger : 0,
-            }}
-          >
-            {item.char}
-          </motion.span>
-        );
-      })}
+      {rendered}
 
       {/* The visible letters are aria-hidden fragments; this carries the real
           sentence for assistive tech and for text selection fallbacks. */}

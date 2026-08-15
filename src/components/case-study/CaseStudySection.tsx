@@ -5,6 +5,9 @@ import type { CaseStudySection as CaseStudySectionType } from "@/content/case-st
 import { cn } from "@/lib/cn";
 import { CaseStudyDiagramBlock, CaseStudyMockupBlock, CaseStudySlot } from "./EvidenceMockups";
 import { CaseStudyVideos } from "./CaseStudyBanner";
+import { CaseStudyFlow } from "./CaseStudyFlow";
+import { CaseStudyInlineVideo } from "./CaseStudyInlineVideo";
+import { CaseStudyPins } from "./CaseStudyPins";
 
 /** Stable anchor id from a heading, shared with CaseStudyNav. */
 export function sectionId(heading: string) {
@@ -89,27 +92,7 @@ export function CaseStudySection({
               </span>
               <h4>{item.title}</h4>
               <p className="text-foreground-light text-[13px] leading-[1.55]">{item.body}</p>
-              {/* Inside the card, the clip is evidence for the point the card
-                  makes — so it drops the outer frame and caption the standalone
-                  player carries, which would double the card's own border. */}
-              {item.video && (
-                <div
-                  className="border-foreground/10 mt-1 w-full overflow-hidden rounded-[8px] border"
-                  style={{ aspectRatio: `${item.video.width} / ${item.video.height}` }}
-                >
-                  <video
-                    src={item.video.src}
-                    poster={item.video.poster}
-                    aria-label={item.video.alt}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              )}
+              {item.video && <CaseStudyInlineVideo video={item.video} />}
             </div>
           ))}
         </div>
@@ -209,19 +192,27 @@ export function CaseStudySection({
           ))}
         </div>
       )}
+      {section.pins && <CaseStudyPins pins={section.pins} />}
+      {section.flows && (
+        <div className="flex flex-col gap-3">
+          {section.flows.map((flow) => (
+            <CaseStudyFlow key={flow.title} flow={flow} />
+          ))}
+        </div>
+      )}
       {section.images && (
         // Side by side once there is more than one, stacking on a phone where
         // two columns would leave each too small to read. `items-start` keeps a
         // shorter image at its own height instead of stretching to match.
         <div
           className={cn(
-            "grid grid-cols-1 items-start gap-4",
+            "grid grid-cols-1 items-start gap-2",
             section.images.length > 1 && "sm:grid-cols-2",
           )}
         >
           {section.images.map((img) => (
             <figure key={img.src} className="flex w-full flex-col gap-3">
-              <div className="w-full overflow-hidden rounded-[14px] border border-[#E5E5EA] bg-white p-2 shadow-[0_1px_2px_rgb(0_0_0_/_5%),0_8px_24px_-12px_rgb(0_0_0_/_25%)] sm:p-3">
+              {section.imagesBare ? (
                 <Image
                   src={img.src}
                   alt={img.alt}
@@ -229,9 +220,21 @@ export function CaseStudySection({
                   height={img.height}
                   quality={92}
                   sizes="(min-width: 640px) 380px, 100vw"
-                  className="h-auto w-full rounded-[6px]"
+                  className="h-auto w-full"
                 />
-              </div>
+              ) : (
+                <div className="w-full overflow-hidden rounded-[14px] border border-[#E5E5EA] bg-white p-2 shadow-[0_1px_2px_rgb(0_0_0_/_5%),0_8px_24px_-12px_rgb(0_0_0_/_25%)] sm:p-3">
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    width={img.width}
+                    height={img.height}
+                    quality={92}
+                    sizes="(min-width: 640px) 380px, 100vw"
+                    className="h-auto w-full rounded-[6px]"
+                  />
+                </div>
+              )}
               {img.caption && (
                 <figcaption className="border-foreground/10 text-foreground-light border-l-2 py-0.5 pl-3 text-[13px] leading-[1.6]">
                   {img.caption}

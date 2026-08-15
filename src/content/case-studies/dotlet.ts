@@ -126,6 +126,167 @@ export const dotlet: CaseStudy = {
       ],
     },
     {
+      heading: "Core Flows",
+      body: [],
+      flows: [
+        {
+          title: "Shapes & colour",
+          body: "Shape and colour get chosen once and then left alone, which is why they sit in the sidebar rather than over the canvas. Recent colours are kept because most people are making a set, not a single icon, and the second one has to match the first.",
+          video: {
+            src: "/videos/dotlet-shapes-colour.mp4",
+            width: 304,
+            height: 352,
+            // TODO: written from the IA tree, not from watching the file.
+            alt: "The shape grid and colour controls being used in the sidebar.",
+          },
+        },
+        {
+          title: "Pen, eraser & move",
+          body: "Dots that land close enough join on their own. That is the whole trick — you decide where the marks go, and the joining is handled for you. Nothing here asks anyone to control a curve, which is the skill that keeps people out of vector tools in the first place.",
+          video: {
+            src: "/videos/dotlet-pen-merge.mp4",
+            width: 554,
+            height: 506,
+            // TODO: written from the tools list and the geometry note in
+            // "What Broke", not from watching the file.
+            alt: "The pen tool placing dots on the grid, which merge into a single shape.",
+          },
+        },
+        {
+          title: "Effects",
+          body: "Every one of these changes the finished look without touching the dots underneath, so anything can be tried and taken back. That mattered more than adding options: someone who is not sure they can undo a change will not risk making one.",
+          video: {
+            src: "/videos/dotlet-effects.mp4",
+            width: 1322,
+            height: 808,
+            // TODO: written from the effects list in the IA, not from watching
+            // the file — the source is named "Effects for text and font".
+            alt: "The effects sliders being adjusted, changing a shape from soft to crisp.",
+          },
+        },
+        {
+          title: "Image to shape",
+          body: "Starting from a picture is easier than starting from nothing, and a blank canvas is where most people give up. What comes back is dots rather than the picture itself, so it stays yours to change — and the original never ends up buried in the file.",
+          video: {
+            src: "/videos/dotlet-image-to-shape.mp4",
+            width: 410,
+            height: 484,
+            // TODO: written from the "Image to Shape → Upload image" branch of
+            // the IA, not from watching the file.
+            alt: "An uploaded image being turned into dots on the Dotlet grid.",
+          },
+        },
+        {
+          title: "Tour guide",
+          body: "Shown once, skippable, and before any sign-up is asked for. Anyone made to create an account before they understand what a tool is for usually never finds out, so the walkthrough comes first and the first thing anyone does is draw.",
+          video: {
+            src: "/videos/dotlet-tour-guide.mp4",
+            width: 1894,
+            height: 876,
+            // TODO: written from your note that this is the onboarding tour,
+            // not from watching the file.
+            alt: "The first-run walkthrough pointing out the canvas and tools.",
+          },
+        },
+      ],
+    },
+    {
+      heading: "Made in Dotlet",
+      body: [
+        "Everything below was drawn in the tool itself, with no other software involved at any point. They are here because a feature list only describes what a tool can do, and the marks are what it actually does.",
+        "None of them needed a curve to be adjusted by hand. The dots decide where the edges fall, so the person drawing is choosing placement rather than steering geometry — which is the whole reason someone with no vector training can finish one of these at all.",
+      ],
+      videos: [
+        {
+          src: "/videos/dotlet-make-muffi.mp4",
+          width: 1892,
+          height: 870,
+          // TODO: written from the frames, not from watching the file end to end.
+          alt: "A MUFFI wordmark drawn from an empty canvas, letter by letter.",
+        },
+        {
+          src: "/videos/dotlet-make-mark.mp4",
+          width: 1892,
+          height: 866,
+          // TODO: written from the frames, not from watching the file end to end.
+          alt: "An abstract monogram taking shape, with the effect sliders adjusted as it goes.",
+        },
+        {
+          src: "/videos/dotlet-marks.mp4",
+          width: 1896,
+          height: 876,
+          // TODO: written from the frames, not from watching the file end to end.
+          alt: "Several finished marks opened one after another in the editor.",
+        },
+        {
+          src: "/videos/dotlet-mail-club.mp4",
+          width: 870,
+          height: 590,
+          // TODO: written from the frames, not from watching the file end to end.
+          alt: "Close on the canvas as the MAIL CLUB mark is drawn, with the dot grid visible underneath.",
+        },
+      ],
+    },
+    {
+      heading: "What people created with Dotlet",
+      body: [
+        "Four identities, each one a wordmark drawn on the grid and then put straight onto packaging, posters and social. Ideation to execution ran 50% faster than the same work done conventionally.",
+      ],
+      pins: [
+        {
+          src: "/images/projects/dotlet/gallery/club-martini.webp",
+          width: 800,
+          height: 800,
+          alt: "The Club wordmark in mustard over a photograph of a hand holding a martini against green velvet.",
+        },
+        {
+          src: "/images/projects/dotlet/gallery/club-lockup-v2.webp",
+          width: 800,
+          height: 800,
+          alt: "The Club wordmark in mustard on olive green, with the line 'for the social butterflies' beneath it.",
+        },
+        {
+          src: "/images/projects/dotlet/gallery/sour-pickle-jar.webp",
+          width: 800,
+          height: 800,
+          alt: "The Sour Pickle wordmark in pink over a photograph of gherkins stacked above an open jar.",
+        },
+        {
+          src: "/images/projects/dotlet/gallery/sour-pickle-lockup-v2.webp",
+          width: 800,
+          height: 800,
+          alt: "The Sour Pickle wordmark in pink on dark green.",
+        },
+        {
+          src: "/images/projects/dotlet/gallery/muffi-oven.webp",
+          width: 800,
+          height: 800,
+          alt: "The Muffi wordmark in white over a photograph of cookies on a tray in an oven.",
+        },
+        {
+          src: "/images/projects/dotlet/gallery/muffi-lockup-v2.webp",
+          width: 800,
+          height: 800,
+          alt: "The Muffi wordmark in white on deep brown, with the line 'baked with love & love'.",
+        },
+      ],
+      imagesBare: true,
+      images: [
+        {
+          src: "/images/projects/dotlet/gallery/mail-club-street.webp",
+          width: 800,
+          height: 800,
+          alt: "The Mail Club wordmark in yellow over a photograph of a brownstone street, with the line 'a small club for big feelings'.",
+        },
+        {
+          src: "/images/projects/dotlet/gallery/mail-club-boxes.webp",
+          width: 800,
+          height: 800,
+          alt: "'You've got a MAIL' in yellow over a photograph of a New York street corner, with the mailboxes outlined in the same yellow.",
+        },
+      ],
+    },
+    {
       heading: "How It Did It",
       body: [
         "Writing a full Functional Requirements Document before opening Figma Make was the single decision that made everything else go more smoothly.",
@@ -218,29 +379,6 @@ export const dotlet: CaseStudy = {
             },
           ],
         },
-      ],
-    },
-    {
-      heading: "Specification Before Code",
-      body: [
-        "Most AI-assisted builds open with a vague prompt and iterate until something looks right. I did the opposite — a full functional requirements document before touching Figma Make, defining what the tool is, how it behaves, and what it will never do.",
-        "Scope widened deliberately along the way, from an icon tool to anything that would otherwise need a path editor. The vocabulary was rewritten so every term in the spec, the UI labels, and the code matched — no gap between what the document said and what Make built.",
-      ],
-      bullets: [
-        "Governing principle, written before any code: the product must not reintroduce a technical skill requirement at any stage.",
-        "Prompts were rewritten from descriptions to exact values — corner-radius ratios, curve formulas, namespace declarations — which measurably cut the correction rounds per feature.",
-      ],
-    },
-    {
-      heading: "Design Decisions",
-      body: [
-        "The out-of-scope list carried the reasoning, not just the exclusions, and that reasoning became the test every later feature idea had to pass.",
-      ],
-      bullets: [
-        "No freeform bezier editing — it reintroduces the exact barrier the product exists to remove. If someone needs a pen tool, they already have one.",
-        "No AI-generated shapes — the tool should respond to what you place, not generate for you. Skill-free is not the same as hands-off.",
-        "No raster import — Dotlet creates from scratch rather than converting.",
-        "No motion export — it would need a second rendering pipeline with no connection to the gooey engine.",
       ],
     },
     {

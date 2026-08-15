@@ -25,7 +25,12 @@ export const services: Service[] = [
   {
     name: "Enterprise UX",
     icon: "LayoutGrid",
-    items: ["Complex workflows", "Dashboards", "Information architecture", "Admin tooling"],
+    items: [
+      "Complex workflows",
+      "Information architecture",
+      "Cross-platform experiences",
+      "Enterprise products",
+    ],
   },
   {
     name: "Design Systems",
@@ -33,14 +38,14 @@ export const services: Service[] = [
     items: ["Component libraries", "Tokens & theming", "Documentation", "Governance"],
   },
   {
-    name: "Human–AI Interaction",
+    name: "AI-Native Product Design",
     icon: "Sparkles",
-    items: ["AI-assisted workflows", "Trust & explainability", "Prompt-driven UI", "Evaluation"],
+    items: ["AI-assisted workflows", "Human-AI interaction", "AI prototyping", "Evaluation"],
   },
   {
-    name: "IoT & Connected Devices",
+    name: "Connected Products",
     icon: "Radio",
-    items: ["Companion apps", "Pairing & onboarding", "Data visualisation", "Cross-device flows"],
+    items: ["IoT", "Device ecosystems", "Companion apps", "Cross-device flows"],
   },
   {
     name: "Research & Accessibility",
