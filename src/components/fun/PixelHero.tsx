@@ -120,7 +120,8 @@ export function PixelHero({
 }: {
   image: string;
   alt: string;
-  children: ReactNode;
+  /** Optional — the hero also works as a bare pixel-reveal panel. */
+  children?: ReactNode;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -451,19 +452,23 @@ export function PixelHero({
         ))}
       </div>
 
-      {/* Editorial type, sitting above the grid. */}
-      <div
-        ref={textRef}
-        className="pointer-events-none absolute inset-0 flex flex-col justify-center p-6 lg:p-12"
-        style={{
-          color: "var(--foreground)",
-          transition: "color 0.25s ease-out, text-shadow 0.25s ease-out",
-        }}
-      >
-        <div ref={boundsRef} className="max-w-[760px]">
-          {children}
+      {/* Editorial type, sitting above the grid. Skipped entirely when the
+          hero carries no headline — an empty full-bleed layer would still be
+          sampled by the contrast pass every frame for nothing. */}
+      {children && (
+        <div
+          ref={textRef}
+          className="pointer-events-none absolute inset-0 flex flex-col justify-center p-6 lg:p-12"
+          style={{
+            color: "var(--foreground)",
+            transition: "color 0.25s ease-out, text-shadow 0.25s ease-out",
+          }}
+        >
+          <div ref={boundsRef} className="max-w-[760px]">
+            {children}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

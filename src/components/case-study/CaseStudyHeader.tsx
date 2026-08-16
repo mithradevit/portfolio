@@ -12,7 +12,9 @@ export function CaseStudyHeader({
     <div className="flex w-full flex-col gap-8">
       {/* Back lives in CaseStudyNav now, so it stays on screen while reading. */}
       <div className="flex flex-col gap-2">
-        <h1>{project.title}</h1>
+        {/* Geist, not the serif the bare `h1` rule sets. The `!` is required:
+            that rule is unlayered and beats a plain utility. */}
+        <h1 className="font-sans! tracking-[-0.03em]!">{project.title}</h1>
         <h4 className="text-foreground-light">
           {project.companyUrl ? (
             <a href={project.companyUrl} target="_blank" rel="noopener noreferrer" data-cursor="pointer" className="hover:text-primary">

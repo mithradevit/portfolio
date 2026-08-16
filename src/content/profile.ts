@@ -16,13 +16,15 @@ export const profile = {
   taglineTail: "easier to understand, operate, and trust.",
 
   bio: [
-    "4+ years designing for domains where getting it wrong has real consequences — Public Safety, Healthcare, IoT.",
-    "I take messy, high-stakes data and turn it into workflows people can actually use under pressure. I move fast, work close to engineering, and increasingly build alongside AI tools instead of just designing around them.",
-    "I have a soft spot for data-dense systems, impossible workflows, and problems that come with too many tabs open.",
+    "I've always been curious about how things work — products, people, and everything in between.",
+    "I've spent the last 4+ years building digital products across B2B and enterprise software — healthcare, public safety, and connected devices. I love taking things apart, understanding how they work, and making them simpler. The rest of the time, I read psychology, make things, and look for good coffee.",
   ],
 
   // Drives the live clock in the intro block.
   timezone: "Asia/Kolkata",
+  /** Bangalore, to four decimal places — roughly 11m of precision, which is
+   *  city-centre accurate without pointing at anyone's front door. */
+  coordinates: { lat: 12.9716, lon: 77.5946 },
 
   // Pills under the intro paragraph — the shorthand for what she works on.
   tags: ["Public safety", "Healthcare", "Clinical systems", "Connected health", "AI"],

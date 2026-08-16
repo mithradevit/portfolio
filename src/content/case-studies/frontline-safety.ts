@@ -13,17 +13,18 @@ import type { CaseStudy } from "./types";
 
 export const frontlineSafety: CaseStudy = {
   slug: "frontline-safety",
-  role: "Senior Product Designer — sole designer across all surfaces",
+  role: "Sole UX designer — end-to-end across mobile, web DEMS and device configuration",
   timeline: "May 2024 – May 2026",
   team: "Embedded with a 40+ person product & engineering org",
   skills: ["Enterprise UX", "Information Architecture", "AI-Assisted Workflows", "Cross-Platform Design Systems"],
-  nda: "Covered by an NDA. Customer agencies, deployments and commercial figures are withheld, and product and entity names are anonymised. The screens below are shown with invented sample data, and each is paired with a simplified schematic isolating the pattern it demonstrates — no real recording, case, device or personnel record appears anywhere on this page.",
+  nda: "Covered by an NDA with an Australian state police force. The force, its commands and districts, deployment scale and all commercial figures are withheld, and product and entity names are anonymised. The screens below are shown with invented sample data, and each is paired with a simplified schematic isolating the pattern it demonstrates — no real recording, case, exhibit, device or sworn-officer record appears anywhere on this page.",
   sections: [
     {
       heading: "Overview",
       body: [
-        "Vault is a digital evidence management platform for body-worn cameras, in-car video and fixed streaming cameras, used by law-enforcement-style organisations. It spans two front-ends over one data model: an admin console for evidence managers, and a field app for officers.",
-        "I was the sole designer on it for two years, working across web, mobile and kiosk — from ecosystem architecture and information architecture down to component states and interaction specs.",
+        "I started working on this project in March 2024.",
+        "This wasn't a single product. It was a connected system of hardware and software — body-worn cameras, in-car cameras, 4G cameras, a kiosk with a palm-vein scanner, mobile applications, and the web-based evidence platform. These systems had to work across hardware-to-software and hardware-to-hardware integrations, while supporting different roles, permissions, and operational workflows.",
+        "Before designing anything, I spent hours going through user guides, technical documentation, role and responsibility documents, existing workflows, and system behaviours to understand how everything connected.",
       ],
       image: {
         src: "/images/projects/frontline-safety/evidence-story.webp",
@@ -34,8 +35,6 @@ export const frontlineSafety: CaseStudy = {
           "The whole problem in one line: everything captured lands somewhere, and one person has to turn that pile into something a court will accept. Every decision in this case study sits between the box and the certificate.",
       },
       diagram: "ecosystem",
-      diagramCaption:
-        "Four surfaces, one designer. Capture happens in motion; review happens at a desk. Everything in this case study is about the distance between those two conditions.",
     },
     {
       heading: "The Challenge",

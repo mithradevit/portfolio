@@ -22,17 +22,6 @@ export function IntroBlock() {
           </p>
         ))}
       </div>
-
-      <div className="flex flex-wrap gap-2 pt-1">
-        {profile.tags.map((tag) => (
-          <span
-            key={tag}
-            className="border-foreground/10 bg-foreground/5 text-foreground-light hover:border-primary/40 hover:text-foreground rounded-full border px-3 py-1.5 font-mono text-[12px] tracking-wide uppercase transition-colors duration-300"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
     </div>
   );
 }

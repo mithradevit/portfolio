@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { vinylTrack } from "@/content/audio";
 import { cn } from "@/lib/cn";
 
@@ -8,6 +8,19 @@ export function VinylPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
+  // Hidden until the reader has scrolled past the first screen. The player is
+  // pinned to the bottom-left, which is exactly where the hero's title sits;
+  // padding the hero around it only moved the collision to the next window
+  // size. Deferring it means the hero owns its own corner and the player
+  // appears once there is nothing there to cover.
+  const [past, setPast] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setPast(window.scrollY > window.innerHeight * 0.6);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   function toggle() {
     const audio = audioRef.current;
@@ -30,7 +43,16 @@ export function VinylPlayer() {
   }
 
   return (
-    <div className="fixed bottom-6 left-6 z-40 flex flex-col items-start gap-2">
+    // Desktop only. On a phone the record covers the bottom-left of the hero,
+    // where the content it hides has nowhere else to go.
+    // `pointer-events-none` while hidden so an invisible record can't swallow
+    // clicks meant for the hero underneath it.
+    <div
+      className={cn(
+        "fixed bottom-6 left-6 z-40 hidden flex-col items-start gap-2 transition-opacity duration-500 lg:flex",
+        past ? "opacity-100" : "pointer-events-none opacity-0",
+      )}
+    >
       <audio
         ref={audioRef}
         src={vinylTrack.src}

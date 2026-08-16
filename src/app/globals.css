@@ -77,6 +77,32 @@ html {
   }
 }
 
+/* Section-by-section scrolling.
+ *
+ * `proximity`, not `mandatory`: sections like the project grid and the skills
+ * graph are taller than the viewport, and a mandatory snap fights the reader
+ * every time they try to stop halfway down one. Proximity only pulls when the
+ * scroll already ends near a boundary, so a deliberate stop mid-section is
+ * left alone while a flick between sections lands cleanly.
+ *
+ * The snap position honours the `scroll-padding-top` set above, so a section
+ * comes to rest below the fixed header rather than underneath it. */
+html {
+  scroll-snap-type: y proximity;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+}
+
+/* Snapping is motion the reader didn't ask for — it moves the page further
+   than the gesture did. Off entirely when they've said they don't want that. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+  }
+}
+
 @media (pointer: fine) {
   body {
     cursor: none;
@@ -280,6 +306,44 @@ a {
 @keyframes vinyl-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* The orbit's box on a 1366-class laptop. At 74vw it came to about 1011px
+   there, and since the orbit radius is a percentage of its own box, the
+   cluster spread most of the way across the screen. Scoped to that window
+   size alone — every other display keeps the 74vw / 1240px rule. */
+@media (min-width: 1280px) and (max-width: 1440px) and (max-height: 820px) {
+  .orbit-laptop {
+    max-width: 62vw;
+    /* The tiles scale by whichever of width or height is tighter, and at 38vh
+       the height was the binding one — the photos came out at 81% of their
+       reference size. A taller box lifts that limit, so the tiles grow while
+       the path stays narrow. */
+    height: 43vh;
+  }
+}
+
+/* Full-HD and larger. The tiles scale by whichever of width or height is
+   tighter, and at 38vh height was the limit here too — the photos sat at 114%
+   of reference while the box had room for more. There is 228px of clear space
+   below the cluster at this size, so the extra height comes out of slack. */
+@media (min-width: 1600px) and (min-height: 900px) {
+  .orbit-laptop {
+    height: 46vh;
+  }
+}
+
+/* The clock's colon. Fades rather than disappearing: a hard on/off flicker at
+   1Hz is the one animation people find genuinely irritating. */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0.25;
   }
 }
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { about } from "@/content/about";
 
 /**
@@ -18,9 +18,27 @@ import { about } from "@/content/about";
 
 const { hero } = about;
 
+/** How long each photo holds before the strip moves on, and the crossfade. */
+const HOLD_MS = 4000;
+const FADE_S = 0.6;
+
 export function ProfileWindow() {
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
   const photo = hero.photos[active];
+  const count = hero.photos.length;
+
+  // A timeout keyed on `active` rather than one long-lived interval: clicking
+  // a thumbnail changes `active`, which tears this down and starts a fresh
+  // full-length hold. With an interval the click could land a moment before
+  // the next tick and the chosen photo would flash past.
+  useEffect(() => {
+    if (paused || count < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const id = setTimeout(() => setActive((i) => (i + 1) % count), HOLD_MS);
+    return () => clearTimeout(id);
+  }, [active, paused, count]);
 
   return (
     // Centred composition, not a full-bleed row. The page shell is 1800px
@@ -28,8 +46,18 @@ export function ProfileWindow() {
     // stretches the body copy past a readable measure. 1040px with a 100px
     // gutter is the proportion the reference holds.
     <div className="mx-auto grid w-full max-w-[1040px] grid-cols-1 items-center gap-10 lg:grid-cols-[460px_1fr] lg:gap-[100px]">
-      {/* Window. */}
-      <div className="border-foreground/[0.08] bg-background flex h-[460px] w-full flex-col overflow-hidden rounded-[14px] border shadow-[inset_0_1px_0_rgb(255_255_255_/_80%),0_2px_6px_rgb(50_64_79_/_6%),0_8px_20px_rgb(50_64_79_/_8%)]">
+      {/* Window.
+          Hovering or tabbing into the window holds the current photo. Someone
+          reaching for a thumbnail is looking at this one, and having it swap
+          out from under the cursor is the whole reason auto-advancing
+          carousels feel hostile. */}
+      <div
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => setPaused(false)}
+        className="border-foreground/[0.08] bg-background flex h-[460px] w-full flex-col overflow-hidden rounded-[14px] border shadow-[inset_0_1px_0_rgb(255_255_255_/_80%),0_2px_6px_rgb(50_64_79_/_6%),0_8px_20px_rgb(50_64_79_/_8%)]"
+      >
         {/* Chrome. */}
         <div className="border-foreground/[0.08] bg-foreground/[0.04] flex shrink-0 items-center gap-2 border-b px-3.5 py-3">
           <span className="h-3 w-3 rounded-full bg-[#ff5f57]/60" />
@@ -44,22 +72,37 @@ export function ProfileWindow() {
             inconsistent switching between them. A plain centre crop, aligned
             the same way every time, is what makes six different photos feel
             like one steady frame. */}
+        {/* Crossfade rather than a cut. `AnimatePresence` without `mode` keeps
+            both frames mounted through the transition, so the outgoing photo
+            fades under the incoming one and the window is never briefly empty.
+            `initial={false}` suppresses the fade on first paint — the photo
+            should already be there when the page arrives. */}
         <div className="relative flex min-h-0 flex-1 items-center justify-center p-3">
-          {photo?.src ? (
-            <Image
-              key={photo.src}
-              src={photo.src}
-              alt={photo.alt}
-              fill
-              quality={90}
-              sizes="(min-width: 1024px) 480px, 100vw"
-              className="rounded object-cover object-center"
-            />
-          ) : (
-            <div className="border-foreground/10 text-foreground-light flex h-full w-full items-center justify-center rounded border border-dashed">
-              <h4>Photo {active + 1}</h4>
-            </div>
-          )}
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={photo?.src || `placeholder-${active}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: FADE_S, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
+              {photo?.src ? (
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  quality={90}
+                  sizes="(min-width: 1024px) 480px, 100vw"
+                  className="rounded object-cover object-center"
+                />
+              ) : (
+                <div className="border-foreground/10 text-foreground-light flex h-full w-full items-center justify-center rounded border border-dashed">
+                  <h4>Photo {active + 1}</h4>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         {/* Thumbnail strip. */}
