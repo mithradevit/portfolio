@@ -25,6 +25,16 @@ export const dotlet: CaseStudy = {
         "The gooey filter engine is the whole product: an SVG feGaussianBlur and feColorMatrix pipeline running live in the browser, turning separate dots into one organic shape as you draw, with no rasterisation until export. The skill the tool asks for is placement, which everyone already has.",
         "I built it solo in 10 days for Config Makeathon 2026, entirely inside Figma Make, and later used it as the live case study for a Friends of Figma workshop on AI-native design workflows.",
       ],
+      embed: {
+        src: "https://halo-cool-93973682.figma.site/",
+        title: "Dotlet — the live vector tool",
+        // 16:10 rather than 16:9: the tool is one screen with a fixed right
+        // sidebar, and at 16:9 the canvas between the header and the palette
+        // gets squeezed to a strip.
+        ratio: "aspect-[16/10]",
+        caption:
+          "The real tool, running here. Place dots on the grid and they merge as you go — or open it full screen, which is the better window for drawing anything you want to keep.",
+      },
       videos: [
         {
           src: "/videos/dotlet.mp4",

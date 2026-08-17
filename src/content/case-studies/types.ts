@@ -18,7 +18,17 @@ export type CaseStudyDiagram =
   | "data-model"
   | "flow"
   | "user-flows"
-  | "artefacts";
+  | "artefacts"
+  /* Clinical trial matching — see components/case-study/TrialDiagrams.tsx.
+     Diagrams rather than screen recreations: there are no shipped screens to
+     rebuild from, and inventing UI would assert an appearance the product may
+     never have had. These describe the reasoning, which is documented. */
+  | "trial-chain"
+  | "matching-modes"
+  | "design-constraints"
+  | "eligibility-loop"
+  | "criteria-logic"
+  | "evaluation-matrix";
 
 export type CaseStudySection = {
   heading: string;
@@ -69,7 +79,22 @@ export type CaseStudySection = {
   /** Renders `images` edge-to-edge with no matting, border, or corner radius —
    *  for photographs that are already the finished artefact, as opposed to a
    *  screenshot that needs a frame to read as UI. */
+  /** A collapsed list, opened on demand — for evidence long enough to bury
+   *  what follows it. */
+  accordion?: { label: string; bullets: string[] };
+  /** Users quoted in their own words, rotated one at a time. */
+  voices?: CaseStudyVoice[];
+  /** Before → after outcomes, ticked. `label` is the measure, `body` the change. */
+  measures?: { label: string; body: string }[];
   imagesBare?: boolean;
+  /** Columns for `images` at desktop width. Defaults to 2. Use 4 for a strip
+   *  meant to be read as a run rather than page by page. */
+  imagesCols?: 2 | 3 | 4;
+  /** Sets the image set on the same iOS grouped surface the diagrams use, so a
+   *  set of artefacts reads as one exhibit rather than loose pictures. */
+  imagesSurface?: boolean;
+  /** Small uppercase label on that surface. Only used with `imagesSurface`. */
+  imagesLabel?: string;
   /**
    * Silent looping videos, rendered under this section's prose. One entry runs
    * full width; two or more sit side by side, stacking on a phone.
@@ -90,6 +115,21 @@ export type CaseStudySection = {
     alt: string;
     span?: "full";
   }[];
+  /**
+   * The live product, running in the page.
+   *
+   * Only for something we control — this hands the reader a real interactive
+   * app rather than a recording of one, so it has to be a URL that will still
+   * be there and still be the same thing. `ratio` sets the box's aspect so the
+   * page reserves the right height before the frame loads.
+   */
+  embed?: {
+    src: string;
+    /** The iframe's accessible name — announced in place of its contents. */
+    title: string;
+    ratio: string; // Tailwind aspect class, e.g. "aspect-[16/10]"
+    caption?: string;
+  };
   /** Numbered callouts rendered beside the mockup — the design decision and the
    *  micro-interaction behind each part of the screen. */
   annotations?: { title: string; body: string }[];
@@ -111,10 +151,27 @@ export type CaseStudySection = {
   slot?: { label: string; text: string };
 };
 
+/** One user, quoted in their own words. Rendered on a rotation, one at a time. */
+export type CaseStudyVoice = {
+  /** Who is speaking — the persona, not a real name. */
+  name: string;
+  /** What they do, and what breaks for them today. Shown on their card. */
+  context?: string;
+  /** The quote itself, without surrounding quotation marks. */
+  quote: string;
+};
+
 export type CaseStudy = {
   slug: string; // must match a slug in content/projects.ts
   role: string;
   timeline: string;
+  /** Where the work happened. Optional — the header drops the column when it
+   *  is absent rather than leaving a labelled blank. */
+  location?: string;
+  /** What was actually shipped, in counts. Sits in the header rather than as a
+   *  stat row inside a section — it is a fact about the engagement, like role
+   *  and timeline, not a finding the prose has to earn. */
+  scope?: string;
   team: string;
   skills: string[];
   sections: CaseStudySection[];

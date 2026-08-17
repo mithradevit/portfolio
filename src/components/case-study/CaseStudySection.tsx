@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { AudioWaveform, PenTool, X } from "lucide-react";
+import { AudioWaveform, Check, PenTool, X } from "lucide-react";
 import type { CaseStudySection as CaseStudySectionType } from "@/content/case-studies";
 import { cn } from "@/lib/cn";
 import { CaseStudyDiagramBlock, CaseStudyMockupBlock, CaseStudySlot } from "./EvidenceMockups";
@@ -8,6 +8,9 @@ import { CaseStudyVideos } from "./CaseStudyBanner";
 import { CaseStudyFlow } from "./CaseStudyFlow";
 import { CaseStudyInlineVideo } from "./CaseStudyInlineVideo";
 import { CaseStudyPins } from "./CaseStudyPins";
+import { CaseStudyEmbed } from "./CaseStudyEmbed";
+import { CaseStudyVoices } from "./CaseStudyVoices";
+import { CaseStudyAccordion } from "./CaseStudyAccordion";
 
 /** Stable anchor id from a heading, shared with CaseStudyNav. */
 export function sectionId(heading: string) {
@@ -93,6 +96,41 @@ export function CaseStudySection({
               <h4>{item.title}</h4>
               <p className="text-foreground-light text-[13px] leading-[1.55]">{item.body}</p>
               {item.video && <CaseStudyInlineVideo video={item.video} />}
+            </div>
+          ))}
+        </div>
+      )}
+      {section.accordion && (
+        <CaseStudyAccordion
+          label={section.accordion.label}
+          bullets={section.accordion.bullets}
+        />
+      )}
+      {section.voices && <CaseStudyVoices voices={section.voices} />}
+      {section.measures && (
+        // Before → after, ticked. Green rather than the accent orange: a tick
+        // reads as "confirmed" in green almost universally, and the accent is
+        // already carrying navigation and emphasis elsewhere on the page.
+        <div className="border-foreground/10 bg-background overflow-hidden rounded-[12px] border">
+          {section.measures.map((m, i) => (
+            <div
+              key={m.label}
+              className={cn(
+                "flex items-start gap-3 p-3.5 sm:items-center sm:gap-4",
+                i > 0 && "border-foreground/10 border-t",
+              )}
+            >
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/12 sm:mt-0">
+                <Check size={12} strokeWidth={3} className="text-emerald-600 dark:text-emerald-400" />
+              </span>
+              <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-4">
+                <span className="text-foreground shrink-0 text-[13px] font-medium sm:w-[168px]">
+                  {m.label}
+                </span>
+                <span className="text-foreground-light min-w-0 text-[13px] leading-[1.55]">
+                  {m.body}
+                </span>
+              </div>
             </div>
           ))}
         </div>
@@ -204,13 +242,43 @@ export function CaseStudySection({
         // Side by side once there is more than one, stacking on a phone where
         // two columns would leave each too small to read. `items-start` keeps a
         // shorter image at its own height instead of stretching to match.
+        //
+        // `imagesCols` overrides the default two-up for sets that are meant to
+        // be read as one strip — four portrait notebook pages, say, where the
+        // point is the run of them rather than any single page's detail.
+        //
+        // `imagesSurface` sets the whole set on the same iOS grouped ground the
+        // diagrams use, so a set of artefacts reads as one exhibit instead of
+        // loose pictures dropped between paragraphs. Pinned light for the same
+        // reason those are: the artefacts are ink on white paper.
+        <div
+          className={cn(
+            section.imagesSurface &&
+              "border-foreground/10 bg-foreground/[0.02] overflow-hidden rounded-[12px] border p-4",
+          )}
+        >
+          {section.imagesSurface && section.imagesLabel && (
+            <span className="text-primary mb-3 block font-mono text-[11px] tracking-[0.08em] uppercase">
+              {section.imagesLabel}
+            </span>
+          )}
         <div
           className={cn(
             "grid grid-cols-1 items-start gap-2",
-            section.images.length > 1 && "sm:grid-cols-2",
+            section.images.length > 1 &&
+              (section.imagesCols === 4
+                ? "grid-cols-2 lg:grid-cols-4"
+                : section.imagesCols === 3
+                  ? "sm:grid-cols-3"
+                  : "sm:grid-cols-2"),
           )}
         >
-          {section.images.map((img) => (
+          {section.images.map((img) => {
+            const sizes =
+              section.imagesCols === 4
+                ? "(min-width: 1024px) 200px, (min-width: 640px) 45vw, 50vw"
+                : "(min-width: 640px) 380px, 100vw";
+            return (
             <figure key={img.src} className="flex w-full flex-col gap-3">
               {section.imagesBare ? (
                 <Image
@@ -219,7 +287,7 @@ export function CaseStudySection({
                   width={img.width}
                   height={img.height}
                   quality={92}
-                  sizes="(min-width: 640px) 380px, 100vw"
+                  sizes={sizes}
                   className="h-auto w-full"
                 />
               ) : (
@@ -230,7 +298,7 @@ export function CaseStudySection({
                     width={img.width}
                     height={img.height}
                     quality={92}
-                    sizes="(min-width: 640px) 380px, 100vw"
+                    sizes={sizes}
                     className="h-auto w-full rounded-[6px]"
                   />
                 </div>
@@ -241,7 +309,9 @@ export function CaseStudySection({
                 </figcaption>
               )}
             </figure>
-          ))}
+            );
+          })}
+        </div>
         </div>
       )}
       {section.image && (
@@ -268,6 +338,7 @@ export function CaseStudySection({
           )}
         </figure>
       )}
+      {section.embed && <CaseStudyEmbed embed={section.embed} />}
       {section.videos && <CaseStudyVideos videos={section.videos} />}
       {section.diagram && <CaseStudyDiagramBlock id={section.diagram} caption={section.diagramCaption} />}
       {section.mockup && <CaseStudyMockupBlock id={section.mockup} caption={section.mockupCaption} />}

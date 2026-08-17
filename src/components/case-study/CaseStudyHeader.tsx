@@ -27,9 +27,19 @@ export function CaseStudyHeader({
         </h4>
       </div>
 
-      <div className="grid grid-cols-2 gap-6 border-y border-foreground/10 py-6 sm:grid-cols-4">
+      {/* Four fields sit in one four-up row. Once location or scope is added
+          the row would squeeze past reading width, so it drops to three across
+          and wraps — two tidy rows of three rather than six thin columns. */}
+      <div
+        className={
+          "grid grid-cols-2 gap-6 border-y border-foreground/10 py-6 " +
+          (caseStudy.location || caseStudy.scope ? "sm:grid-cols-3" : "sm:grid-cols-4")
+        }
+      >
         <MetaField label="Role" value={caseStudy.role} />
         <MetaField label="Timeline" value={caseStudy.timeline} />
+        {caseStudy.location && <MetaField label="Location" value={caseStudy.location} />}
+        {caseStudy.scope && <MetaField label="Scope" value={caseStudy.scope} />}
         <MetaField label="Team" value={caseStudy.team} />
         <MetaField label="Skills" value={caseStudy.skills.join(", ")} />
       </div>

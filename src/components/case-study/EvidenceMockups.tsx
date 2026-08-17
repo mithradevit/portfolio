@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import type { CaseStudyDiagram, CaseStudyMockup } from "@/content/case-studies/types";
+import { trialDiagrams } from "./TrialDiagrams";
 
 /**
  * Recreations of Vault's key surfaces, rebuilt in React against the product's
@@ -1084,6 +1085,8 @@ const diagrams: Record<CaseStudyDiagram, () => React.ReactElement> = {
   flow: FlowDiagram,
   "user-flows": UserFlowsDiagram,
   artefacts: ArtefactsDiagram,
+  // Clinical trial matching — own palette, kept in their own file.
+  ...trialDiagrams,
 };
 
 const mockups: Record<CaseStudyMockup, () => React.ReactElement> = {
