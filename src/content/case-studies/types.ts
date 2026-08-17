@@ -67,10 +67,40 @@ export type CaseStudySection = {
     }[];
   }[];
   bullets?: string[];
+  /**
+   * The same material as `bullets`, but each point split into the claim and
+   * the evidence for it, and rendered as rows that open individually. Use when
+   * the points are long enough that a plain bulleted list becomes a wall — the
+   * titles alone then read as a summary.
+   *
+   * Not the same as `accordion`, which hides one whole list behind a single
+   * label. This gives every point its own row.
+   */
+  findings?: { title: string; body: string }[];
   mockup?: CaseStudyMockup;
   mockupCaption?: string;
   diagram?: CaseStudyDiagram;
   diagramCaption?: string;
+  /**
+   * A photograph set beside the section's prose rather than under it — text on
+   * the left, image on the right, stacking on a phone. For a photograph of the
+   * setting the product runs in, where the picture is context for the words
+   * rather than an artefact the words explain.
+   */
+  bodyAside?: { src: string; alt: string; width: number; height: number };
+  /**
+   * Lets `bodyAside` stand beside the prose *and* the section's `grid`, with the
+   * grid becoming one ruled list in the left column. Use when the prose alone is
+   * too short to hold up its half of the row — a lone sentence against a tall
+   * photograph reads as an accident rather than a pairing.
+   */
+  bodyAsideSpan?: boolean;
+  /** Puts `image` at the top of the section, above the prose and any cards —
+   *  for a photograph or screen that sets the scene the section then explains. */
+  imageLead?: boolean;
+  /** Drops the white mat around `image`. Photographs are already their own
+   *  edge; the mat exists for ink-on-paper and light-mode screens. */
+  imageBare?: boolean;
   /** A real image (sketch, photo, exported artefact) rendered above the diagram/mockup. */
   image?: { src: string; alt: string; width: number; height: number; caption?: string };
   /** Several stills, stacked full width in order. Use for diagrams that were
@@ -95,6 +125,9 @@ export type CaseStudySection = {
   imagesSurface?: boolean;
   /** Small uppercase label on that surface. Only used with `imagesSurface`. */
   imagesLabel?: string;
+  /** Fraction of the column the image set may occupy, e.g. 0.7 for 70%. Use
+   *  when tall artefacts would otherwise outweigh the prose around them. */
+  imagesScale?: number;
   /**
    * Silent looping videos, rendered under this section's prose. One entry runs
    * full width; two or more sit side by side, stacking on a phone.
@@ -136,10 +169,16 @@ export type CaseStudySection = {
   /** Big numbers rendered as a stat-tile row, e.g. research volume or an outcome metric. */
   stats?: { value: string; label: string }[];
   /** A numbered/titled card grid — used for authored, ordered sets like design principles. */
+  /** Stacks `grid` as one card per row, full width, instead of a column track —
+   *  for a set whose titles and bodies are too long to survive narrow columns. */
+  gridRows?: boolean;
   /** Numbered cards. Each may carry its own clip, shown inside the card. */
   grid?: {
     title: string;
     body: string;
+    /** A line icon for the card, drawn from the site's lucide set. Names map in
+     *  CaseStudySection — keep them descriptive of the idea, not the glyph. */
+    icon?: "records" | "protocol" | "criteria" | "imaging" | "status";
     video?: { src: string; width: number; height: number; poster?: string; alt: string };
   }[];
   /**

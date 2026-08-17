@@ -1,6 +1,16 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { AudioWaveform, Check, PenTool, X } from "lucide-react";
+import {
+  AudioWaveform,
+  Check,
+  Database,
+  Eye,
+  FileText,
+  ListChecks,
+  PenTool,
+  Route,
+  X,
+} from "lucide-react";
 import type { CaseStudySection as CaseStudySectionType } from "@/content/case-studies";
 import { cn } from "@/lib/cn";
 import { CaseStudyDiagramBlock, CaseStudyMockupBlock, CaseStudySlot } from "./EvidenceMockups";
@@ -11,6 +21,17 @@ import { CaseStudyPins } from "./CaseStudyPins";
 import { CaseStudyEmbed } from "./CaseStudyEmbed";
 import { CaseStudyVoices } from "./CaseStudyVoices";
 import { CaseStudyAccordion } from "./CaseStudyAccordion";
+import { CaseStudyFindings } from "./CaseStudyFindings";
+
+/** Card icons, named by idea rather than glyph so the drawing can change
+ *  without the content having to. */
+const gridIcons = {
+  records: Database,
+  protocol: FileText,
+  criteria: ListChecks,
+  imaging: Eye,
+  status: Route,
+} as const;
 
 /** Stable anchor id from a heading, shared with CaseStudyNav. */
 export function sectionId(heading: string) {
@@ -29,6 +50,10 @@ export function CaseStudySection({
    *  outbound link pills on the first section. */
   trailing?: ReactNode;
 }) {
+  // The grid moves into the aside row instead of sitting under it — so the row
+  // itself carries the cards and the standalone grid block below is skipped.
+  const asideSpansGrid = Boolean(section.bodyAsideSpan && section.bodyAside && section.grid);
+
   return (
     <div id={sectionId(section.heading)} className="flex w-full scroll-mt-24 flex-col gap-4">
       {trailing ? (
@@ -47,11 +72,104 @@ export function CaseStudySection({
           {section.kicker}
         </span>
       )}
-      {section.body.map((paragraph, i) => (
-        <p key={i} className="text-foreground-light max-w-[700px] leading-relaxed">
-          {paragraph}
-        </p>
-      ))}
+      {section.imageLead && section.image && (
+        // Leading full-width image: the section opens on the thing itself and
+        // the prose reads as its explanation rather than its introduction.
+        <figure className="flex w-full flex-col gap-3">
+          <div
+            className={cn(
+              "w-full overflow-hidden rounded-[14px]",
+              section.imageBare
+                ? "border-foreground/10 border"
+                : "border border-[#EDEDF0] bg-white p-2 sm:p-3",
+            )}
+          >
+            <Image
+              src={section.image.src}
+              alt={section.image.alt}
+              width={section.image.width}
+              height={section.image.height}
+              quality={90}
+              sizes="(min-width: 1024px) 760px, 100vw"
+              className={cn("h-auto w-full", section.imageBare ? "" : "rounded-[6px]")}
+            />
+          </div>
+          {section.image.caption && (
+            <figcaption className="border-foreground/10 text-foreground-light border-l-2 py-0.5 pl-3 text-[13px] leading-[1.6]">
+              {section.image.caption}
+            </figcaption>
+          )}
+        </figure>
+      )}
+      {section.bodyAside ? (
+        // Prose and photograph as one row: the picture is the setting the words
+        // describe, so it sits beside them rather than under them. Stacks on a
+        // phone, where side-by-side would leave both halves too narrow to read.
+        //
+        // `bodyAsideSpan` pulls the section's grid into the left column as one
+        // ruled list, so the row has equal weight on both sides and the photo is
+        // held by content rather than floating beside a single line.
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-5 lg:gap-8",
+            asideSpansGrid
+              ? "items-stretch lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]"
+              : "items-start lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)]",
+          )}
+        >
+          <div className="flex flex-col gap-4">
+            {section.body.map((paragraph, i) => (
+              <p key={i} className="text-foreground-light leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
+            {asideSpansGrid && section.grid && (
+              <div className="border-foreground/10 bg-background overflow-hidden rounded-[12px] border shadow-[0_1px_2px_rgb(50_64_79_/_5%),0_6px_16px_-8px_rgb(50_64_79_/_12%)]">
+                {section.grid.map((item, i) => (
+                  <div
+                    key={item.title}
+                    className={cn(
+                      "flex flex-col gap-1 p-3.5",
+                      i === 0 ? "" : "border-foreground/10 border-t",
+                    )}
+                  >
+                    <div className="flex items-baseline gap-2.5">
+                      <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h4>{item.title}</h4>
+                    </div>
+                    <p className="text-foreground-light text-[13px] leading-[1.55]">{item.body}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {/* The photo tracks the column's full height so the two halves end
+              together, and crops from the centre rather than letterboxing. */}
+          <div
+            className={cn(
+              "border-foreground/10 relative overflow-hidden rounded-[12px] border",
+              asideSpansGrid ? "min-h-[240px] lg:h-full" : "aspect-[3/2]",
+            )}
+          >
+            <Image
+              src={section.bodyAside.src}
+              alt={section.bodyAside.alt}
+              fill
+              quality={88}
+              sizes="(min-width: 1024px) 420px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      ) : (
+        section.body.map((paragraph, i) => (
+          <p key={i} className="text-foreground-light max-w-[700px] leading-relaxed">
+            {paragraph}
+          </p>
+        ))
+      )}
       {section.stats && (
         <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {section.stats.map((stat) => (
@@ -75,29 +193,78 @@ export function CaseStudySection({
           ))}
         </ul>
       )}
-      {section.grid && (
+      {section.findings && <CaseStudyFindings items={section.findings} />}
+      {section.grid && !asideSpansGrid && (
         // Three cards get their own three-column track rather than wrapping to
         // 2 + 1, which leaves a stranded card on the second row. Anything else
         // stays on the two-column default.
         <div
           className={cn(
             "mt-2 grid grid-cols-1 gap-3",
-            section.grid.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2",
+            // `gridRows` keeps one card per row at every width: titles and
+            // bodies of this length are unreadable in a narrow column track.
+            section.gridRows
+              ? ""
+              : section.grid.length === 3
+                ? "sm:grid-cols-3"
+                : section.grid.length === 5
+                  ? "sm:grid-cols-2 lg:grid-cols-5"
+                  : "sm:grid-cols-2",
           )}
         >
-          {section.grid.map((item, i) => (
+          {section.grid.map((item, i) => {
+            const Icon = item.icon ? gridIcons[item.icon] : null;
+            return (
             <div
               key={item.title}
-              className="border-foreground/10 bg-background flex flex-col gap-1.5 rounded-[11px] border p-4 shadow-[0_1px_2px_rgb(50_64_79_/_5%),0_6px_16px_-8px_rgb(50_64_79_/_12%)]"
+              className={cn(
+                "border-foreground/10 bg-background flex rounded-[11px] border p-4 shadow-[0_1px_2px_rgb(50_64_79_/_5%),0_6px_16px_-8px_rgb(50_64_79_/_12%)]",
+                section.gridRows
+                  ? "flex-row items-start gap-3.5"
+                  : "flex-col gap-1.5",
+              )}
             >
+              {section.gridRows ? (
+                <>
+                  {Icon && (
+                    <span className="border-primary/25 bg-primary/[0.06] flex size-8 shrink-0 items-center justify-center rounded-[9px] border">
+                      <Icon size={15} strokeWidth={1.75} aria-hidden className="text-primary" />
+                    </span>
+                  )}
+                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                    <h4>{item.title}</h4>
+                    <p className="text-foreground-light text-[13px] leading-[1.55]">{item.body}</p>
+                  </div>
+                  <span className="text-foreground-light/40 shrink-0 font-mono text-[11px] tracking-[0.08em]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </>
+              ) : (
+              <>
+              {Icon ? (
+                // Icon and number share a row: the glyph carries the idea at a
+                // glance, the number keeps the set countable.
+                <span className="flex items-center justify-between gap-2">
+                  <span className="border-primary/25 bg-primary/[0.06] flex size-7 items-center justify-center rounded-[8px] border">
+                    <Icon size={14} strokeWidth={1.75} aria-hidden className="text-primary" />
+                  </span>
+                  <span className="text-foreground-light/50 font-mono text-[11px] tracking-[0.08em]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </span>
+              ) : (
               <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
                 {String(i + 1).padStart(2, "0")}
               </span>
+              )}
               <h4>{item.title}</h4>
               <p className="text-foreground-light text-[13px] leading-[1.55]">{item.body}</p>
               {item.video && <CaseStudyInlineVideo video={item.video} />}
+              </>
+              )}
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
       {section.accordion && (
@@ -272,6 +439,10 @@ export function CaseStudySection({
                   ? "sm:grid-cols-3"
                   : "sm:grid-cols-2"),
           )}
+          // Caps the set's width so a run of tall artefacts does not dominate
+          // the column it sits in. A fraction of the available width rather than
+          // a fixed pixel size, so it scales with the page.
+          style={section.imagesScale ? { maxWidth: `${section.imagesScale * 100}%` } : undefined}
         >
           {section.images.map((img) => {
             const sizes =
@@ -291,7 +462,17 @@ export function CaseStudySection({
                   className="h-auto w-full"
                 />
               ) : (
-                <div className="w-full overflow-hidden rounded-[14px] border border-[#E5E5EA] bg-white p-2 shadow-[0_1px_2px_rgb(0_0_0_/_5%),0_8px_24px_-12px_rgb(0_0_0_/_25%)] sm:p-3">
+                // Inside a grouped surface the set already sits on its own
+                // ground, so each page needs only a hairline mat — the full
+                // frame and drop shadow read as a border on a border.
+                <div
+                  className={cn(
+                    "w-full overflow-hidden rounded-[10px] border border-[#EDEDF0] bg-white",
+                    section.imagesSurface
+                      ? "p-1 shadow-[0_1px_2px_rgb(0_0_0_/_4%)] sm:p-1.5"
+                      : "rounded-[14px] p-2 shadow-[0_1px_2px_rgb(0_0_0_/_5%),0_8px_24px_-12px_rgb(0_0_0_/_25%)] sm:p-3",
+                  )}
+                >
                   <Image
                     src={img.src}
                     alt={img.alt}
@@ -314,13 +495,13 @@ export function CaseStudySection({
         </div>
         </div>
       )}
-      {section.image && (
+      {section.image && !section.imageLead && (
         <figure className="flex w-full flex-col gap-3">
           {/* Explicit light ground. These are light-mode product screens and
               ink-on-paper sketches — a transparent backing would let the dark
               page show through the artwork's own white and destroy it. The
               thin inset padding reads as a frame rather than a bleed. */}
-          <div className="w-full overflow-hidden rounded-[14px] border border-[#E5E5EA] bg-white p-2 shadow-[0_1px_2px_rgb(0_0_0_/_5%),0_8px_24px_-12px_rgb(0_0_0_/_25%)] sm:p-3">
+          <div className="w-full overflow-hidden rounded-[14px] border border-[#EDEDF0] bg-white p-2 sm:p-3">
             <Image
               src={section.image.src}
               alt={section.image.alt}

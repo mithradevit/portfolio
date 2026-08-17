@@ -48,24 +48,6 @@ export const frontlineSafety: CaseStudy = {
         { value: "3", label: "Surfaces — web console, mobile field app, kiosk dock software" },
         { value: "1", label: "Designer, embedded across a 40+ person product and engineering organisation" },
       ],
-      image: {
-        src: "/images/projects/frontline-safety/fleet.webp",
-        alt: "Vault Cameras screen: tiles for online, need attention, waiting to upload and offline, above a map of the area with camera pins colour-coded for recording, idle and no signal.",
-        width: 1280,
-        height: 987,
-        caption:
-          "The second job nobody accounted for. 128 clips waiting to upload and two cameras dark — evidence that has been captured but is not yet safe, which is the supervisor's problem before it is anyone else's.",
-      },
-    },
-    {
-      heading: "The System",
-      body: [
-        "Before designing anything I had to make the system legible to myself. Evidence, cases and device telemetry each lived in their own mental model, and users were expected to reconcile them by hand.",
-        "The architecture below is what the product resolves to: an admin console organised around Media, Streaming and Dashboard, and a field app organised around the officer's own work — with Sessions and Cases as the shared spine underneath both.",
-      ],
-      diagram: "ia",
-      diagramCaption:
-        "Two audiences, two navigation models, one object graph. An officer never sees Administration; an evidence manager never sees My Team. Both are reading and writing the same sessions.",
     },
     {
       heading: "Research",
@@ -73,8 +55,17 @@ export const frontlineSafety: CaseStudy = {
         "The assumed pain points and the real ones diverged sharply, which is why the fieldwork was not negotiable. Interviews ran across the full chain — officers, supervisors, investigators, evidence technicians, administrators, device-maintenance staff and judiciary users — because each of them inherits the previous role's shortcuts.",
         "Alongside primary research: support-ticket and product-feedback analysis, device telemetry review, stakeholder workshops with product, engineering and domain experts, and iterative design reviews through implementation.",
       ],
+    },
+    {
+      heading: "What I Did",
+      body: [
+        "The fieldwork and the deliverables it produced — what the research actually consisted of, and where the work landed once it was synthesised.",
+      ],
       stats: [
-        { value: "12+", label: "Contextual interviews across every role in the evidence chain, including judiciary users" },
+        // TODO(Mithra): this was 12+ and you changed it to 5+. Lowering a
+        // research number is unusual enough to be worth a second look —
+        // confirm it, or tell me what the 5+ was meant to count.
+        { value: "5+", label: "Contextual interviews across every role in the evidence chain, including judiciary users" },
         { value: "8+", label: "Workflow observations and ride-alongs across capture, transfer and review" },
         { value: "15+", label: "Usability sessions across web, mobile and kiosk — run monthly, after every sprint" },
       ],
@@ -87,12 +78,35 @@ export const frontlineSafety: CaseStudy = {
       body: [
         "Five findings did most of the work in reshaping the product. None of them were what the team expected going in.",
       ],
-      bullets: [
-        "Documenting video was harder than capturing it. Officers captured willingly and often — describing footage accurately afterwards was the actual bottleneck, and it happened at the exact moment users had the least recall and the least patience for typing.",
-        "End-of-day offload meant footage sat on a device for a full shift. That is a window of risk for loss, damage and delay, and it existed purely because the kiosk was the only route off the device.",
-        "Device faults in the field were handled alone. No one to ask, no obvious next step, and an escalation path that ran through a phone call to the supervisor.",
-        "Supervisors inherited whatever officers did not do. Every skipped metadata field became somebody else's backlog, which meant the desk experience was largely a consequence of the field experience.",
-        "There was no shared definition of handled. Two supervisors could review the same file while a third was missed entirely, because status lived in people's heads rather than in the system.",
+      image: {
+        src: "/images/projects/frontline-safety/findings.webp",
+        alt: "A findings board. The lead panel reads 'Documenting video was harder than capturing it' beside an officer at a patrol car and an incident form warning that recall is fading and detail is missing. Four numbered panels follow: end-of-day offload, showing a kiosk upload in progress over a risk window of loss, damage and delay; device faults handled alone, showing a camera error with restart, check connection and call supervisor as the only options; supervisors inheriting what officers did not do, showing 127 incomplete submissions with missing field counts; and no shared definition of handled, showing three supervisors on one file — reviewed, in review, and never opened.",
+        width: 1536,
+        height: 1024,
+        caption:
+          "The five findings as they were presented back to the team — each one paired with the screen or moment it came from.",
+      },
+      findings: [
+        {
+          title: "Documenting video was harder than capturing it.",
+          body: "Officers captured willingly and often — describing footage accurately afterwards was the actual bottleneck, and it happened at the exact moment users had the least recall and the least patience for typing.",
+        },
+        {
+          title: "End-of-day offload meant footage sat on a device for a full shift.",
+          body: "That is a window of risk for loss, damage and delay, and it existed purely because the kiosk was the only route off the device.",
+        },
+        {
+          title: "Device faults in the field were handled alone.",
+          body: "No one to ask, no obvious next step, and an escalation path that ran through a phone call to the supervisor.",
+        },
+        {
+          title: "Supervisors inherited whatever officers did not do.",
+          body: "Every skipped metadata field became somebody else's backlog, which meant the desk experience was largely a consequence of the field experience.",
+        },
+        {
+          title: "There was no shared definition of handled.",
+          body: "Two supervisors could review the same file while a third was missed entirely, because status lived in people's heads rather than in the system.",
+        },
       ],
     },
     {

@@ -794,7 +794,7 @@ function EcosystemDiagram() {
         </div>
         <Arrow />
         <DiaBox
-          kicker="Vault platform"
+          kicker="DEMS"
           lines={["Sessions", "Cases", "Streaming", "Devices"]}
           note="Desk, with time to think"
         />

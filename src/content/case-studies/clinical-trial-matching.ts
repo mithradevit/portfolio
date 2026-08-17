@@ -48,12 +48,21 @@ export const clinicalTrialMatching: CaseStudy = {
         "The platform brings electronic medical record data and retinal imaging into one place, evaluates each patient against the criteria of trials that are actively enrolling, and returns a ranked, explainable set of candidates — during the visit, rather than after it.",
         "It connects securely to the systems a practice already runs, delivering real-time insight without adding burden to the site, and ranks patients using detailed criterion-level evaluations so the most promising candidates come first.",
       ],
+      image: {
+        src: "/images/projects/clinical-trial-matching/imaging-visit.jpg",
+        alt: "A clinician steadying a patient at a retinal imaging machine, the OCT scan appearing on the screen beside them.",
+        width: 1250,
+        height: 833,
+      },
+      imageLead: true,
+      imageBare: true,
+      gridRows: true,
       grid: [
-        { title: "Data unification", body: "Records and imaging, held together without losing clinical context" },
-        { title: "Protocol modules", body: "A trial's criteria configured as a unit, not hardcoded into a screen" },
-        { title: "Criterion-level evaluation and ranking", body: "Each rule assessed individually, with evidence attached" },
-        { title: "Image intelligence", body: "OCT, FAF and NIR read for the biomarkers a protocol names, not for a general impression" },
-        { title: "Status through to enrolment", body: "A candidate carried from referral to enrolled, and kept for the next trial when this one does not fit" },
+        { title: "Data unification", body: "Records and imaging, held together without losing clinical context", icon: "records" },
+        { title: "Protocol modules", body: "A trial's criteria configured as a unit, not hardcoded into a screen", icon: "protocol" },
+        { title: "Criterion-level evaluation and ranking", body: "Each rule assessed individually, with evidence attached", icon: "criteria" },
+        { title: "Image intelligence", body: "OCT, FAF and NIR read for the biomarkers a protocol names, not for a general impression", icon: "imaging" },
+        { title: "Status through to enrolment", body: "A candidate carried from referral to enrolled, and kept for the next trial when this one does not fit", icon: "status" },
       ],
     },
     {
@@ -68,7 +77,9 @@ export const clinicalTrialMatching: CaseStudy = {
     },
     {
       heading: "Learning the Domain",
-      body: [],
+      body: [
+        "My first CTMS project, 2024. These were my notes as I tried to understand the workflows, people, terminology, and complexity behind clinical trial management.",
+      ],
       images: [
         {
           src: "/images/projects/clinical-trial-matching/notes-1.jpg",
@@ -95,9 +106,20 @@ export const clinicalTrialMatching: CaseStudy = {
           height: 1867,
         },
       ],
-      imagesCols: 2,
+      imagesCols: 4,
+      imagesBare: true,
       imagesSurface: true,
-      imagesLabel: "My notes — me trying to understand things",
+      imagesLabel: "My notes — understanding CTMS for the first time",
+    },
+    {
+      heading: "Research",
+      body: [],
+      image: {
+        src: "/images/projects/clinical-trial-matching/research-board.png",
+        alt: "A board of collected reference material: a recruitment funnel from potential candidates through pre-screening, screening and randomisation; a patient enrolment journey map with process ownership and pain points; a screening and eConsent workflow diagram; an inclusion and exclusion decision tree; published papers on automated eligibility screening; and photographs of clinicians with patients at imaging equipment.",
+        width: 1350,
+        height: 884,
+      },
     },
     {
       heading: "What I Learned",
@@ -117,10 +139,10 @@ export const clinicalTrialMatching: CaseStudy = {
         ],
       },
       image: {
-        src: "/images/projects/clinical-trial-matching/findings.jpg",
-        alt: "Illustrated summary of the seven findings: nothing could be scanned, priority was invisible, complexity passed through rather than resolved, live matching is made of edge cases, the same data visualised twice for inclusion and exclusion, recruitment status had nowhere to live, and trial openings and referred patients were separate questions.",
-        width: 1024,
-        height: 559,
+        src: "/images/projects/clinical-trial-matching/findings.png",
+        alt: "Seven illustrated panels: nothing could be scanned, priority was invisible, complexity passed through rather than resolved, live matching is made of edge cases, the same data visualised twice for inclusion and exclusion, recruitment status had nowhere to live, and trial openings and referred patients were separate.",
+        width: 1480,
+        height: 899,
         caption: "The seven findings, drawn out — the shape of the problem before any of it became screens.",
       },
     },
@@ -133,7 +155,7 @@ export const clinicalTrialMatching: CaseStudy = {
         {
           name: "Clinical Research Coordinator",
           context:
-            "Runs recruitment across several trials; not a clinician. Checks protocol prose by hand, per patient, per trial.",
+            "Runs recruitment across several trials; not a clinician. Checks protocol criteria by hand, per patient, per trial.",
           quote:
             "I'm checking the same eligibility criteria again and again, across different trials. I just need to know quickly whether this patient actually qualifies.",
         },
@@ -161,6 +183,14 @@ export const clinicalTrialMatching: CaseStudy = {
       body: [
         "The problem was not simply finding eligible patients. It was making the eligibility decision possible within the constraints of a real clinic.",
       ],
+      image: {
+        src: "/images/projects/clinical-trial-matching/clinic-consult.jpg",
+        alt: "A clinician at an OCT machine pointing to a retinal scan on the monitor while the patient sits opposite, waiting.",
+        width: 1920,
+        height: 1214,
+      },
+      imageLead: true,
+      imageBare: true,
       grid: [
         { title: "Patient", body: "May qualify for a trial but never gets considered during the visit." },
         { title: "Clinician", body: "Has to interpret complex criteria across records, images, and protocol documents." },
@@ -183,7 +213,7 @@ export const clinicalTrialMatching: CaseStudy = {
     {
       heading: "Defining the Design Challenge",
       body: [
-        "How might we transform fragmented clinical and imaging data into an experience that helps clinicians and research teams quickly understand a patient's potential eligibility for a clinical trial — without overwhelming them with complexity?",
+        "How might we turn scattered records and retinal imaging into an answer a clinician can read while the patient is still in the room — without making them read everything to get it?",
       ],
       diagram: "design-constraints",
     },
@@ -211,6 +241,13 @@ export const clinicalTrialMatching: CaseStudy = {
       body: [
         "The through-line across the work: the system already knew things, and the design job was making what it knew legible in the seconds available.",
       ],
+      image: {
+        src: "/images/projects/clinical-trial-matching/oct-viewer.jpg",
+        alt: "A retinal imaging viewer: a cross-sectional OCT scan at the centre, thickness and deviation maps to the side, sector grids in red, green and yellow, and a measurements table of fovea minimum, central sector, area thickness and volume.",
+        width: 1521,
+        height: 954,
+      },
+      imageLead: true,
       measures: [
         { label: "Trial matching", body: "40% faster, through structured eligibility comparison" },
         { label: "Referral efficiency", body: "30% improved, through clearer referral workflows" },
