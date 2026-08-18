@@ -71,14 +71,15 @@ export const projects: Project[] = [
   },
   {
     slug: "pet-health-collar",
-    title: "Guided setup for a pet collar",
+    title: "Pet Collar — Pet Longevity Platform",
     company: "Connected Pet Collar",
     category: "IoT · Mobile",
     tags: ["IoT", "Mobile"],
     nda: true,
     year: "2025",
-    thumbnailColor: "#C97B63",
-    aspect: "aspect-[10/7]",
+    thumbnailColor: "#1B5E42",
+    aspect: "aspect-[16/9]",
+    image: "/images/projects/pet-health-collar.png",
     cursorLabel: "case-study",
   },
   {

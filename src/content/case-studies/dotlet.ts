@@ -297,6 +297,101 @@ export const dotlet: CaseStudy = {
       ],
     },
     {
+      heading: "Version 2 IA + Features",
+      body: [
+        "Everything above is the hackathon build. I'm currently building the next set of features — here's a sneak peek, starting with where they sit.",
+        "The single-screen shape holds: header, canvas, palette, right sidebar. What changed is that the canvas now has two modes, and the mode governs the sidebar under it — brush controls belong to Freehand, effects and grid to Dots, colour and layers to both.",
+      ],
+      images: [
+        {
+          src: "/images/projects/dotlet/ia-v2-1.webp",
+          width: 720,
+          height: 1109,
+          alt: "Version 2 information architecture, top half. The header gains a click-to-rename file name that syncs with the Files menu, and a save status of Saved, Saving or Unsaved. The canvas splits into Dots mode — snap-to-grid nodes, gooey merge, dots on artwork plus custom layers — and a new Freehand mode drawing plain geometry with no filter. A shape FAB moves to the left, its colour pickers relocated to the sidebar. The floating palette gains a selection bar that appears only when something is selected, offering a count, group and ungroup, and export selection to SVG or PNG cropped tight; Move is renamed Select; export gains a transparent-background toggle replacing four duplicate alpha options, and splits into SVG vector, SVG editable dots, PNG at 3x and copy PNG.",
+          caption:
+            "Header, canvas and palette. The marks reading NEW are the additions; Compose is listed as a stub that does nothing yet.",
+        },
+        {
+          src: "/images/projects/dotlet/ia-v2-2.webp",
+          width: 716,
+          height: 967,
+          alt: "Version 2 information architecture, bottom half: the right sidebar, now dockable, with a canvas mode switch of Dots or Freehand governing everything below it. Brush is Freehand-only — pen, taper, calligraphy, pencil and marker, with size, opacity, stability, nib angle for calligraphy and grain for pencil. Image to Shape is Dots-only. Colour is shared, offering hex with an eyedropper, hue, saturation and lightness, and saved swatches. Layers is shared: a base Layer 1, custom layers that can be selected, renamed, hidden and deleted, background visibility, and add layer. Effects and Grid are Dots-only.",
+          caption:
+            "The sidebar, now driven by the canvas mode — each group marked Dots only, Freehand only, or shared.",
+        },
+      ],
+    },
+    {
+      // TODO(Mithra): "Building" was taken — there is already a "Building It"
+      // section on the AI-assisted build further down, and two near-identical
+      // entries in the sticky nav would be unreadable. "Currently Building"
+      // says the same thing and stays distinct; rename if you had another word
+      // in mind.
+      heading: "Currently Building",
+      // TODO(Mithra): Select and Compose is described from what you told me.
+      // The other three are written from what the recordings literally show —
+      // the toggle, the five brushes, the three sliders, the gradient fills.
+      // What is still missing is the half only you can write: why each earned
+      // a place in a tool whose whole premise was that placement is the only
+      // skill required. The Font Builder was cut on exactly that test, so
+      // these need to answer it.
+      body: [
+        "The core flows of the new build, running.",
+      ],
+      flows: [
+        {
+          title: "Freehand mode",
+          body: "A second mode sitting beside Dots. The same canvas takes a continuous stroke, with Pen, Taper, Calligraphy, Pencil and Marker as the brushes, and size, opacity and stability as the controls.",
+          video: {
+            src: "/videos/dotlet-freehand.mp4",
+            width: 650,
+            height: 390,
+            alt: "The Dots/Freehand toggle switched to Freehand, revealing brush options — Pen, Taper, Calligraphy, Pencil, Marker — with size, opacity and stability sliders, then a loose spiral drawn on the canvas.",
+          },
+        },
+        {
+          title: "Layers",
+          body: "The first build had two fixed layers — artwork and background — and a visibility toggle on each. Now assets can be drawn and controlled on custom layers that can be added, renamed, hidden and deleted. A mark and the plate it sits on are no longer the same object: either can be worked on without disturbing the other.",
+          video: {
+            src: "/videos/dotlet-layers.mp4",
+            width: 446,
+            height: 386,
+            alt: "An 'lbun' wordmark in blue sitting on a pale lavender rounded plate, the two held on separate layers so each can be edited without touching the other.",
+          },
+        },
+        {
+          title: "Gradient fills",
+          body: "A fill is no longer a single flat colour. A shape can carry a gradient across it, and each shape in a set can take its own.",
+          video: {
+            src: "/videos/dotlet-gradients-v2.mp4",
+            width: 486,
+            height: 468,
+            alt: "A shape drawn on the grid, then filled with a gradient rather than a flat colour — blue washing into pale lavender across the mark, with the fill following the merged silhouette rather than a bounding box.",
+          },
+        },
+        {
+          title: "Colour, reworked",
+          body: "The colour control moved to a hex field with an eyedropper and HSL sliders behind it, and the swatch row grows as colours are used — so the second mark in a set can be matched to the first without re-entering a value.",
+          video: {
+            src: "/videos/dotlet-colour-v3.mp4",
+            width: 232,
+            height: 286,
+            alt: "The colour panel: a hex field with an eyedropper and an HSL toggle, three sliders for hue, saturation and lightness, and a swatch row that grows as colours are used — a shape taken from blue through yellow to green, with each colour kept.",
+          },
+        },
+        {
+          title: "Select and export",
+          body: "Selecting, grouping and exporting individual elements inside a layer. The first build treated a layer as one mark — everything drawn into it came out together. Here a single letter can be pulled out of a wordmark, grouped with others, and exported on its own.",
+          video: {
+            src: "/videos/dotlet-pen-merge-v2.mp4",
+            width: 694,
+            height: 554,
+            alt: "A wordmark drawn from an empty canvas, its dots merging into continuous letterforms, then the Select tool used to pick out individual letters within the layer. The palette below runs Pen, Erase, Select, Hand, Undo, Redo, Export and Compose.",
+          },
+        },
+      ],
+    },
+    {
       heading: "How It Did It",
       body: [
         "Writing a full Functional Requirements Document before opening Figma Make was the single decision that made everything else go more smoothly.",
