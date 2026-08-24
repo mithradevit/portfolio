@@ -17,10 +17,25 @@ export const frontlineSafety: CaseStudy = {
   timeline: "May 2024 – May 2026",
   team: "Embedded with a 40+ person product & engineering org",
   skills: ["Enterprise UX", "Information Architecture", "AI-Assisted Workflows", "Cross-Platform Design Systems"],
-  nda: "Covered by an NDA with an Australian state police force. The force, its commands and districts, deployment scale and all commercial figures are withheld, and product and entity names are anonymised. The screens below are shown with invented sample data, and each is paired with a simplified schematic isolating the pattern it demonstrates — no real recording, case, exhibit, device or sworn-officer record appears anywhere on this page.",
+  // Short on purpose. The long version listed everything being withheld, which
+  // read as a disclaimer to get past rather than a fact. Two sentences: what
+  // the constraint is, and what it means for what's on the page.
+  nda: "This work is strictly confidential. Names, figures and real records are withheld — every screen here uses sample data.",
   sections: [
     {
       heading: "Overview",
+      // The facts here are deliberately not the ones in the page header. The
+      // header answers role, timeline, team and skills; these four answer what
+      // the thing was — surfaces, sector, who used it, what can be shown.
+      intro: {
+        lead: "I worked across a **complete ecosystem** — hardware, mobile and web — for a public safety technology company.",
+        facts: [
+          { label: "Surfaces", value: "Body-worn, in-car and 4G cameras · Kiosk · Mobile (iOS / Android) · DEMS web platform" },
+          { label: "Sector", value: "Public safety technology" },
+          { label: "Users", value: "First-day field officers through to system administrators" },
+          { label: "Status", value: "Under NDA — full visuals available on request" },
+        ],
+      },
       body: [
         "I started working on this project in March 2024.",
         "This wasn't a single product. It was a connected system of hardware and software — body-worn cameras, in-car cameras, 4G cameras, a kiosk with a palm-vein scanner, mobile applications, and the web-based evidence platform. These systems had to work across hardware-to-software and hardware-to-hardware integrations, while supporting different roles, permissions, and operational workflows.",
@@ -55,6 +70,14 @@ export const frontlineSafety: CaseStudy = {
         "The assumed pain points and the real ones diverged sharply, which is why the fieldwork was not negotiable. Interviews ran across the full chain — officers, supervisors, investigators, evidence technicians, administrators, device-maintenance staff and judiciary users — because each of them inherits the previous role's shortcuts.",
         "Alongside primary research: support-ticket and product-feedback analysis, device telemetry review, stakeholder workshops with product, engineering and domain experts, and iterative design reviews through implementation.",
       ],
+      image: {
+        src: "/images/projects/frontline-safety/working-notes-board.jpg",
+        alt: "A large handwritten working board: flow sketches of an officer checking in at the office, pairing a body-worn camera to the phone app by QR code and Bluetooth, branches for cameras already registered versus not registered in the back end, duress-button notification states, Wi-Fi and hotspot fallbacks, upload paths from dock to server, and lists of features and open questions annotated in pink and orange highlighter.",
+        width: 3000,
+        height: 2250,
+        caption:
+          "The working board behind the ecosystem model — pairing, duress, connectivity fallbacks and upload paths worked out in one place, with open questions left highlighted rather than resolved on the spot.",
+      },
     },
     {
       heading: "What I Did",
@@ -68,6 +91,33 @@ export const frontlineSafety: CaseStudy = {
         { value: "5+", label: "Contextual interviews across every role in the evidence chain, including judiciary users" },
         { value: "8+", label: "Workflow observations and ride-alongs across capture, transfer and review" },
         { value: "15+", label: "Usability sessions across web, mobile and kiosk — run monthly, after every sprint" },
+      ],
+      imagesCols: 1,
+      images: [
+        {
+          src: "/images/projects/frontline-safety/working-notes-detail-1.jpg",
+          alt: "Handwritten flow: an officer arrives at the office, logs in and checks in for the day, collects a body-worn camera and connects it to the phone app; branches cover Bluetooth permission states from 'not enabled' through to 'can't scan', cameras already registered versus not registered in the back end, and duress-button notifications in foreground, background and locked-screen states.",
+          width: 3000,
+          height: 2250,
+          caption:
+            "Check-in and pairing, worked through state by state — including the paths where Bluetooth is off, the camera is not in the back end, or the phone screen is locked when duress is pressed.",
+        },
+        {
+          src: "/images/projects/frontline-safety/working-notes-detail-2.jpg",
+          alt: "Handwritten notes: a solution flow diagram listing check out the camera, check out as a button, and view all footage in phone; a feature list for storing files from camera to phone, viewing in a media player and uploading to cloud; and a boxed comparison of individual-user versus agency-level deployment with dock stations noted as costly.",
+          width: 3000,
+          height: 2250,
+          caption:
+            "Feature scope and viewing restrictions on one side, deployment shape on the other — an individual officer with one camera and dock behaves nothing like an agency rolling out hundreds.",
+        },
+        {
+          src: "/images/projects/frontline-safety/working-notes-detail-3.jpg",
+          alt: "Handwritten notes: a camera about-page breakdown separating static information such as MAC ID and battery from dynamic session video data, with store, view and upload each marked restricted or unrestricted; beside it a sketch of the phone-to-camera-to-cloud path and a media hierarchy reading camera, then info, files and videos.",
+          width: 3000,
+          height: 2250,
+          caption:
+            "Where the data model got settled: static device facts separated from dynamic session data, and store, view and upload each given its own permission rule rather than one blanket one.",
+        },
       ],
       diagram: "artefacts",
       diagramCaption:

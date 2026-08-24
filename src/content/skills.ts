@@ -146,7 +146,6 @@ export const skillGroups = [
       "Microsoft 365 Copilot",
       "ChatGPT",
       "Gemini",
-      "Google Stitch",
       "Replit",
       "Cursor",
       "Lovable",

@@ -11,7 +11,9 @@ import { ChatMessage } from "./ChatMessage";
 
 const SUGGESTIONS = [
   "What does she do at Alchi Design Studio?",
-  "Tell me about the MView project.",
+  // Named the client's product, which is redacted, and pointed at a slug that
+  // no longer exists — the bot answered "I don't know" to its own suggestion.
+  "Tell me about the digital evidence work.",
   "What are her core skills?",
 ];
 

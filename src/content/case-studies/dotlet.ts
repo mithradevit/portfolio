@@ -12,6 +12,14 @@ export const dotlet: CaseStudy = {
   timeline: "June 2026 — 10 days, concept to release",
   team: "Solo — product strategy, UX, interaction design, AI-assisted build",
   skills: ["0→1 Product Design", "AI-Assisted Development", "Interaction Design", "Scoping"],
+  hero: {
+    src: "/videos/dotlet.mp4",
+    width: 1350,
+    height: 872,
+    // TODO: confirm this describes what the clip actually shows — it is both
+    // the caption under the video and the player's accessible name.
+    alt: "Dotlet in use: dots placed on the grid merge into a single smooth shape.",
+  },
   links: [
     { label: "Full case study", href: "https://dotlet.netlify.app" },
     // TODO: the live tool's own URL — the write-up links to it as "Try Dotlet
@@ -26,7 +34,7 @@ export const dotlet: CaseStudy = {
         "I built it solo in 10 days for Config Makeathon 2026, entirely inside Figma Make, and later used it as the live case study for a Friends of Figma workshop on AI-native design workflows.",
       ],
       embed: {
-        src: "https://halo-cool-93973682.figma.site/",
+        src: "https://dotlet.site/",
         title: "Dotlet — the live vector tool",
         // 16:10 rather than 16:9: the tool is one screen with a fixed right
         // sidebar, and at 16:9 the canvas between the header and the palette
@@ -35,16 +43,6 @@ export const dotlet: CaseStudy = {
         caption:
           "The real tool, running here. Place dots on the grid and they merge as you go — or open it full screen, which is the better window for drawing anything you want to keep.",
       },
-      videos: [
-        {
-          src: "/videos/dotlet.mp4",
-          width: 1350,
-          height: 872,
-          // TODO: confirm this describes what the clip actually shows — it is
-          // both the caption under the video and the player's accessible name.
-          alt: "Dotlet in use: dots placed on the grid merge into a single smooth shape.",
-        },
-      ],
     },
     {
       heading: "The Problem",

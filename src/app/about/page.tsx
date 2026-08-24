@@ -4,20 +4,23 @@ import { InterestList } from "@/components/about/InterestList";
 import { PhotoGrid } from "@/components/about/PhotoGrid";
 import { ProfileWindow } from "@/components/about/ProfileWindow";
 import { ArcCarousel } from "@/components/about/ArcCarousel";
-import { MilestoneTimeline, CertificationTimeline } from "@/components/about/MilestoneTimeline";
+import { CertificationTimeline } from "@/components/about/MilestoneTimeline";
+import { CareerTimeline } from "@/components/about/CareerTimeline";
 import { ActivityStrip } from "@/components/home/ActivityStrip";
+import { SkillsGraph } from "@/components/home/SkillsGraph";
 import { FaqChat } from "@/components/about/FaqChat";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import { Reveal } from "@/components/motion/Reveal";
+import { flags } from "@/lib/flags";
 
 export default function AboutPage() {
   return (
-    <div className="flex w-full flex-col items-center gap-16 p-6">
-      {/* Same 1800px shell and same `gap-16 lg:gap-24` band rhythm as Home and
-          Fun, so About shares a left edge with the header and footer. The
-          narrower 1040px measure the hero wants is applied by ProfileWindow
-          itself, which centres inside this container. */}
-      <Reveal className="flex w-full max-w-[1800px] flex-col gap-16 lg:gap-24">
+    <div className="flex w-full flex-col items-center gap-16 p-6 lg:p-10">
+      {/* Same 1800px shell and same `gap-40 lg:gap-60` band rhythm as Home, so
+          About shares a left edge with the header and footer and the two pages
+          breathe identically. The narrower 1040px measure the hero wants is
+          applied by ProfileWindow itself, which centres inside this container. */}
+      <Reveal className="flex w-full max-w-[1800px] flex-col gap-40 lg:gap-60">
         {/* The fold is centred in the viewport rather than pinned under the
             header — that vertical breathing room is most of what reads as
             "composed" in the reference. */}
@@ -27,11 +30,15 @@ export default function AboutPage() {
 
         <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between sm:gap-16">
           <div className="flex flex-col gap-6">
-            <div>
-              <ScrambleText as="h4" text="Outside of work" delay={0.15} scrambleOnHover />
-              <div className="mt-2">
-                <InterestList interests={about.interests} />
+            {/* The 32px label row and 16px step to content that every
+                labelled section on the site uses. This was an 8px `mt-2`
+                against a bare label, which sat tighter than anything else on
+                the page. */}
+            <div className="flex flex-col gap-4">
+              <div className="flex h-8 items-center">
+                <ScrambleText as="h4" text="Outside of work" delay={0.15} scrambleOnHover />
               </div>
+              <InterestList interests={about.interests} />
             </div>
             <p className="text-foreground-light text-[15px]">
               {about.contactPrompt}{" "}
@@ -47,20 +54,34 @@ export default function AboutPage() {
           <ActivityStrip compact />
         </div>
 
-        {/* These two pairs render visually similar content back to back —
-            two dense rulers, two photo grids — so the shared page rhythm
-            reads as one continuous block rather than four sections. Each
-            pair gets a tighter internal gap than the band rhythm separating
-            them, so the grouping itself stays visible. */}
-        <div className="flex flex-col gap-10">
-          <MilestoneTimeline />
+        {/* Two dense rulers back to back, so they're grouped as one block
+            rather than two bands. The internal gap is a clear step below the
+            band rhythm — the same relationship Tools has inside the About
+            band on Home — so the grouping stays visible without the pair
+            reading as cramped. */}
+        <div className="flex flex-col gap-24 lg:gap-40">
+          <CareerTimeline />
           <CertificationTimeline />
         </div>
 
-        <div className="flex flex-col gap-10">
-          <PhotoGrid categories={about.photoCategories} />
-          <ArcCarousel />
-        </div>
+        {/* Moved here from Home. It belongs to the same question the timelines
+            answer — what she's done and what she can do — and it was the one
+            block on Work that wasn't a piece of work.
+
+            No fold and no snap point here. The viewport-tall bands are a Work
+            page device; About is a page you read down. */}
+        <SkillsGraph />
+
+        {/* Both are switched off in lib/flags.ts until there are real photos
+            to put in them — see the note there. The wrapper is inside the
+            check too, so the page doesn't keep an empty band's worth of gap
+            where they used to be. */}
+        {(flags.aboutPhotoGrid || flags.aboutArcCarousel) && (
+          <div className="flex flex-col gap-10">
+            {flags.aboutPhotoGrid && <PhotoGrid categories={about.photoCategories} />}
+            {flags.aboutArcCarousel && <ArcCarousel />}
+          </div>
+        )}
 
         <FaqChat />
       </Reveal>

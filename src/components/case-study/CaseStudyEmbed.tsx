@@ -1,10 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Play } from "lucide-react";
 import type { CaseStudySection } from "@/content/case-studies/types";
 
 type Embed = NonNullable<CaseStudySection["embed"]>;
+
+/**
+ * The viewport width the frame is *told* it has, before being scaled down to
+ * fit. Without this the tool lays itself out for a ~770px window and every
+ * control renders at full size inside it, so the UI reads as zoomed in. Giving
+ * it a desktop viewport and shrinking the result means the embed shows the same
+ * proportions a visitor sees on the real site.
+ */
+const BASE_WIDTH = 1280;
 
 /**
  * The live product, running inside the case study.
@@ -25,6 +34,25 @@ type Embed = NonNullable<CaseStudySection["embed"]>;
 export function CaseStudyEmbed({ embed }: { embed: Embed }) {
   const [live, setLive] = useState(false);
   const host = hostOf(embed.src);
+
+  // Measured rather than derived from `embed.ratio`, which is a Tailwind class
+  // string and would have to be parsed. The box is already sized by that class;
+  // we only need the pixels it settled on.
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [stage, setStage] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setStage({ width, height });
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const scale = stage.width ? stage.width / BASE_WIDTH : 1;
 
   return (
     <figure className="flex w-full flex-col gap-3">
@@ -57,7 +85,7 @@ export function CaseStudyEmbed({ embed }: { embed: Embed }) {
           </a>
         </div>
 
-        <div className={embed.ratio}>
+        <div ref={stageRef} className={`relative overflow-hidden ${embed.ratio}`}>
           {live ? (
             <iframe
               src={embed.src}
@@ -67,7 +95,14 @@ export function CaseStudyEmbed({ embed }: { embed: Embed }) {
               // (the mute preference) without granting it anything here.
               // `allow-downloads` is what makes its SVG/PNG export work.
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads"
-              className="h-full w-full border-0"
+              className="absolute top-0 left-0 border-0"
+              style={{
+                width: BASE_WIDTH,
+                // Undo the scale so the shrunk frame still covers the box.
+                height: stage.height ? stage.height / scale : "100%",
+                transform: `scale(${scale})`,
+                transformOrigin: "top left",
+              }}
             />
           ) : (
             <button

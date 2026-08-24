@@ -1,5 +1,6 @@
 import type { Project } from "@/content/projects";
 import type { CaseStudy } from "@/content/case-studies";
+import { CaseStudyBanner } from "./CaseStudyBanner";
 
 export function CaseStudyHeader({
   project,
@@ -26,6 +27,11 @@ export function CaseStudyHeader({
           • {project.category}
         </h4>
       </div>
+
+      {/* The product, shown before it is described. Above the meta grid rather
+          than below it: role, timeline and team are answers to questions a
+          reader only has once they know what the thing is. */}
+      {caseStudy.hero && <CaseStudyBanner banner={caseStudy.hero} />}
 
       {/* Four fields sit in one four-up row. Once location or scope is added
           the row would squeeze past reading width, so it drops to three across

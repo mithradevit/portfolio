@@ -354,7 +354,21 @@ export function OrbitGallery({
       onPointerCancel={endDrag}
       onPointerLeave={endDrag}
       className={className}
-      style={{ position: "relative", touchAction: "none", cursor: "grab" }}
+      // `isolation: isolate` is the whole fix for the tiles covering the header
+      // and the chat panel. Each tile carries a computed z-index in the 1000–2000
+      // range — that is how the orbit decides which tile is in front of which —
+      // and without a stacking context of its own those numbers competed with
+      // the rest of the page, where the header is z-50 and the chat panel z-70.
+      // Isolating turns them into a private scale: they still order each other
+      // exactly as before, but the whole gallery now sits at z-0 against
+      // everything outside it.
+      style={{
+        position: "relative",
+        zIndex: 0,
+        isolation: "isolate",
+        touchAction: "none",
+        cursor: "grab",
+      }}
     >
       <div style={{ position: "absolute", top: "50%", left: "50%", width: 0, height: 0 }}>
         {images.map((image, i) => {

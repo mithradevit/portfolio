@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "_comment": "Listed first on purpose. A dev server is usually already running on 3000 (often started outside the session), and Next 16 holds a per-directory lock — a second `next dev` on this folder exits no matter which port it is given, so autoPort cannot help. Attaching is the correct default; use the `portfolio` entry below only when nothing is on 3000.",
+      "name": "portfolio-attach",
+      "port": 3000,
+      "url": "http://localhost:3000"
+    },
+    {
       "name": "portfolio",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],

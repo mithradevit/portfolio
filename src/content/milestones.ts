@@ -40,7 +40,10 @@ export const milestones: Milestone[] = [
   {
     date: "2024-06",
     year: "Jun 2024",
-    title: "MView DEMS",
+    // Product name redacted — the engagement is under NDA and the client's
+    // product must not be named anywhere on the site. Describe the work, not
+    // the brand.
+    title: "Digital Evidence Management",
     description:
       "Two years leading UX on a digital evidence management system for law enforcement. One coherent experience across web, mobile and kiosk — then past the screen into packaging and evidence-handling workflows, because the chain of custody doesn't stop at the interface.",
   },

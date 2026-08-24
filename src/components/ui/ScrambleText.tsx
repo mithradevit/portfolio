@@ -21,14 +21,26 @@ export function ScrambleText({
   delay = 0,
   /** Re-run the scramble when the element (or its group) is hovered. */
   scrambleOnHover = false,
+  /**
+   * Wait until the text is actually on screen before decoding it.
+   *
+   * Without this the effect fires on mount, so anything below the fold has
+   * finished resolving long before it is scrolled to and the reader only ever
+   * sees the settled string. `delay` still applies, measured from the moment
+   * the element enters view rather than from page load, so a group of labels
+   * can stagger as it arrives.
+   */
+  scrambleInView = false,
 }: {
   text: string;
   as?: "span" | "h1" | "h2" | "h3" | "h4" | "p";
   className?: string;
   delay?: number;
   scrambleOnHover?: boolean;
+  scrambleInView?: boolean;
 }) {
   const [display, setDisplay] = useState(text);
+  const hostRef = useRef<HTMLElement>(null);
   const frame = useRef<number | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reduced = useRef(false);
@@ -69,15 +81,42 @@ export function ScrambleText({
     reduced.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced.current) return;
 
-    timer.current = setTimeout(run, delay * 1000);
-    return () => {
+    const cleanup = () => {
       if (timer.current) clearTimeout(timer.current);
       if (frame.current !== null) cancelAnimationFrame(frame.current);
     };
-  }, [run, delay]);
+
+    if (!scrambleInView) {
+      timer.current = setTimeout(run, delay * 1000);
+      return cleanup;
+    }
+
+    const el = hostRef.current;
+    if (!el) return cleanup;
+
+    // Fires once. A label that re-scrambled every time it crossed the edge of
+    // the screen would be a flicker on the way back up, not an entrance.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        timer.current = setTimeout(run, delay * 1000);
+      },
+      // A small margin so the decode starts just before the line clears the
+      // bottom edge, rather than after the reader is already looking at it.
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      cleanup();
+    };
+  }, [run, delay, scrambleInView]);
 
   return (
     <Tag
+      ref={hostRef as React.Ref<HTMLHeadingElement>}
       className={className}
       onMouseEnter={scrambleOnHover ? run : undefined}
       // The real string stays available to assistive tech while glyphs churn.

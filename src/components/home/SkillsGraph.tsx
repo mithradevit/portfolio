@@ -23,6 +23,7 @@ const HUB_RY = 250;
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
+
 /** Small LCG so jitter is stable across renders and between server/client. */
 function seededRandom(seed: number) {
   let s = seed;
@@ -215,7 +216,9 @@ export function SkillsGraph() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <ScrambleText as="h4" text="Skills" delay={0.35} scrambleOnHover />
+      <div className="flex h-8 items-center">
+        <ScrambleText as="h4" text="Skills" delay={0.35} scrambleOnHover />
+      </div>
 
       {/* Scrolls inside its own box on phones. Scaling a 1200px graph down to a
           375px screen would render the labels at ~2px; better to keep them

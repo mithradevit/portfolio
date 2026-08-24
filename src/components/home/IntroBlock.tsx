@@ -4,7 +4,7 @@ import { ScrambleText } from "@/components/ui/ScrambleText";
 /** Short bio plus the tag pills that summarise what she works on. */
 export function IntroBlock() {
   return (
-    <div className="flex w-full max-w-[720px] flex-col gap-5">
+    <div className="flex w-full max-w-[720px] flex-col gap-4">
       {/* Fixed-height header row, matched by the Experience block. Its label
           shares a row with a 32px button; without a shared height the two
           section labels sit on different baselines. */}

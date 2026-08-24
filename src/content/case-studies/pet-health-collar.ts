@@ -8,6 +8,7 @@ export const petHealthCollar: CaseStudy = {
   timeline: "2025 – 2026",
   team: "Hardware & Software Teams",
   skills: ["IoT Onboarding", "Human–Hardware–Software Design", "Shared-Access Systems"],
+  nda: "Covered by an NDA. The company, its product name, its hardware partners and all commercial figures are withheld, and no shipped screen appears on this page. The architecture shown is a generic description of how a connected collar works, and what is described beyond it is my own design reasoning.",
   sections: [
     {
       heading: "Overview",
@@ -43,6 +44,15 @@ export const petHealthCollar: CaseStudy = {
           body: ["Owners didn't need more data. They needed context."],
         },
       ],
+    },
+    {
+      heading: "How the system fits together",
+      body: [
+        "The app is one layer in a chain that starts at a sensor on a moving animal. Understanding that chain was the job before any screen: what the collar can measure, what survives the trip through connectivity, what the cloud can infer from it, and what is left worth showing an owner.",
+      ],
+      diagram: "collar-architecture",
+      diagramCaption:
+        "Six layers between a sensor reading and an owner's decision. The owner only ever sees layer five — every constraint in the four below it still lands on that screen.",
     },
     {
       heading: "Approach",

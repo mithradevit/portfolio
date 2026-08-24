@@ -101,8 +101,8 @@ export function ExperienceTimeline({ entries }: { entries: ExperienceEntry[] }) 
                       )}
                     </span>
                     <span
-                      // One step under the company name, matching the mono
-                      // label size globals.css uses for secondary text.
+                      // One step under the company name, matching the size
+                      // globals.css uses for secondary text.
                       className={`text-foreground-light text-[13px] transition-opacity duration-300 ${
                         isActive ? "opacity-100" : "opacity-60"
                       }`}
@@ -130,7 +130,12 @@ export function ExperienceTimeline({ entries }: { entries: ExperienceEntry[] }) 
         {/* Only rendered once entries actually carry images — an empty framed
             box beside the list would read as something failing to load. */}
         {activeImage && (
-          <div className="border-foreground/10 bg-foreground/[0.03] flex w-full shrink-0 overflow-hidden rounded-[14px] border p-2 lg:w-[230px]">
+          // `self-stretch` ties the panel's height to the list beside it
+          // rather than to the picture inside it. Removing a role left a
+          // 204px list next to a 301px photo, so the panel hung ~100px below
+          // the last row; now it ends level with it, and it will stay level
+          // whatever the entry count becomes.
+          <div className="border-foreground/10 bg-foreground/[0.03] relative flex w-full shrink-0 overflow-hidden rounded-[14px] border p-2 lg:w-[230px] lg:self-stretch">
             <motion.img
               // Keyed on src so React swaps the element and the fade replays
               // on each change rather than mutating one image in place.
@@ -140,13 +145,23 @@ export function ExperienceTimeline({ entries }: { entries: ExperienceEntry[] }) 
               initial={{ opacity: 0, scale: 1.02 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.35 }}
-              // A fixed 3:4 box rather than `h-auto`. Left to size itself the
-              // image took its own intrinsic ratio, and the four photos are
-              // not all the same shape — the square one rendered 29px shorter
-              // than the portraits, so the panel resized on every hover and
-              // the whole section shifted with it. `object-cover` crops to the
-              // box instead, so the frame is identical for all four.
-              className="h-[180px] w-full rounded-[9px] object-cover lg:h-auto lg:aspect-[3/4]"
+              // Absolute from lg, so the picture contributes no height at all
+              // and the panel is free to take the list's. `self-stretch` alone
+              // could not do it: the panel still had the image's intrinsic
+              // height inside it, and stretch only ever grows a box.
+              //
+              // The photos are not all the same shape, so left to size itself
+              // the image resized the panel on every hover and shifted the
+              // whole section. `object-cover` crops to the frame instead, and
+              // the frame is now identical for every entry whatever the entry
+              // count becomes.
+              // The explicit size is not redundant with `inset-2`: an `img` is
+              // a replaced element, so `height:auto` resolves from its own
+              // intrinsic ratio and ignores the insets — it overflowed the
+              // panel by 100px and got clipped from the top-left instead of
+              // cropping from the centre. The 1rem is the panel's `p-2`,
+              // top and bottom.
+              className="h-[180px] w-full rounded-[9px] object-cover lg:absolute lg:inset-2 lg:h-[calc(100%-1rem)] lg:w-[calc(100%-1rem)]"
             />
           </div>
         )}

@@ -33,6 +33,104 @@ const gridIcons = {
   status: Route,
 } as const;
 
+/**
+ * The opening spread: the sentence that says what the work was, and the facts
+ * of the engagement beside it.
+ *
+ * The lead is set in the display serif rather than the body face. That serif is
+ * otherwise used only for section headings, and giving it one full sentence per
+ * case study is what makes it read as part of the type system rather than as a
+ * leftover from the headings.
+ *
+ * The facts sit in a column of ruled cards on the right. Each card is a label
+ * and a value and nothing else — an accent rule on the leading edge does the
+ * work a box outline would otherwise do, without drawing four sides.
+ */
+function CaseStudyIntro({
+  intro,
+  body,
+}: {
+  intro: NonNullable<CaseStudySectionType["intro"]>;
+  body: string[];
+}) {
+  return (
+    <div className="mt-2 grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12">
+      <div className="flex flex-col gap-5">
+        {/* `text-foreground` and a size well above the body: this is the one
+            sentence a reader who reads nothing else should come away with. */}
+        <p className="text-foreground max-w-[24ch] text-[clamp(1.375rem,2.2vw,1.75rem)]! leading-[1.3] font-serif!">
+          {markLead(intro.lead)}
+        </p>
+
+        <div className="flex max-w-[560px] flex-col gap-4">
+          {body.map((paragraph, i) => (
+            <p key={i} className="text-foreground-light leading-relaxed">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2.5">
+        {intro.facts.map((fact) => (
+          <div
+            key={fact.label}
+            className="border-primary/40 bg-foreground/[0.025] flex flex-col gap-1.5 border-l-2 py-3.5 pr-4 pl-4"
+          >
+            <span className="text-foreground-light/80 font-mono text-[10px] tracking-[0.12em] uppercase">
+              {fact.label}
+            </span>
+            <span className="text-foreground text-[15px] leading-snug">{fact.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Splits a lead on `**marked**` runs and rules the marked ones.
+ *
+ * A drawn underline rather than a highlighter fill: a filled block behind text
+ * costs contrast at exactly the size where the sentence is meant to be easiest
+ * to read, and it is the effect that most reads as a template. The rule sits
+ * clear of the descenders and takes the accent, so the phrase is marked without
+ * the words themselves changing colour.
+ */
+function markLead(lead: string) {
+  return lead.split(/\*\*(.+?)\*\*/g).map((part, i) =>
+    i % 2 === 1 ? (
+      <span
+        key={i}
+        className="decoration-primary/60 underline decoration-[2px] underline-offset-[6px]"
+      >
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  );
+}
+
+/**
+ * A case-study section heading.
+ *
+ * 32px on a 1.2 line, measured off the reference rather than guessed — its
+ * section headlines set at 32px/38.4px against the same 15px body, and the bare
+ * `h3` rule here was producing 21.2px. At that size a heading is barely a step
+ * above the prose under it, which is why the page read as flat next to the
+ * reference even though the column width and body type already matched.
+ *
+ * The `!` is required throughout: the bare `h3` rule in globals.css is
+ * unlayered and beats plain utilities. Only case-study sections take this size
+ * — `h3` elsewhere (the Fun cards) is a card title and stays where it is.
+ */
+function SectionHeading({ children }: { children: ReactNode }) {
+  return (
+    <h3 className="text-foreground text-[32px]! leading-[1.2]! tracking-[-0.01em]!">{children}</h3>
+  );
+}
+
 /** Stable anchor id from a heading, shared with CaseStudyNav. */
 export function sectionId(heading: string) {
   return heading
@@ -61,11 +159,11 @@ export function CaseStudySection({
         // serif and the pills are 12px mono, so centring them makes the text
         // look misaligned even though the boxes are not.
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3">
-          <h3>{section.heading}</h3>
+          <SectionHeading>{section.heading}</SectionHeading>
           {trailing}
         </div>
       ) : (
-        <h3>{section.heading}</h3>
+        <SectionHeading>{section.heading}</SectionHeading>
       )}
       {section.kicker && (
         <span className="text-primary -mt-2 font-mono text-[11px] tracking-[0.1em] uppercase">
@@ -101,7 +199,9 @@ export function CaseStudySection({
           )}
         </figure>
       )}
-      {section.bodyAside ? (
+      {section.intro ? (
+        <CaseStudyIntro intro={section.intro} body={section.body} />
+      ) : section.bodyAside ? (
         // Prose and photograph as one row: the picture is the setting the words
         // describe, so it sits beside them rather than under them. Stacks on a
         // phone, where side-by-side would leave both halves too narrow to read.
@@ -437,7 +537,11 @@ export function CaseStudySection({
                 ? "grid-cols-2 lg:grid-cols-4"
                 : section.imagesCols === 3
                   ? "sm:grid-cols-3"
-                  : "sm:grid-cols-2"),
+                  : // 1 keeps the single-column default: for scans carrying
+                    // handwriting, half a column is too narrow to read.
+                    section.imagesCols === 1
+                    ? ""
+                    : "sm:grid-cols-2"),
           )}
           // Caps the set's width so a run of tall artefacts does not dominate
           // the column it sits in. A fraction of the available width rather than
@@ -448,7 +552,9 @@ export function CaseStudySection({
             const sizes =
               section.imagesCols === 4
                 ? "(min-width: 1024px) 200px, (min-width: 640px) 45vw, 50vw"
-                : "(min-width: 640px) 380px, 100vw";
+                : section.imagesCols === 1
+                  ? "(min-width: 1024px) 760px, 100vw"
+                  : "(min-width: 640px) 380px, 100vw";
             return (
             <figure key={img.src} className="flex w-full flex-col gap-3">
               {section.imagesBare ? (

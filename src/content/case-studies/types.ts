@@ -28,7 +28,9 @@ export type CaseStudyDiagram =
   | "design-constraints"
   | "eligibility-loop"
   | "criteria-logic"
-  | "evaluation-matrix";
+  | "evaluation-matrix"
+  /* Pet collar — see components/case-study/CollarDiagrams.tsx. */
+  | "collar-architecture";
 
 export type CaseStudySection = {
   heading: string;
@@ -87,6 +89,23 @@ export type CaseStudySection = {
    * setting the product runs in, where the picture is context for the words
    * rather than an artefact the words explain.
    */
+  /**
+   * Opening spread: one large sentence plus the facts of the engagement,
+   * side by side. For the section that introduces the work — it answers
+   * "what was this" and "what was my part in it" before the prose starts.
+   *
+   * `lead` is set in the display serif. Wrap a phrase in `**double asterisks**`
+   * to mark it; the marked run gets an accent rule under it, so the sentence
+   * has one thing the eye lands on. Only the lead supports the marker — body
+   * paragraphs are plain text on purpose.
+   *
+   * When `intro` is present the section's `body` paragraphs render underneath
+   * the lead in the same column, so a section keeps one list of prose.
+   */
+  intro?: {
+    lead: string;
+    facts: { label: string; value: string }[];
+  };
   bodyAside?: { src: string; alt: string; width: number; height: number };
   /**
    * Lets `bodyAside` stand beside the prose *and* the section's `grid`, with the
@@ -118,8 +137,9 @@ export type CaseStudySection = {
   measures?: { label: string; body: string }[];
   imagesBare?: boolean;
   /** Columns for `images` at desktop width. Defaults to 2. Use 4 for a strip
-   *  meant to be read as a run rather than page by page. */
-  imagesCols?: 2 | 3 | 4;
+   *  meant to be read as a run rather than page by page, and 1 for scans
+   *  carrying handwriting, where half a column is too narrow to read. */
+  imagesCols?: 1 | 2 | 3 | 4;
   /** Sets the image set on the same iOS grouped surface the diagrams use, so a
    *  set of artefacts reads as one exhibit rather than loose pictures. */
   imagesSurface?: boolean;
@@ -213,6 +233,10 @@ export type CaseStudy = {
   scope?: string;
   team: string;
   skills: string[];
+  /** One looping clip directly under the title, before the meta grid — the
+   *  thing itself, shown before it is described. Same shape as a section's
+   *  `videos` entry, so a clip can be moved up here by cutting and pasting. */
+  hero?: { src: string; width: number; height: number; poster?: string; alt: string };
   sections: CaseStudySection[];
   /** Live product, full write-up, repo — rendered as buttons under the header. */
   links?: { label: string; href: string }[];

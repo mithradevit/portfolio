@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import type { CaseStudyDiagram, CaseStudyMockup } from "@/content/case-studies/types";
 import { trialDiagrams } from "./TrialDiagrams";
+import { collarDiagrams } from "./CollarDiagrams";
 
 /**
  * Recreations of Vault's key surfaces, rebuilt in React against the product's
@@ -1034,45 +1035,37 @@ function ArtefactsDiagram() {
       ],
     },
   ];
-  const total = phases.reduce((n, p) => n + p.items.length, 0);
-  const max = Math.max(...phases.map((p) => p.items.length));
-
+  // A ruled table, in the site's own type and colour. This was previously an
+  // iOS-styled card — rounded chrome, SF Pro, hardcoded system greys and a
+  // progress bar per row, which asserted an interface that does not exist.
+  //
+  // The counts are gone too. They were doing the same job twice: the caption
+  // under this figure already says twenty-eight artefacts and that more than a
+  // third sit in Flows & IA, and a column of numbers repeating it added
+  // arithmetic to a list whose job is to name the phases. The `items` arrays
+  // stay as the record of what each phase actually produced.
   return (
-    <Frame label={`Artefacts · ${total} deliverables across five phases`}>
-      {/* Inset-grouped list: one white card, rows divided by hairline
-          separators that stop short of the leading edge, exactly like a
-          Settings table. */}
-      <div className="overflow-hidden rounded-[12px]" style={{ background: c.card }}>
-        {phases.map((p, i) => (
+    <figure className="flex w-full max-w-[560px] flex-col gap-4">
+      <div className="text-foreground-light font-mono text-[11px] tracking-[0.12em] uppercase">
+        Artefacts
+      </div>
+
+      <div className="flex flex-col">
+        {phases.map((p) => (
           <div
             key={p.name}
-            className="grid grid-cols-[128px_1fr_24px] items-center gap-3 px-3.5 py-2.5 sm:grid-cols-[160px_1fr_24px]"
-            style={{ borderTop: i === 0 ? "none" : `0.5px solid ${c.line}` }}
+            className="border-foreground/10 grid grid-cols-[92px_1fr] items-baseline gap-4 border-t py-3 sm:grid-cols-[120px_1fr]"
           >
-            <span className="min-w-0">
-              <span className="block text-[9.5px] font-semibold tracking-[0.04em] uppercase" style={{ color: c.accent }}>
-                {p.phase}
-              </span>
-              <span className="block text-[12.5px] leading-[1.25] font-semibold" style={{ color: c.ink, letterSpacing: "-0.01em" }}>
-                {p.name}
-              </span>
+            <span className="text-foreground-light/70 font-mono text-[10px] tracking-[0.1em] uppercase">
+              {p.phase}
             </span>
-            {/* Bar length carries the whole comparison — the eye ranks the
-                phases without reading a number, and Architect being twice
-                anything else is the point of the chart. */}
-            <span className="h-2 w-full overflow-hidden rounded-full" style={{ background: c.card3 }}>
-              <span
-                className="block h-full rounded-full"
-                style={{ width: `${(p.items.length / max) * 100}%`, background: c.accent }}
-              />
-            </span>
-            <span className="text-right text-[11.5px] font-semibold tabular-nums" style={{ color: c.ink2 }}>
-              {p.items.length}
-            </span>
+            <span className="text-foreground text-[15px] leading-snug">{p.name}</span>
           </div>
         ))}
+        {/* Closing rule, so the list ends on a line rather than trailing off. */}
+        <div className="border-foreground/10 border-t" />
       </div>
-    </Frame>
+    </figure>
   );
 }
 
@@ -1087,6 +1080,8 @@ const diagrams: Record<CaseStudyDiagram, () => React.ReactElement> = {
   artefacts: ArtefactsDiagram,
   // Clinical trial matching — own palette, kept in their own file.
   ...trialDiagrams,
+  // Pet collar — same treatment, its own file.
+  ...collarDiagrams,
 };
 
 const mockups: Record<CaseStudyMockup, () => React.ReactElement> = {

@@ -1,21 +1,22 @@
-"use client";
-
-import { useState } from "react";
-import { LayoutList, Shuffle } from "lucide-react";
 import { tools, toolCategories, type Tool } from "@/content/tools";
 import { ToolIcon } from "@/components/ui/ToolIcon";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
 /**
- * The tool stack, in two moods.
+ * The tool stack, grouped.
  *
- * Default is a drifting marquee — 25 logos as texture rather than a list,
- * which is what most visitors want from this section. The toggle sorts them
- * into plain-language groups for the reader who actually came to audit the
- * stack, and puts them back when they're done.
+ * One state, no toggle, no motion. This used to default to a drifting marquee
+ * with a button to sort it, and later sorted itself when the section scrolled
+ * into view — three behaviours for a block whose whole job is to answer "what
+ * does she work in". Grouped and still, it answers that on sight, and the
+ * section can be read at a glance instead of waited on.
  *
- * Both states render the same pills from the same data; only the container
- * changes, so nothing has to be kept in sync.
+ * Dropping the marquee also removes a permanent animation from a page that is
+ * otherwise quiet, and with it the whole class of layout shifts that came from
+ * swapping between two views of different heights.
+ *
+ * No `"use client"`: there is no state left here, so this renders on the
+ * server and ships no JavaScript.
  */
 
 function ToolPill({ tool }: { tool: Tool }) {
@@ -29,55 +30,21 @@ function ToolPill({ tool }: { tool: Tool }) {
   );
 }
 
-/** One scrolling lane. The list is rendered twice so the -50% loop is seamless;
- *  the copy is hidden from assistive tech to avoid reading 25 tools twice. */
-function MarqueeLane({ items, reverse }: { items: Tool[]; reverse?: boolean }) {
-  return (
-    <div className="marquee overflow-hidden">
-      <div className={`marquee-track flex gap-2 ${reverse ? "marquee-track-reverse" : ""}`}>
-        {items.map((tool) => (
-          <ToolPill key={tool.name} tool={tool} />
-        ))}
-        <div aria-hidden className="flex gap-2">
-          {items.map((tool) => (
-            <ToolPill key={`${tool.name}-copy`} tool={tool} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function ToolsRow() {
-  const [sorted, setSorted] = useState(false);
-
-  // Split into lanes that drift in opposite directions — a single lane reads
-  // as a broken scrollbar, two read as motion.
-  const half = Math.ceil(tools.length / 2);
-  const lanes = [tools.slice(0, half), tools.slice(half)];
-
   return (
-    <div className="flex w-full flex-col gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <ScrambleText as="h4" text="Tools" delay={0.3} scrambleOnHover />
-
-        <button
-          type="button"
-          onClick={() => setSorted((v) => !v)}
-          data-cursor="pointer"
-          aria-pressed={sorted}
-          className="group border-foreground/10 text-foreground-light hover:border-primary/40 hover:text-primary flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[12px] tracking-wide uppercase transition-colors duration-300"
-        >
-          {/* Says what it does first, personality second — a visitor scanning
-              the page shouldn't have to click to find out what the button is
-              for. */}
-          {sorted ? <Shuffle size={13} strokeWidth={1.5} /> : <LayoutList size={13} strokeWidth={1.5} />}
-          {sorted ? "Set them drifting" : "Categorize"}
-        </button>
+    // gap-4 and a 32px header row, matching Experience, Selected Work and
+    // Skills. Every section on this page uses the same label→content step, so
+    // the only varying vertical space is the shell's band gap.
+    <div className="flex w-full flex-col gap-4">
+      {/* Decodes when the section is scrolled to, not on page load — this
+          block sits well below the fold, so a mount-time effect finished long
+          before anyone got here. */}
+      <div className="flex min-h-8 items-center">
+        <ScrambleText as="h4" text="Tools" scrambleInView scrambleOnHover />
       </div>
 
-      {sorted ? (
-        toolCategories.map((category, i) => {
+      <div className="flex flex-col gap-4">
+        {toolCategories.map((category, i) => {
           const group = tools.filter((t) => t.category === category.id);
           if (group.length === 0) return null;
 
@@ -86,10 +53,13 @@ export function ToolsRow() {
               key={category.id}
               className="grid grid-cols-1 gap-3 lg:grid-cols-[200px_1fr] lg:items-start lg:gap-6"
             >
+              {/* Staggered off each label's own arrival, so the five decode
+                  in sequence down the column as the section comes up. */}
               <ScrambleText
                 as="h4"
                 text={category.label}
-                delay={i * 0.06}
+                delay={0.12 + i * 0.09}
+                scrambleInView
                 scrambleOnHover
                 className="lg:pt-1.5"
               />
@@ -100,14 +70,8 @@ export function ToolsRow() {
               </div>
             </div>
           );
-        })
-      ) : (
-        <div className="flex flex-col gap-2">
-          {lanes.map((lane, i) => (
-            <MarqueeLane key={i} items={lane} reverse={i % 2 === 1} />
-          ))}
-        </div>
-      )}
+        })}
+      </div>
     </div>
   );
 }

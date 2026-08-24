@@ -5,7 +5,6 @@ import { ExperienceTimeline } from "@/components/work/ExperienceTimeline";
 import { ProjectGrid } from "@/components/work/ProjectGrid";
 import { IntroBlock } from "@/components/home/IntroBlock";
 import { ToolsRow } from "@/components/home/ToolsRow";
-import { SkillsGraph } from "@/components/home/SkillsGraph";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import { PlayfulMotionText } from "@/components/ui/PlayfulMotionText";
 import { Reveal } from "@/components/motion/Reveal";
@@ -30,8 +29,8 @@ export default function HomePage() {
     // header and footer, and one `gap-16 lg:gap-24` band rhythm. Sections
     // must not carry their own vertical padding — that is what made the
     // spacing read as uneven from page to page.
-    <div className="flex w-full flex-col items-center gap-16 p-6">
-      <Reveal className="flex w-full max-w-[1800px] flex-col gap-16 lg:gap-24">
+    <div className="flex w-full flex-col items-center gap-16 p-6 lg:p-10">
+      <Reveal className="flex w-full max-w-[1800px] flex-col gap-40 lg:gap-60">
         {/* The hero is at least a screen tall, but it does not promise that
             every element inside it fits above the fold. That promise was what
             forced five things to shrink together whenever a window got short,
@@ -149,14 +148,14 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* The second screen holds About and Experience and nothing else.
-            The height is the viewport less the header offset the snap rests
-            at (6rem) and the band gap that follows (6rem at lg, 4rem below
-            it), so when this section is snapped into place the next one
-            starts exactly at the bottom edge rather than peeking above it.
-            `content-center` sits the two columns in the middle of that band
-            instead of pinning them to the top of a mostly empty screen. */}
-        <div className="snap-section grid w-full min-h-[calc(100dvh-12rem)] grid-cols-1 content-center gap-12 lg:grid-cols-2 lg:gap-6">
+        {/* The second screen: About and Experience, centred in a band a
+            viewport tall. The height is what makes it read as a fold rather
+            than as another block in the scroll, and `content-center` sits the
+            two columns in the middle of it instead of pinning them to the top
+            of a mostly empty screen.
+
+            Tools has a fold of its own, further down. */}
+        <div className="snap-section grid min-h-[calc(100dvh-12rem)] w-full grid-cols-1 content-center gap-12 lg:grid-cols-2 lg:gap-6">
           <IntroBlock />
           <ExperienceTimeline entries={experience} />
         </div>
@@ -168,14 +167,18 @@ export default function HomePage() {
             page out from under the reader. */}
         <ServicesSection />
 
-        <div className="flex flex-col gap-4">
-          <ScrambleText as="h4" text="Selected Work" delay={0.25} scrambleOnHover />
-          <ProjectGrid projects={projects} />
+        {/* After Services, which it now reads as the evidence for: Services
+            says what she takes on, Tools says what she takes it on with. */}
+        <div className="snap-section flex min-h-[calc(100dvh-12rem)] w-full flex-col justify-center">
+          <ToolsRow />
         </div>
 
-        <ToolsRow />
-
-        <SkillsGraph />
+        <div className="flex flex-col gap-4">
+          <div className="flex h-8 items-center">
+            <ScrambleText as="h4" text="Selected Work" delay={0.25} scrambleOnHover />
+          </div>
+          <ProjectGrid projects={projects} />
+        </div>
       </Reveal>
     </div>
   );

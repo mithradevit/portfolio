@@ -103,6 +103,29 @@ html {
   }
 }
 
+/* Page lock while the chat panel is open, phones only — there the panel fills
+   the screen, so a swipe that misses the message list scrolls the page behind
+   it and closing the chat drops the reader somewhere they never chose to be.
+   Above 768px the panel is a 400px rail with the page visibly beside it, and
+   freezing that page would be wrong.
+
+   `position: fixed` rather than `overflow: hidden`: iOS Safari ignores
+   overflow on the body and keeps scrolling anyway. Snapping is disabled too,
+   or the locked page fights the snap points on the way back. */
+@media (max-width: 768px) {
+  html.chat-open {
+    scroll-snap-type: none;
+  }
+
+  body.chat-open {
+    position: fixed;
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    touch-action: none;
+  }
+}
+
 @media (pointer: fine) {
   body {
     cursor: none;
@@ -186,6 +209,17 @@ li {
 
 a {
   font-size: 15px;
+}
+
+/* No scrollbar at all, for a row that carries its own position indicator.
+   Only for scrollers that show progress some other way — a scroll region with
+   nothing at all to say it scrolls is a trap. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* A thin, quiet scrollbar for content that scrolls inside its own pane

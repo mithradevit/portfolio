@@ -27,8 +27,11 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
 
         {/* Bottom padding lets the final section scroll up into the nav's
             trigger band — without it the page bottoms out first and the
-            highlight can never reach the last item. */}
-        <div className="flex w-full max-w-[760px] flex-col gap-16 pb-[45vh]">
+            highlight can never reach the last item.
+
+            48px between sections, measured off the reference: it stacks
+            sections at gap-12 with gap-4 inside each one, a 3:1 ratio. */}
+        <div className="flex w-full max-w-[760px] flex-col gap-12 pb-[45vh]">
           <CaseStudyHeader project={project} caseStudy={caseStudy} />
           {caseStudy.sections.map((section, i) => (
             <CaseStudySection
