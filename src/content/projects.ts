@@ -41,7 +41,7 @@ export const projects: Project[] = [
     year: "2026",
     thumbnailColor: "#2B4C7E",
     aspect: "aspect-[16/9]",
-    image: "/images/projects/frontline-safety.png",
+    image: "/images/projects/frontline-safety-cover.webp",
     cursorLabel: "case-study",
   },
   {

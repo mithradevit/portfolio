@@ -207,7 +207,7 @@ export const frontlineSafety: CaseStudy = {
       ],
       image: {
         src: "/images/projects/frontline-safety/triage.webp",
-        alt: "Vault Recordings list: status tabs across the top, a filter row, then rows showing recording name, time, camera and officer, a status pill and clip count.",
+        alt: "Recordings list: status tabs across the top, a filter row, then rows showing recording name, time, camera and officer, a status pill and clip count.",
         width: 1280,
         height: 974,
         caption: "The shipped Recordings screen.",
@@ -230,7 +230,7 @@ export const frontlineSafety: CaseStudy = {
       ],
       image: {
         src: "/images/projects/frontline-safety/detail-pattern.webp",
-        alt: "Vault recording detail: player and editing timeline on the left, a Details, Transcript and History tab set on the right holding name, status, case and incident fields plus earlier notes.",
+        alt: "Recording detail: player and editing timeline on the left, a Details, Transcript and History tab set on the right holding name, status, case and incident fields plus earlier notes.",
         width: 1280,
         height: 1033,
         caption: "The shipped recording detail.",
@@ -345,6 +345,19 @@ export const frontlineSafety: CaseStudy = {
       diagram: "data-model",
       diagramCaption:
         "Every screen in either front-end resolves to one of these objects. Designing against the data model rather than the page list is what kept two apps coherent with one designer.",
+      embed: {
+        src: "/design-system/evidence-design-system.html",
+        title: "Evidence management design system — tokens, atoms, molecules, organisms and composed components",
+        // Not an aspect box: the document is ~6800px tall, so a ratio derived
+        // from the column width just picks an arbitrary peephole. A viewport
+        // fraction gives it a readable working height on any screen.
+        ratio: "h-[72vh] min-h-[540px]",
+        eager: true,
+        fluid: true,
+        label: "design system",
+        caption:
+          "The system itself: colour and type tokens, the 4px spacing grid, the icon spec, then atoms through to the composed screens they build. Scroll inside the frame, or switch it between light and dark to check contrast in both.",
+      },
     },
     {
       heading: "Validation & Iteration",

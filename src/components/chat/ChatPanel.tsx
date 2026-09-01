@@ -17,6 +17,19 @@ const SUGGESTIONS = [
   "What are her core skills?",
 ];
 
+/** Pulls the `error` field out of the API's JSON body when there is one, so a
+ *  rate limit reads as a rate limit. Falls back to a generic line — an
+ *  exception message from the SDK is not something to show a visitor. */
+function readableError(error: Error): string {
+  try {
+    const parsed = JSON.parse(error.message);
+    if (typeof parsed?.error === "string") return parsed.error;
+  } catch {
+    // Not JSON — a network or stream failure. Fall through.
+  }
+  return "Something went wrong. Please try again in a moment.";
+}
+
 export function ChatPanel() {
   const { open, setOpen } = useChatOpen();
   const [input, setInput] = useState("");
@@ -91,7 +104,10 @@ export function ChatPanel() {
 
         {error && (
           <p className="text-sm text-red-500">
-            Something went wrong. Please try again in a moment.
+            {/* The API sends a readable reason for the failures a visitor can
+                act on (rate limit, not configured). Anything else is an
+                internal detail and stays generic. */}
+            {readableError(error)}
           </p>
         )}
       </div>

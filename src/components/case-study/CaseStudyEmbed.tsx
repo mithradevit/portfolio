@@ -32,8 +32,8 @@ const BASE_WIDTH = 1280;
  * because someone who wants it gone will scroll.
  */
 export function CaseStudyEmbed({ embed }: { embed: Embed }) {
-  const [live, setLive] = useState(false);
-  const host = hostOf(embed.src);
+  const [live, setLive] = useState(embed.eager ?? false);
+  const host = embed.label ?? hostOf(embed.src);
 
   // Measured rather than derived from `embed.ratio`, which is a Tailwind class
   // string and would have to be parsed. The box is already sized by that class;
@@ -52,7 +52,7 @@ export function CaseStudyEmbed({ embed }: { embed: Embed }) {
     return () => observer.disconnect();
   }, []);
 
-  const scale = stage.width ? stage.width / BASE_WIDTH : 1;
+  const scale = embed.fluid || !stage.width ? 1 : stage.width / BASE_WIDTH;
 
   return (
     <figure className="flex w-full flex-col gap-3">
@@ -97,11 +97,12 @@ export function CaseStudyEmbed({ embed }: { embed: Embed }) {
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads"
               className="absolute top-0 left-0 border-0"
               style={{
-                width: BASE_WIDTH,
+                width: embed.fluid ? "100%" : BASE_WIDTH,
                 // Undo the scale so the shrunk frame still covers the box.
                 height: stage.height ? stage.height / scale : "100%",
-                transform: `scale(${scale})`,
-                transformOrigin: "top left",
+                ...(embed.fluid
+                  ? {}
+                  : { transform: `scale(${scale})`, transformOrigin: "top left" }),
               }}
             />
           ) : (

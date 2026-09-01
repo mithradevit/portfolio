@@ -182,6 +182,27 @@ export type CaseStudySection = {
     title: string;
     ratio: string; // Tailwind aspect class, e.g. "aspect-[16/10]"
     caption?: string;
+    /**
+     * Load the frame with the page instead of behind a click. Only for a static
+     * same-origin document we ship ourselves — the click gate exists to stop a
+     * third-party app booting unasked and setting its cookies, and neither risk
+     * applies to a file out of /public.
+     */
+    eager?: boolean;
+    /** Replaces the host in the address pill. A `/public` path is a filename,
+     *  not an address, and reads as one. */
+    label?: string;
+    /**
+     * Render the frame at the column's own width instead of scaling a 1280px
+     * viewport down into it.
+     *
+     * The scaling exists for a fixed-layout app that has to be seen whole. A
+     * long responsive *document* is the opposite case: scaled to fit this
+     * column its 14px body type lands at ~8px, which is not reading size. Fluid
+     * lets the page use its own breakpoints at true size — narrower, but
+     * legible, which is the point of showing it at all.
+     */
+    fluid?: boolean;
   };
   /** Numbered callouts rendered beside the mockup — the design decision and the
    *  micro-interaction behind each part of the screen. */
