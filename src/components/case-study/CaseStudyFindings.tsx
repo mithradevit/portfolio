@@ -29,7 +29,10 @@ export function CaseStudyFindings({ items }: { items: Item[] }) {
     setOpen((prev) => (prev.includes(i) ? prev.filter((n) => n !== i) : [...prev, i]));
 
   return (
-    <div className="border-foreground/10 flex w-full max-w-[820px] flex-col border-t">
+    // No max-width: 820px was tuned against the old 760px content measure and
+    // now sits 76px inside it, which read as a stray indent — and the row's own
+    // children overflowed that cap by 3px.
+    <div className="border-foreground/10 flex w-full flex-col border-t">
       {items.map((item, i) => {
         const isOpen = open.includes(i);
         return (
@@ -55,13 +58,18 @@ export function CaseStudyFindings({ items }: { items: Item[] }) {
 
               {/* One glyph rotated, not a swap between plus and minus: the
                   quarter-turn is what reads as the row opening. */}
-              <Plus
-                size={15}
-                aria-hidden
-                className={`text-foreground-light shrink-0 transition-transform duration-300 ${
-                  isOpen ? "rotate-45" : ""
-                }`}
-              />
+              {/* Fixed box around the glyph: a rotated element's bounding box
+                  grows by √2, so the open row's plus was 21px wide in a slot
+                  sized for 15 and pushed the article 3px past its measure. */}
+              <span className="grid h-[22px] w-[22px] shrink-0 place-items-center">
+                <Plus
+                  size={15}
+                  aria-hidden
+                  className={`text-foreground-light transition-transform duration-300 ${
+                    isOpen ? "rotate-45" : ""
+                  }`}
+                />
+              </span>
             </button>
 
             {/* `height: auto` on an AnimatePresence child animates properly in
@@ -78,7 +86,7 @@ export function CaseStudyFindings({ items }: { items: Item[] }) {
                 >
                   {/* Indented past the number column — its glyph width plus
                       the row's own gap, so the body lines up under the title. */}
-                  <p className="text-foreground-light max-w-[700px] pb-5 pl-[calc(1rem+2ch)] leading-relaxed">
+                  <p className="text-foreground-light pb-5 pl-[calc(1rem+2ch)] text-[14px]! leading-[1.65]!">
                     {item.body}
                   </p>
                 </motion.div>

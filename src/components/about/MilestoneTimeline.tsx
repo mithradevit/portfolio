@@ -173,7 +173,12 @@ function Timeline({ items, hint, label }: { items: TimelineItem[]; hint: string;
 
   return (
     <div className="flex flex-col gap-4">
-      <h4>{hint}</h4>
+      {/* The 32px label row every other labelled section on the site uses. A
+          bare h4 here sat ~9px higher than "The roles" directly above it, so
+          two stacked rulers didn't start on the same line. */}
+      <div className="flex h-8 items-center">
+        <h4>{hint}</h4>
+      </div>
 
       <div
         ref={ref}

@@ -1,4 +1,6 @@
 import { about } from "@/content/about";
+import { leadership } from "@/content/fun-projects";
+import { FunProjectsGrid } from "@/components/fun/FunProjectsGrid";
 import { profile } from "@/content/profile";
 import { InterestList } from "@/components/about/InterestList";
 import { PhotoGrid } from "@/components/about/PhotoGrid";
@@ -61,6 +63,21 @@ export default function AboutPage() {
             reading as cramped. */}
         <div className="flex flex-col gap-24 lg:gap-40">
           <CareerTimeline />
+
+          {/* Moved off /fun. The workshop is not a side project — it belongs
+              with the roles and certifications, which is where the page
+              answers what she has actually done. It keeps the fun card and
+              detail window because the shape of the content is identical. */}
+          <div className="flex w-full flex-col gap-4">
+            <div className="flex h-8 items-center">
+              <ScrambleText as="h4" text="Leadership @ Figma" delay={0.15} scrambleOnHover />
+            </div>
+            <FunProjectsGrid
+              projects={leadership}
+              gridClassName="grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16"
+            />
+          </div>
+
           <CertificationTimeline />
         </div>
 

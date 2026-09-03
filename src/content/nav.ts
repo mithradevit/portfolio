@@ -12,7 +12,7 @@ export const navItems: NavItem[] = [
   { href: "/about", label: "About" },
   { href: "/fun", label: "Fun" },
   {
-    href: "https://drive.google.com/file/d/1E3nt7TDm6jTCg5RmGJRj487b71H2yAhl/view?usp=sharing",
+    href: "https://drive.google.com/file/d/1dZA6awVs6-b6YjUz_0nTGj9qmdo1DJ2a/view?usp=sharing",
     label: "Resume",
     external: true,
   },

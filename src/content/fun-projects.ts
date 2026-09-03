@@ -47,6 +47,16 @@ export const funProjects: FunProject[] = [
     year: "2023",
     tools: ["Figma", "Interaction Design"],
   },
+];
+
+/**
+ * Speaking and mentoring, shown on /about rather than /fun.
+ *
+ * Same shape as a fun project so it reuses the card and detail window, but it
+ * is not a side project — it sits with the roles and certifications, which is
+ * the part of the site that answers what she has done professionally.
+ */
+export const leadership: FunProject[] = [
   {
     title: "Designing with Leverage: The AI-Empowered Designer",
     description:

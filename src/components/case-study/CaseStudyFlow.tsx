@@ -23,6 +23,7 @@ export function CaseStudyFlow({ flow }: { flow: Flow }) {
 
   /** Landscape clips get the full column rather than half of one. */
   const wide = flow.video.width / flow.video.height >= 1.3;
+  const isGif = flow.video.src.toLowerCase().endsWith(".gif");
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -76,22 +77,41 @@ export function CaseStudyFlow({ flow }: { flow: Flow }) {
         className="w-full overflow-hidden rounded-[9px]"
         style={{ aspectRatio: `${flow.video.width} / ${flow.video.height}` }}
       >
-        <video
-          ref={videoRef}
-          src={flow.video.src}
-          aria-label={flow.video.alt}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="h-full w-full object-cover"
-        />
+        {isGif ? (
+          // A GIF can't go in a <video>, and it can't be paused either — the
+          // format has no playback control at all. So reduced motion swaps the
+          // file itself for a still first frame rather than trying to stop it,
+          // which keeps the same promise the video path makes. `loading="lazy"`
+          // stands in for the video's visibility gate: without it, several
+          // megabytes of animation download on first load whether or not the
+          // reader ever scrolls this far.
+          <img
+            src={reduced && flow.video.poster ? flow.video.poster : flow.video.src}
+            alt={flow.video.alt}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            src={flow.video.src}
+            aria-label={flow.video.alt}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="h-full w-full object-cover"
+          />
+        )}
       </div>
 
       <div className="flex min-w-0 flex-col gap-1.5">
         <h4 className="text-foreground!">{flow.title}</h4>
         <p className="text-foreground-light text-[13px] leading-[1.6]">{flow.body}</p>
-        {reduced && (
+        {/* Not offered for a GIF: there is nothing to pause or resume, so the
+            control would be a button that visibly does nothing. */}
+        {reduced && !isGif && (
           <button
             type="button"
             onClick={() => setPlaying((v) => !v)}

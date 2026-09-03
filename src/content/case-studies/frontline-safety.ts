@@ -13,6 +13,9 @@ import type { CaseStudy } from "./types";
 
 export const frontlineSafety: CaseStudy = {
   slug: "frontline-safety",
+  // Centred grey-mat photo-essay presentation for this case study alone — see
+  // CaseStudyFigure. Every other case study keeps the default bordered card.
+  mattedImages: true,
   role: "Sole UX designer — end-to-end across mobile, web DEMS and device configuration",
   timeline: "May 2024 – May 2026",
   team: "Embedded with a 40+ person product & engineering org",
@@ -21,47 +24,77 @@ export const frontlineSafety: CaseStudy = {
   // read as a disclaimer to get past rather than a fact. Two sentences: what
   // the constraint is, and what it means for what's on the page.
   nda: "This work is strictly confidential. Names, figures and real records are withheld — every screen here uses sample data.",
+  // Same file the card on the home page uses. One image, one path — a second
+  // copy would double the bytes and drift the moment either is re-exported.
+  cover: {
+    src: "/images/projects/frontline-safety-cover.webp",
+    alt: "Cover artwork for the digital evidence ecosystem case study.",
+    width: 1600,
+    height: 900,
+  },
   sections: [
     {
       heading: "Overview",
-      // The facts here are deliberately not the ones in the page header. The
-      // header answers role, timeline, team and skills; these four answer what
-      // the thing was — surfaces, sector, who used it, what can be shown.
+      // No fact cards. The header above already answers role, timeline, team
+      // and skills; a second labelled column directly under it read as a
+      // duplicate of the same furniture, and the NDA line it carried is
+      // already stated in the banner.
       intro: {
-        lead: "I worked across a **complete ecosystem** — hardware, mobile and web — for a public safety technology company.",
-        facts: [
-          { label: "Surfaces", value: "Body-worn, in-car and 4G cameras · Kiosk · Mobile (iOS / Android) · DEMS web platform" },
-          { label: "Sector", value: "Public safety technology" },
-          { label: "Users", value: "First-day field officers through to system administrators" },
-          { label: "Status", value: "Under NDA — full visuals available on request" },
+        // No `**marked**` phrase: the reference sets this line as a plain
+        // question with no accent rule under it.
+        lead: "How do you design a cohesive evidence ecosystem from patrol car to courtroom?",
+        columns: [
+          {
+            title: "System Architecture",
+            body: "Mapping the complex flow of data across body-worn cameras, biometric kiosks, and cloud infrastructure.",
+          },
+          {
+            title: "Web & Mobile UI",
+            body: "Creating a comprehensive design system from the ground up to accelerate case creation and build resilient field features like real-time duress detection.",
+          },
+          {
+            title: "Evidentiary Trust",
+            body: "Ensuring every digital interaction maintains strict legal compliance, non-destructive editing, and an unbreakable chain of custody.",
+          },
         ],
       },
+      // One line between the question and the columns. The two paragraphs that
+      // used to sit here — the shape of the system, and the reading done before
+      // designing — moved out with the template: this section now states the
+      // problem and the three strands, and the sections below do the telling.
       body: [
-        "I started working on this project in March 2024.",
-        "This wasn't a single product. It was a connected system of hardware and software — body-worn cameras, in-car cameras, 4G cameras, a kiosk with a palm-vein scanner, mobile applications, and the web-based evidence platform. These systems had to work across hardware-to-software and hardware-to-hardware integrations, while supporting different roles, permissions, and operational workflows.",
-        "Before designing anything, I spent hours going through user guides, technical documentation, role and responsibility documents, existing workflows, and system behaviours to understand how everything connected.",
+        "As the sole UX designer within a 40-person engineering team, my goal was to unify a complex public safety network into one secure, efficient platform.",
       ],
-      image: {
-        src: "/images/projects/frontline-safety/evidence-story.webp",
-        alt: "Sketch strip: cameras, phones and patrol cars feed a box overflowing with video files, which overwhelms one person, then reaches a supervisor at a desk surrounded by questions, weighed on a scale between speed and safeguarding, ending in a certified document.",
-        width: 1800,
-        height: 352,
-        caption:
-          "The whole problem in one line: everything captured lands somewhere, and one person has to turn that pile into something a court will accept. Every decision in this case study sits between the box and the certificate.",
-      },
       diagram: "ecosystem",
     },
     {
-      heading: "The Challenge",
+      // Replaces "The Challenge". Same ground — evidence piling up faster than
+      // anyone could account for it — but stated as the two problems users
+      // actually reported, with the systemic reading underneath.
+      heading: "Pain Points",
+      intro: {
+        columns: [
+          {
+            title: "1. Evidence is difficult to move",
+            body: "Officers often need to return to the station to dock cameras, upload footage, and manually organise evidence.",
+          },
+          {
+            title: "2. Evidence is difficult to manage",
+            body: "As digital evidence grows, supervisors, investigators and legal teams struggle with fragmented systems, scattered files and manual workflows.",
+          },
+        ],
+        image: {
+          src: "/images/projects/frontline-safety/evidence-journey-today.webp",
+          alt: "Five-panel sketch of the journey as it stood: an officer on duty capturing footage in the field, driving back to the police station, docking the camera and waiting on a 42% upload, then manually reviewing, categorising and tagging evidence at a desk, ending with a stack of case files ready for investigation.",
+          width: 1735,
+          height: 906,
+        },
+        insight:
+          "The problem wasn't collecting more evidence — it was the friction created every time that evidence had to move from one person, system or stage of the justice process to another.",
+      },
       body: [
-        "Evidence was arriving faster than anyone could account for it. Hundreds of recordings a day landed in a single undifferentiated list, most of them never needed as evidence — but the ones that mattered were buried in the same feed as routine patrol footage, sorted by nothing more useful than recency.",
-        "The people responsible for that record were also, in practice, the fleet manager and the helpdesk. A supervisor had to know what existed, whether it was intact, who touched it, who could see it, what had been disclosed and what had to be destroyed — while also fielding calls about a camera that would not turn on.",
+        "From the moment footage is captured in the field to the moment it is presented in court, evidence passes through multiple people, platforms and processes. Each handoff introduces delay, manual work, and an opportunity for something critical to be lost.",
         "The commercial constraint made it harder: this is a product sold on evidentiary defensibility. Anything that made the workflow faster but the record weaker was not a trade the business could take.",
-      ],
-      stats: [
-        { value: "2", label: "Distinct front-ends sharing one backend data model, both of which I owned" },
-        { value: "3", label: "Surfaces — web console, mobile field app, kiosk dock software" },
-        { value: "1", label: "Designer, embedded across a 40+ person product and engineering organisation" },
       ],
     },
     {
@@ -70,37 +103,25 @@ export const frontlineSafety: CaseStudy = {
         "The assumed pain points and the real ones diverged sharply, which is why the fieldwork was not negotiable. Interviews ran across the full chain — officers, supervisors, investigators, evidence technicians, administrators, device-maintenance staff and judiciary users — because each of them inherits the previous role's shortcuts.",
         "Alongside primary research: support-ticket and product-feedback analysis, device telemetry review, stakeholder workshops with product, engineering and domain experts, and iterative design reviews through implementation.",
       ],
-      image: {
-        src: "/images/projects/frontline-safety/working-notes-board.jpg",
-        alt: "A large handwritten working board: flow sketches of an officer checking in at the office, pairing a body-worn camera to the phone app by QR code and Bluetooth, branches for cameras already registered versus not registered in the back end, duress-button notification states, Wi-Fi and hotspot fallbacks, upload paths from dock to server, and lists of features and open questions annotated in pink and orange highlighter.",
-        width: 3000,
-        height: 2250,
-        caption:
-          "The working board behind the ecosystem model — pairing, duress, connectivity fallbacks and upload paths worked out in one place, with open questions left highlighted rather than resolved on the spot.",
-      },
-    },
-    {
-      heading: "What I Did",
-      body: [
-        "The fieldwork and the deliverables it produced — what the research actually consisted of, and where the work landed once it was synthesised.",
-      ],
-      stats: [
-        // TODO(Mithra): this was 12+ and you changed it to 5+. Lowering a
-        // research number is unusual enough to be worth a second look —
-        // confirm it, or tell me what the 5+ was meant to count.
-        { value: "5+", label: "Contextual interviews across every role in the evidence chain, including judiciary users" },
-        { value: "8+", label: "Workflow observations and ride-alongs across capture, transfer and review" },
-        { value: "15+", label: "Usability sessions across web, mobile and kiosk — run monthly, after every sprint" },
-      ],
-      imagesCols: 1,
+      // Prose runs full width; every artefact lives in the rail below it. The
+      // board leads the rail because it is the whole working session at wall
+      // scale and the three detail pages are what it resolves into.
+      imagesScroll: true,
       images: [
+        {
+          src: "/images/projects/frontline-safety/working-notes-board.jpg",
+          alt: "A large handwritten working board: flow sketches of an officer checking in at the office, pairing a body-worn camera to the phone app by QR code and Bluetooth, branches for cameras already registered versus not registered in the back end, duress-button notification states, Wi-Fi and hotspot fallbacks, upload paths from dock to server, and lists of features and open questions annotated in pink and orange highlighter.",
+          width: 3000,
+          height: 2250,
+          caption: "The full working board — everything below is a page out of it.",
+        },
         {
           src: "/images/projects/frontline-safety/working-notes-detail-1.jpg",
           alt: "Handwritten flow: an officer arrives at the office, logs in and checks in for the day, collects a body-worn camera and connects it to the phone app; branches cover Bluetooth permission states from 'not enabled' through to 'can't scan', cameras already registered versus not registered in the back end, and duress-button notifications in foreground, background and locked-screen states.",
           width: 3000,
           height: 2250,
           caption:
-            "Check-in and pairing, worked through state by state — including the paths where Bluetooth is off, the camera is not in the back end, or the phone screen is locked when duress is pressed.",
+            "Mapped the camera check-out and pairing journey, including common failure scenarios such as Bluetooth being off, unregistered devices, and locked phones during emergencies.",
         },
         {
           src: "/images/projects/frontline-safety/working-notes-detail-2.jpg",
@@ -108,7 +129,11 @@ export const frontlineSafety: CaseStudy = {
           width: 3000,
           height: 2250,
           caption:
-            "Feature scope and viewing restrictions on one side, deployment shape on the other — an individual officer with one camera and dock behaves nothing like an agency rolling out hundreds.",
+            // Third bullet, second image: this page is the deployment sketch,
+            // and the store/view/upload bullet belongs to the page that
+            // actually works it out. Captions follow the artefact, not the
+            // order they were written in.
+            "Explored different deployment models, designing for both individual officers and large agencies managing hundreds of cameras and docking stations.",
         },
         {
           src: "/images/projects/frontline-safety/working-notes-detail-3.jpg",
@@ -116,15 +141,96 @@ export const frontlineSafety: CaseStudy = {
           width: 3000,
           height: 2250,
           caption:
-            "Where the data model got settled: static device facts separated from dynamic session data, and store, view and upload each given its own permission rule rather than one blanket one.",
+            "Defined how officers interact with footage, including storing, viewing, and uploading videos from the camera to the cloud.",
         },
       ],
-      diagram: "artefacts",
-      diagramCaption:
-        "Twenty-eight artefacts, and the distribution is the point: more than a third sit in Flows & IA. This was an architecture problem before it was a screen problem, and the deliverables show it.",
+    },
+    {
+      heading: "User Interviews",
+      navLabel: "Interviews",
+      body: [
+        "Three roles inherit the same evidence in sequence, and each one describes a different failure. Their words set the brief for the surfaces that follow.",
+      ],
+      // All three at once: the argument is that three roles inherit the same
+      // evidence and each describes a different failure, which can't be read
+      // when the other two are hidden behind a timer.
+      voicesStacked: true,
+      voices: [
+        {
+          name: "Patrol officer",
+          context: "The capture UX",
+          quote:
+            "In a critical moment, I can't check my phone to see if the camera is connected. I hit record and trust that it worked.",
+        },
+        {
+          name: "Shift supervisor",
+          context: "The triage UX",
+          quote:
+            "I'm managing cameras that won't sync while searching through hundreds of videos for the one thing that actually matters.",
+        },
+        {
+          name: "Evidence technician",
+          context: "The disclosure UX",
+          quote:
+            "Getting the video isn't enough. I need to prepare it for disclosure without breaking the chain of custody.",
+        },
+      ],
+      image: {
+        src: "/images/projects/frontline-safety/journey-map.webp",
+        alt: "Journey map across six phases — check out and pair, capture in the field, upload and sync, organise evidence, review and manage cases, retain and audit. Each phase lists key actions, an emotion curve running between prepared, focused, relieved, in control, confident and assured at the top and frustrated, distracted, anxious, overwhelmed, uncertain and concerned at the bottom, the user's thoughts at that moment, and the opportunities each low point opens up.",
+        width: 1839,
+        height: 1214,
+      },
+    },
+    {
+      // The map is the section — no heading above a label saying the same
+      // thing, and no paragraph introducing a list that introduces itself.
+      heading: "Process & Deliverables",
+      navLabel: "Process",
+      body: [],
+      processLabel: "Six stages, and what each one left behind",
+      process: [
+        {
+          icon: "discover",
+          title: "Discover",
+          body: "Understand the ecosystem, its users and where the work actually breaks.",
+          deliverables: ["Research synthesis", "Stakeholder maps", "Journey maps"],
+        },
+        {
+          icon: "define",
+          title: "Define",
+          body: "Frame the right problems and the opportunities worth taking.",
+          deliverables: ["Problem statements", "Opportunity areas", "Design principles"],
+        },
+        {
+          icon: "architect",
+          title: "Architect",
+          body: "Design the structure and the flows that make the system work.",
+          deliverables: ["Information architecture", "User flows", "Wireframes"],
+        },
+        {
+          icon: "validate",
+          title: "Validate",
+          body: "Prototype early and test often, with the people who do the job.",
+          deliverables: ["Clickable prototypes", "Usability findings", "Iteration notes"],
+        },
+        {
+          icon: "systemise",
+          title: "Systemise",
+          body: "Build a design system that holds consistency as the product grows.",
+          deliverables: ["Design system", "Component library", "Documentation"],
+        },
+        {
+          icon: "handoff",
+          title: "Handoff",
+          body: "Give engineering everything it needs to build without guessing.",
+          deliverables: ["Handoff specs", "Annotations", "Assets & guides"],
+        },
+      ],
     },
     {
       heading: "What I Found",
+      navLabel: "Insights",
       body: [
         "Five findings did most of the work in reshaping the product. None of them were what the team expected going in.",
       ],
@@ -161,6 +267,7 @@ export const frontlineSafety: CaseStudy = {
     },
     {
       heading: "The Design Tensions",
+      navLabel: "Design Decisions",
       body: [
         "The interesting decisions on this product were not usability problems with a correct answer. They were tensions where both sides were legitimate, and the job was to decide which one won in which context — and to be able to say why.",
       ],
@@ -174,6 +281,7 @@ export const frontlineSafety: CaseStudy = {
     },
     {
       heading: "Design Principles",
+      navLabel: "Principles",
       body: [
         "Nine rules, authored early and applied in order of precedence whenever two of them conflicted. Writing them down was what let me defend a decision to engineering months later without relitigating it from scratch.",
       ],
@@ -191,6 +299,7 @@ export const frontlineSafety: CaseStudy = {
     },
     {
       heading: "Reframing the Problem",
+      navLabel: "Reframing",
       body: [
         "The brief I was handed was make the review interface better. The finding that changed the product was that the review interface was inheriting a problem created two steps upstream — so the highest-leverage change to the desk experience happened outside the desk experience entirely.",
         "If metadata is captured in the field, at or near the moment of recording, the supervisor never inherits the debt for it. That single reframe moved the supervisor's job from authoring metadata to verifying it, and pulled upload forward out of the end-of-shift window at the same time.",
@@ -200,106 +309,70 @@ export const frontlineSafety: CaseStudy = {
         "The same lifecycle, redistributed. Documentation moves to the moment of capture where recall is highest, AI handles the transcription and tagging pass, and the supervisor arrives to verify rather than to write.",
     },
     {
-      heading: "Decision 01 · Triage Before Chronology",
+      heading: "The Solution: A Trust-First Ecosystem",
+      navLabel: "The Solution",
       body: [
-        "The old entry point answered what happened. The redesign answers what needs you. Sessions open on work queues — uncategorized, aging, approaching a deadline — instead of a reverse-chronological feed where a flagged incident from Tuesday sits below routine patrol from this morning.",
-        "The alternative considered was a smarter sort on the existing list. I rejected it because sorting still requires the supervisor to interpret; a queue with an explicit shared vocabulary answers the question by structure instead.",
+        "The ecosystem was redesigned to automate data tagging in the field, surface critical anomalies at the desk, and lock down the chain of custody for the courtroom.",
       ],
-      image: {
-        src: "/images/projects/frontline-safety/triage.webp",
-        alt: "Recordings list: status tabs across the top, a filter row, then rows showing recording name, time, camera and officer, a status pill and clip count.",
-        width: 1280,
-        height: 974,
-        caption: "The shipped Recordings screen.",
-      },
-      mockup: "sessions",
-      annotations: [
-        { title: "Status became a fixed vocabulary", body: "Uncategorized → Categorized → Evidence, mutually exclusive, always in the same column position. Scannable peripherally without reading the label." },
-        { title: "Counts derive from the same query as the list", body: "The number a supervisor acts on and the list they open can never disagree, because there is only one source." },
-        { title: "Selection uses the accent fill, not just a tick", body: "The target of a bulk action is unmissable — bulk operations on evidence are exactly where a wrong selection is expensive." },
-        { title: "Device identity travels with every row", body: "Serial and MAC sit under the session ID, so attribution survives sorting, filtering and export without a drill-in." },
+      // TODO(Mithra): each step's left column is a marked placeholder until you
+      // send the artefact for it. Drop the files into
+      // public/images/projects/frontline-safety/ and add an `image` to the step.
+      steps: [
+        {
+          title: "Zero-Friction Capture (Mobile & Hardware)",
+          body: "Officers under adrenaline cannot navigate complex UI. The capture experience was rebuilt for the worst-case scenario.",
+          bullets: [
+            {
+              title: "Resilient duress flows",
+              body: "Engineered the mobile app to bypass locked screens and OS battery-savers, so a hardware duress press pings dispatch instantly, even in low-connectivity zones.",
+            },
+            {
+              title: "Automated cruisers",
+              body: "Integrated Computer-Aided Dispatch (CAD) metadata directly into the capture sequence, eliminating manual typing in the vehicle.",
+            },
+            {
+              title: "Biometric handoffs",
+              body: "Replaced manual check-ins with one-tap palm-vein authentication at the kiosk, with visual LED feedback when a body-worn camera is paired and ready.",
+            },
+          ],
+        },
+        {
+          title: "Triage Over Chronology (Web Dashboard)",
+          body: "Supervisors no longer scroll through 500 routine traffic stops to find one critical incident.",
+          bullets: [
+            {
+              title: "Exception-based routing",
+              body: "The dashboard prioritises files by missing metadata, impending retention deletion, or flagged hardware anomalies — a camera that failed to upload, for instance.",
+            },
+            {
+              title: "Automated ingestion",
+              body: "Docking a camera offloads the footage, clears local device storage to prevent mid-shift storage failure, and routes the data to the correct case file.",
+            },
+          ],
+        },
+        {
+          title: "The Secure Workspace (Investigation & Disclosure)",
+          body: "Speed is irrelevant if the evidence is thrown out of court.",
+          bullets: [
+            {
+              title: "Cases as containers",
+              body: "Instead of downloading and exporting via USB or FTP, evidence is bundled into secure, shareable containers governed by strict backend permissions.",
+            },
+            {
+              title: "Non-destructive redaction",
+              body: "A layered video workspace: blurring a bystander's face applies a visual mask, and the interface says plainly that the original raw file stays locked and untouched.",
+            },
+            {
+              title: "Immutable audit trails",
+              body: "Every view, tag and redaction is logged to an un-editable ledger, turning a messy workflow into a court-defensible document.",
+            },
+          ],
+        },
       ],
-      mockupCaption:
-        "Every queue tile is a filter rather than a statistic, and the query lives in the URL so a supervisor can share or return to exactly the view they were working from.",
-    },
-    {
-      heading: "Decision 02 · One Detail Pattern, Reused Everywhere",
-      body: [
-        "Rather than designing a bespoke screen per object, I built one detail pattern — a horizontal tab bar over a two-column layout, main content beside a related-items rail — and reused it for Sessions and Cases alike.",
-        "This is the decision with the most downstream leverage in the whole project. It meant a user who learned the session screen already knew the case screen, and it meant engineering built the shell once.",
-      ],
-      image: {
-        src: "/images/projects/frontline-safety/detail-pattern.webp",
-        alt: "Recording detail: player and editing timeline on the left, a Details, Transcript and History tab set on the right holding name, status, case and incident fields plus earlier notes.",
-        width: 1280,
-        height: 1033,
-        caption: "The shipped recording detail.",
-      },
-      mockup: "session-tabs",
-      annotations: [
-        { title: "Four tabs, ordered by frequency of use", body: "File information first because it is the daily job; audit trail last because it is consulted, not edited." },
-        { title: "The rail keeps siblings in reach", body: "Child files and adjacent sessions stay visible, so moving between related media never costs a round-trip back to the list." },
-        { title: "Category is the only required field", body: "Marked inline with the accent border. Everything else can wait; the one field that unblocks the rest of the workflow cannot." },
-        { title: "Identity strip is always above the tabs", body: "Owner, status and incident flag persist across every tab, so context never disappears when the user switches task." },
-      ],
-    },
-    {
-      heading: "Decision 03 · The Original Is Never Modified",
-      body: [
-        "The highest-stakes surface in the product, governed by one rule. Redaction, beeping, clipping and annotation all operate on a selection and produce a new derived file — the source is untouched, always.",
-        "Derived files are first-class records with their own identifier and a visible link back to the parent, and every save writes an audit entry describing the range and the treatments applied. The destructive path does not exist rather than being discouraged.",
-      ],
-      image: {
-        src: "/images/projects/frontline-safety/editor.webp",
-        alt: "The editing timeline: selection range readout, scrubber with waveform, Blur faces, Mute sound and Add a note controls, the line stating the original is never changed, and the resulting clips below.",
-        width: 652,
-        height: 470,
-        caption: "The shipped editor, cropped to the timeline and its clips.",
-      },
-      mockup: "editor",
-      annotations: [
-        { title: "Treatments are labelled regions on the timeline", body: "Not hidden in a settings panel — a reviewer can see what was done at a glance and remove any of it individually." },
-        { title: "The unselected range is dimmed, not cropped", body: "The full recording stays visible while the selection is being made, so the operator never loses the surrounding context." },
-        { title: "Audio waveform sits under the video track", body: "Beep redaction targets speech, so the operator needs to see audio to place a treatment accurately." },
-        { title: "The safety guarantee is stated in the tool belt", body: "Written where the destructive-looking action lives, not in a help page — the moment of hesitation is the moment to answer it." },
-      ],
-    },
-    {
-      heading: "Decision 04 · Custody Moved Into the Interface",
-      body: [
-        "Chain of custody existed in the database but not on screen, which meant answering who touched this required an administrator and a support ticket. Moving it into the primary interface, in plain language, made supervisors self-sufficient on the question the product exists to answer.",
-        "Edits, status changes, case additions, exports and shares all append to the same record — including system events like ingest and integrity verification — so one narrative covers the file's whole life rather than three partial ones.",
-      ],
-      image: {
-        src: "/images/projects/frontline-safety/custody.webp",
-        alt: "The History tab: a permanent record listing who recorded, uploaded, changed status, blurred faces and added the file to a case, each with a timestamp.",
-        width: 1280,
-        height: 1033,
-        caption: "The shipped History tab.",
-      },
-      mockup: "audit",
-      mockupCaption:
-        "The same vertical-timeline component serves the session audit trail and the case chain of custody. Accent dots mark the current user's own actions; system and third-party events stay neutral.",
-    },
-    {
-      heading: "Decision 05 · Cases as Containers, Not Exports",
-      body: [
-        "Sharing outside the organisation used to mean an export and an email attachment, at which point control was gone and there was no record of what left, to whom, or for how long.",
-        "Cases became containers that gather sessions, derived clips and attachments into one reviewable unit. Sharing operates on the case with explicit named recipients, access is revocable, and revocation is treated as consequential enough to require confirmation. Every sharing event appends to the same custody record as everything else.",
-      ],
-      image: {
-        src: "/images/projects/frontline-safety/sharing.webp",
-        alt: "Case sharing: a table of who can see the case, what each recipient can do — view and download, view only, blurred copy only — and an expiry date, with Remove on every row.",
-        width: 1050,
-        height: 560,
-        caption: "The shipped sharing controls, where revocability and blurred-copy access are explicit.",
-      },
-      mockup: "case-file",
-      mockupCaption:
-        "Add to case is the funnel from raw media to curated evidence, and it is the same primary action on the sessions list and the session detail — one path, repeated wherever the user might decide.",
     },
     {
       heading: "Designing Across the Ecosystem",
+      navLabel: "Ecosystem",
       body: [
         "The surfaces are not three versions of the same app. The mobile app exists to close the gap between capture and documentation; the kiosk exists to guarantee a controlled handover; the console exists to make sense of everything after the fact.",
         "What holds them together is the object model, not the layout. A session created on a device, described on a phone, edited on the console and shared into a case is one record moving through four contexts — and the design work was mostly about making each handoff survivable.",
@@ -338,6 +411,7 @@ export const frontlineSafety: CaseStudy = {
     },
     {
       heading: "Building the System",
+      navLabel: "Build",
       body: [
         "With one designer and 40+ engineers, consistency could not depend on me reviewing every screen. It had to be structural: a small set of components that appear everywhere, with their states and interaction specs defined once.",
         "The reused patterns did most of the governance work. The tabbed detail shell, the search and date-range bar, the status chip, the notes-with-history block, the vertical audit timeline and the map component each appear on multiple surfaces with identical behaviour — which is also why a new feature could usually be specified as a composition of existing parts rather than a new design.",
@@ -345,22 +419,47 @@ export const frontlineSafety: CaseStudy = {
       diagram: "data-model",
       diagramCaption:
         "Every screen in either front-end resolves to one of these objects. Designing against the data model rather than the page list is what kept two apps coherent with one designer.",
-      embed: {
-        src: "/design-system/evidence-design-system.html",
-        title: "Evidence management design system — tokens, atoms, molecules, organisms and composed components",
-        // Not an aspect box: the document is ~6800px tall, so a ratio derived
-        // from the column width just picks an arbitrary peephole. A viewport
-        // fraction gives it a readable working height on any screen.
-        ratio: "h-[72vh] min-h-[540px]",
-        eager: true,
-        fluid: true,
-        label: "design system",
-        caption:
-          "The system itself: colour and type tokens, the 4px spacing grid, the icon spec, then atoms through to the composed screens they build. Scroll inside the frame, or switch it between light and dark to check contrast in both.",
-      },
+      // The embedded live design-system document was removed; the plates below
+      // are the same system as flat exports, which read at a glance instead of
+      // asking the reader to scroll a 6800px page inside a frame.
+      imagesScroll: true,
+      imagesRailHeight: 400,
+      images: [
+        {
+          src: "/images/projects/frontline-safety/ds-01-colour.webp",
+          alt: "01 Colour — token groups for surface and ink, the accent set, and five semantic hues, each swatch labelled with its variable name and hex value.",
+          width: 1236,
+          height: 776,
+        },
+        {
+          src: "/images/projects/frontline-safety/ds-02-type-spacing.webp",
+          alt: "02 Type, spacing, radius and shadow — the typographic scale from h1 to mono with size, weight and tracking; a 4px spacing grid from 4 to 40px; five radius steps; three shadow elevations; and the single easing curve used for motion.",
+          width: 1236,
+          height: 1052,
+        },
+        {
+          src: "/images/projects/frontline-safety/ds-03-icons.webp",
+          alt: "03 Icons — the construction spec (24x24 viewBox, stroke 1.8–2, round joins, 17px nav and 14px inline sizes) beside the navigation and action set used in product.",
+          width: 1236,
+          height: 439,
+        },
+        {
+          src: "/images/projects/frontline-safety/ds-04-atoms.webp",
+          alt: "04 Atoms — button variants with padding, radius and font specs; text field and search with focus-ring rules; tags and badges; checkbox and switch; avatars.",
+          width: 1236,
+          height: 600,
+        },
+        {
+          src: "/images/projects/frontline-safety/ds-05-molecules.webp",
+          alt: "05 Molecules — atoms composed into stat tiles, ranked bars, tabs, an alert row with a severity stripe and fix action, and a list row with thumbnail, title and actions.",
+          width: 1236,
+          height: 530,
+        },
+      ],
     },
     {
       heading: "Validation & Iteration",
+      navLabel: "Validation",
       body: [
         "Usability sessions ran monthly, after every sprint, across all three surfaces — which meant findings landed while the work was still cheap to change rather than at the end of a release.",
         "The corrections were as instructive as the confirmations. The first status vocabulary had five states, and testing showed two of them were interpreted inconsistently by different supervisors, so it collapsed to a smaller mutually exclusive set. An early version of the editor put treatments in a side panel; observation showed operators lost track of what they had applied, which is why treatments moved onto the timeline as labelled regions. Terminology testing killed most of the internal jargon — language written for engineers was being read by operators with no technical background.",

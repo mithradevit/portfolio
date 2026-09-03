@@ -29,7 +29,7 @@ export const profile = {
   // Pills under the intro paragraph — the shorthand for what she works on.
   tags: ["Public safety", "Healthcare", "Clinical systems", "Connected health", "AI"],
 
-  resumeUrl: "https://drive.google.com/file/d/1E3nt7TDm6jTCg5RmGJRj487b71H2yAhl/view?usp=sharing",
+  resumeUrl: "https://drive.google.com/file/d/1dZA6awVs6-b6YjUz_0nTGj9qmdo1DJ2a/view?usp=sharing",
 
   socials: {
     linkedin: "https://linkedin.com/in/mithradevi",

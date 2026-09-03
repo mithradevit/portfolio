@@ -18,7 +18,7 @@ type Banner = NonNullable<CaseStudy["sections"][number]["videos"]>[number];
  */
 export function CaseStudyVideos({ videos }: { videos: Banner[] }) {
   if (videos.length === 0) return null;
-  if (videos.length === 1) return <CaseStudyBanner banner={videos[0]} />;
+  if (videos.length === 1) return <CaseStudyBanner banner={videos[0]} showCaption={false} />;
 
   // Clips recorded separately are rarely the exact same shape, and a row of
   // boxes at slightly different heights reads as a mistake. Give the paired
@@ -44,10 +44,10 @@ export function CaseStudyVideos({ videos }: { videos: Banner[] }) {
               video.width / video.height < 1.8 && "mx-auto w-full max-w-[480px]",
             )}
           >
-            <CaseStudyBanner banner={video} />
+            <CaseStudyBanner banner={video} showCaption={false} />
           </div>
         ) : (
-          <CaseStudyBanner key={video.src} banner={video} aspect={shared} />
+          <CaseStudyBanner key={video.src} banner={video} aspect={shared} showCaption={false} />
         ),
       )}
     </div>
@@ -67,11 +67,26 @@ export function CaseStudyVideos({ videos }: { videos: Banner[] }) {
  * in an effect, not during render, because the server has no way to know it and
  * guessing would mismatch on hydration.
  */
-export function CaseStudyBanner({ banner, aspect }: { banner: Banner; aspect?: number }) {
+export function CaseStudyBanner({
+  banner,
+  aspect,
+  showCaption = true,
+}: {
+  banner: Banner;
+  aspect?: number;
+  /**
+   * Whether `alt` is also printed under the clip. Off for a grid of clips,
+   * where the pictures speak for themselves and four ruled captions turn a
+   * gallery into a spec sheet. `alt` still goes on the player as its
+   * accessible name either way — this hides the caption, not the description.
+   */
+  showCaption?: boolean;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [reduced, setReduced] = useState(false);
   const [playing, setPlaying] = useState(true);
   const [inView, setInView] = useState(false);
+  const isGif = banner.src.toLowerCase().endsWith(".gif");
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -120,22 +135,35 @@ export function CaseStudyBanner({ banner, aspect }: { banner: Banner; aspect?: n
         className="border-foreground/10 bg-foreground/[0.03] relative w-full overflow-hidden rounded-[14px] border shadow-[0_1px_2px_rgb(50_64_79_/_5%),0_8px_24px_-12px_rgb(50_64_79_/_20%)]"
         style={{ aspectRatio: aspect ?? `${banner.width} / ${banner.height}` }}
       >
-        <video
-          ref={videoRef}
-          // Not `autoPlay`: playback is driven by the effect above so the
-          // reduced-motion preference can veto it before the first frame.
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster={banner.poster}
-          aria-label={banner.alt}
-          className="h-full w-full object-cover"
-        >
-          <source src={banner.src} type="video/mp4" />
-        </video>
+        {isGif ? (
+          // A GIF has no pause, so reduced motion swaps the file itself for a
+          // still first frame instead of trying to stop it — the same promise
+          // the video path makes, kept the only way this format allows.
+          <img
+            src={reduced && banner.poster ? banner.poster : banner.src}
+            alt={banner.alt}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            // Not `autoPlay`: playback is driven by the effect above so the
+            // reduced-motion preference can veto it before the first frame.
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={banner.poster}
+            aria-label={banner.alt}
+            className="h-full w-full object-cover"
+          >
+            <source src={banner.src} type="video/mp4" />
+          </video>
+        )}
 
-        {reduced && (
+        {reduced && !isGif && (
           <button
             type="button"
             onClick={() => setPlaying((v) => !v)}
@@ -146,9 +174,11 @@ export function CaseStudyBanner({ banner, aspect }: { banner: Banner; aspect?: n
           </button>
         )}
       </div>
-      <figcaption className="border-foreground/10 text-foreground-light border-l-2 py-0.5 pl-3 text-[13px] leading-[1.6]">
-        {banner.alt}
-      </figcaption>
+      {showCaption && (
+        <figcaption className="border-foreground/10 text-foreground-light border-l-2 py-0.5 pl-3 text-[13px] leading-[1.6]">
+          {banner.alt}
+        </figcaption>
+      )}
     </figure>
   );
 }

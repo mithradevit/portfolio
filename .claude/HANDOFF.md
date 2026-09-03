@@ -1,14 +1,15 @@
-# Handoff — portfolio (as of 25 Aug 2026)
+# Handoff — portfolio (as of 1 Sep 2026)
 
-## ⚠️ FIRST THING: the dev server is wedged
+## The dev server wedges periodically
 
-Port 3000 is held by a `node.exe` that **accepts TCP connections but never
-answers** — `/`, `/about`, `/manifest.json` and even static `.webp` files all
-hang for 20s+ then `ECONNRESET`. It is not a code fault: static assets do not
-touch React, so a wedged process is the only explanation. It has now happened
-to two separate PIDs (29580, then 18752), so expect it to recur.
+Port 3000 gets held by a `node.exe` that **accepts TCP connections but never
+answers** — `/`, `/about`, `/manifest.json` and even static `.webp` files hang
+for 20s+ then `ECONNRESET`. It is not a code fault: static assets do not touch
+React, so a wedged process is the only explanation. It has happened to three
+PIDs so far (29580, 18752, and one before that), so expect it again.
 
-**Fix:**
+Resolved on 1 Sep — 18752 was killed and the restart is healthy — but the fix
+is worth keeping:
 
 ```bash
 netstat -ano | grep ":3000.*LISTENING"   # get the PID
@@ -24,9 +25,9 @@ node -e "require('http').get({host:'127.0.0.1',port:3000,path:'/',timeout:15000}
 ```
 
 `curl` is unreliable in this shell (returns 000 against a server that answers
-200 to Node's client) — use the Node probe.
-
-**Because of this, nothing below marked "unverified" has been seen rendering.**
+200 to Node's client) — use the Node probe. Note the **first probe after a
+cold start hangs** while Turbopack compiles; retry before concluding it is
+wedged.
 
 ## Read this first
 
@@ -74,6 +75,22 @@ Case-study spacing and heading size were reverse-engineered from `rachelchen.tec
 
 **Case studies:** optional `intro` block (serif lead with `**marked**` phrase + fact cards) exists on the type and is used **only on frontline-safety**. Dotlet has an `embed` (`dotlet.site`) and a `hero` video in the header.
 
+- `embed` gained three optional fields on 1 Sep: `eager` (load with the page
+  instead of behind the click gate — only for a static same-origin file we
+  ship), `label` (replaces the host in the address pill, since a `/public`
+  path is a filename not an address), and `fluid` (render at the column's own
+  width instead of scaling a 1280px viewport down into it).
+- **`fluid` exists because scaling ruins a long document.** The component was
+  built for Dotlet, a fixed-layout canvas app that has to be seen whole. Fitting
+  a 1280px viewport into the 758px column scales to 0.59, which puts 14px body
+  text at **8.3px** and shows ~13% of a 6800px page. `fluid` drops the
+  transform so the framed page uses its own breakpoints at true size.
+- frontline-safety's "Building the System" section embeds the design system at
+  `public/design-system/evidence-design-system.html` — `eager` + `fluid`, in an
+  `h-[72vh] min-h-[540px]` frame rather than an aspect box, because a ratio
+  derived from column width just picks an arbitrary peephole into a document
+  that tall.
+
 ## Open / unfinished
 
 0. **⚠️ The client product name is still visible in seven screenshots.** The
@@ -92,37 +109,64 @@ Case-study spacing and heading size were reverse-engineered from `rachelchen.tec
 
 1. **`h3` renders in three typefaces site-wide** — serif on Fun, Geist Sans on Work cards, 32px serif in case studies. Flagged in a font audit; Mithra has not decided.
 2. **Seven mono label sizes** (9, 9.27, 10, 11, 12, 13, 15px) doing one job.
-3. **MithraLLM has never run.** No `.env.local`; the endpoint opens a stream then errors. Mithra must create her own `ANTHROPIC_API_KEY`. Also: the system prompt only reads `sections[0].body[0]` per case study, and errors are masked as "An error occurred."
+3. **MithraLLM has still never run** — there is no `.env.local`, so nothing
+   below has been exercised against the real API. Mithra must create her own
+   `ANTHROPIC_API_KEY` (console.anthropic.com → Settings → Keys) and put it in
+   `portfolio/.env.local`; `.env.local.example` is the template.
+
+   Reworked on 1 Sep, typechecks clean, **untested end to end**:
+   - The system prompt no longer reads only `sections[0].body[0]`. It now emits
+     role/timeline/team/scope/skills plus every section's heading, body,
+     bullets, findings, measures and note per project — roughly 10K tokens.
+     It still loops over `content/projects.ts`, not `caseStudies`, which is
+     what keeps the unpublished drafts (`crm-remediation`, `health-ring`,
+     `maternity-clinical-suite`) out of the bot's mouth as well as off the page.
+   - Prompt caching is on (`providerOptions.anthropic.cacheControl`). The
+     system prompt is byte-identical per request, so follow-up questions are
+     ~10x cheaper on the repeated part. **Check `cache_read_input_tokens` is
+     non-zero once a key exists** — if it's zero, something is varying in the
+     prefix.
+   - Errors are no longer masked. `toUIMessageStreamResponse({ onError })`
+     logs the real cause server-side; `readableError()` in `ChatPanel.tsx`
+     surfaces the API's own `error` string for things a visitor can act on
+     (rate limit, not configured) and stays generic otherwise.
+   - A missing key now returns **503 with a readable reason** instead of
+     failing deep inside the stream, where it looked identical to an outage.
+   - The prompt carries NDA instructions: describe the work, never name the
+     client or product, and don't confirm a visitor's guess. **This is the
+     only thing standing between the expanded knowledge base and the same
+     leak item 0 describes** — the case-study prose is now fed to the model in
+     full, so verify this holds before the chat goes live.
+   - Model is `claude-haiku-4-5` — a deliberate cost choice for a public
+     endpoint, not an oversight. Revisit only if answer quality disappoints.
 4. **`npx next build` has never been run** this session — only `tsc --noEmit`, and the last one was interrupted.
 5. Pre-existing **OrbitGallery hydration mismatch** on `/` (offered, never accepted).
 6. Open `TODO(Mithra)` markers: NDA flags on projects, the 5+ interview stat, "Currently Building" naming, FIESTAA/SYNECTICS placeholder year.
 7. Unused leftovers: `MilestoneTimeline` export, `servicesIntro` in `content/services.ts`, `.marquee-track-reverse` CSS.
 
-## Last changes — unverified in browser (server was hung)
+## Verified rendering (1 Sep)
 
-Both verified at source level only. Neither has been seen rendering.
-
-1. **Client product name redacted.** `MView DEMS` → `Digital Evidence
-   Management` in `content/milestones.ts`; the MithraLLM suggestion chip now
-   reads "Tell me about the digital evidence work" (it previously named the
-   redacted product *and* pointed at a project no longer in `projects.ts`, so
-   the bot answered "I don't know" to its own suggestion). Confirmed by grep:
-   **zero occurrences of "MView"** in `src/` or `public/`. "Altitude" was never
-   present anywhere in the codebase.
-
-2. **First case study cover replaced.** `Downloads/Inspo/Frame 10.png`
-   (1600×900) → `public/images/projects/frontline-safety-cover.webp` (88 KB),
-   and `projects.ts` now points at it. The old `frontline-safety.png` is still
-   on disk and now unreferenced — delete when confirmed.
-
-   Note the naming: a **new filename**, not an overwrite. Overwriting keeps
-   serving stale bytes from Next's optimizer cache. Same reason
-   `dotlet-cover-v2.webp` exists.
+- **New first-case-study cover** — `Downloads/Inspo/Frame 10.png` (1600×900) →
+  `public/images/projects/frontline-safety-cover.webp` (88 KB). Confirmed as
+  the image actually served for the first card on `/`. A **new filename, not an
+  overwrite** — overwriting keeps serving stale bytes from Next's optimizer
+  cache, same reason `dotlet-cover-v2.webp` exists. The old
+  `frontline-safety.png` is unreferenced; delete when confirmed.
+- **MView redaction** — zero matches for "mview" or "altitude" in the rendered
+  text of `/` and `/about`. Note `/about` does **not** show "Digital Evidence
+  Management": `about/page.tsx` imports only `CertificationTimeline` from
+  `MilestoneTimeline.tsx`, so `content/milestones.ts` renders nowhere. The
+  redaction is correct but the data is currently dead. If that ruler is meant
+  to be visible, it isn't — a separate decision from the redaction.
+- **Design system embed** — loads eagerly at true 14px, no transform, no
+  horizontal overflow, product name stripped (0 refs in the served file).
 
 ## Next session should
 
-1. Kill the wedged PID, restart, and **verify both changes above render** —
-   `/` (first card shows the new cover) and `/about` (milestone reads
-   "Digital Evidence Management").
-2. Ask Mithra whether the leftover `frontline-safety.png` and the three unused
-   components (`ProjectRail`, `ProjectBento`, `ProjectTabs`) should be deleted.
+1. **Get MithraLLM running** — it is the one feature that has never executed.
+   Needs Mithra's key in `.env.local`, then exercise the NDA guardrail and
+   confirm cache hits (item 3).
+2. Raise the **screenshot redaction** (item 0) before any deploy.
+3. Ask about the leftover `frontline-safety.png` and the three unused
+   components (`ProjectRail`, `ProjectBento`, `ProjectTabs`).
+4. Run `npx next build` — still never done this session (item 4).

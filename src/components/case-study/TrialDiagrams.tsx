@@ -16,7 +16,7 @@ import { ArrowRight } from "lucide-react";
 function Frame({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="border-foreground/10 bg-foreground/[0.02] flex w-full flex-col gap-3 rounded-[12px] border p-4">
-      <span className="text-primary font-mono text-[11px] tracking-[0.08em] uppercase">
+              <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
         {label}
       </span>
       {children}
@@ -136,7 +136,7 @@ function EligibilityLoopDiagram() {
           <Card key={s.title} accent={s.accent}>
             <span
               className={[
-                "font-mono text-[11px] tracking-[0.08em]",
+
                 s.accent ? "text-primary" : "text-foreground-light/60",
               ].join(" ")}
             >
@@ -163,7 +163,7 @@ function CriteriaLogicDiagram() {
     <Frame label="Eligibility logic">
       <div className="border-primary/40 bg-primary/[0.06] flex items-center gap-3.5 rounded-[11px] border p-3.5">
         <span className="text-primary font-mono text-[24px] leading-none font-semibold">78%</span>
-        <span className="text-foreground-light min-w-0 text-[12px] leading-[1.5]">
+            <span className="text-foreground-light min-w-0 text-[12px] leading-[1.55]">
           <span className="text-foreground font-medium">The match percentage is the door.</span> It
           cannot say whether the missing 22% is a soft preference or a hard stop.
         </span>
@@ -239,12 +239,12 @@ function DesignConstraintsDiagram() {
             ].join(" ")}
           >
             <div className="flex shrink-0 items-baseline gap-2.5 sm:w-[170px]">
-              <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
+      <span className="text-primary font-mono text-[11px] tracking-[0.08em] uppercase">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="text-foreground text-[13px] font-medium">{it.title}</span>
             </div>
-            <span className="text-foreground-light min-w-0 text-[12px] leading-[1.55]">
+        <span className="text-foreground-light min-w-0 text-[12px] leading-[1.5]">
               {it.body}
             </span>
           </div>
@@ -305,7 +305,7 @@ function EvaluationMatrixDiagram() {
             ].join(" ")}
           >
             <div className="flex items-baseline gap-2.5 p-3">
-              <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
+      <span className="text-primary font-mono text-[11px] tracking-[0.08em] uppercase">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="text-foreground text-[12.5px] font-medium">{r.tested}</span>

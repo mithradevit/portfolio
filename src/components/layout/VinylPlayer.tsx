@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { vinylTrack } from "@/content/audio";
 import { cn } from "@/lib/cn";
 
@@ -14,6 +15,14 @@ export function VinylPlayer() {
   // size. Deferring it means the hero owns its own corner and the player
   // appears once there is nothing there to cover.
   const [past, setPast] = useState(false);
+
+  // A case study runs its own fixed-position rail into the same bottom-left
+  // corner (see CaseStudyNav), and a case study is not the place for background
+  // music regardless. Hidden rather than unmounted: this component lives in the
+  // root layout specifically so a track keeps playing across navigation, and
+  // unmounting here would stop it dead the moment someone opens a case study.
+  const pathname = usePathname();
+  const onCaseStudy = pathname?.startsWith("/projects/") ?? false;
 
   useEffect(() => {
     const onScroll = () => setPast(window.scrollY > window.innerHeight * 0.6);
@@ -50,7 +59,7 @@ export function VinylPlayer() {
     <div
       className={cn(
         "fixed bottom-6 left-6 z-40 hidden flex-col items-start gap-2 transition-opacity duration-500 lg:flex",
-        past ? "opacity-100" : "pointer-events-none opacity-0",
+        past && !onCaseStudy ? "opacity-100" : "pointer-events-none opacity-0",
       )}
     >
       <audio

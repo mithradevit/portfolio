@@ -84,21 +84,23 @@ export function HeroStats() {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.45 + i * 0.05, ease: EASE }}
-            className="border-foreground/[0.08] bg-foreground/[0.04] rounded-full border px-2.5 py-1 backdrop-blur-md"
-            style={{
-              boxShadow:
-                "inset 0 1px 0 rgb(255 255 255 / 0.45), 0 1px 2px rgb(0 0 0 / 0.04)",
-            }}
+            // Fill is the page's own background, not an ink tint. A
+            // `foreground/4%` wash is grey by construction — it drags the label
+            // toward the surface it sits on and costs contrast at this size,
+            // which is the one thing these can't afford.
+            className="border-foreground/20 bg-background/70 rounded-full border px-2.5 py-1 backdrop-blur-md"
+            style={{ boxShadow: "0 1px 2px rgb(0 0 0 / 0.05)" }}
           >
             {/* A span carrying the h4 label styling by hand, not an <h4>: the
                 bare h4 rule in globals.css is unlayered and fixes the size at
                 12px, which a utility can't step down from. */}
             <span
-              className="text-foreground-light block font-mono tracking-wide whitespace-nowrap uppercase"
-              // One golden-ratio step below the stat line at every width: that
-              // line clamps 11→15px, and this is the same ramp divided by
-              // 1.618 (11/1.618 = 6.8, 15/1.618 = 9.27).
-              style={{ fontSize: "clamp(6.8px, 0.34rem + 0.68vw, 9.27px)" }}
+              className="text-foreground block font-mono tracking-wide whitespace-nowrap uppercase"
+              // Was the golden-ratio step below the stat line (6.8→9.27px);
+              // now that ramp plus 10%. Full-strength ink rather than
+              // `foreground-light`: at this size the lighter tone reads as
+              // blur, not as hierarchy — the pill already sets these apart.
+              style={{ fontSize: "clamp(7.5px, 0.374rem + 0.748vw, 10.2px)" }}
             >
               {tag}
             </span>

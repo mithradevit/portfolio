@@ -21,9 +21,10 @@ const c = {
      fills for pills — the surface language is Apple's, so these read as
      native app screens rather than web cards.
 
-     The one deliberate departure is `accent`: iOS would use systemOrange
-     (#FF9500), but this stays the product's own brand orange, which is also
-     the portfolio's primary. Everything structural is iOS; the brand is not. */
+     `accent` is kept for the semantic tones (status pills and the like) but is
+     no longer used to mark a box in a diagram: a single orange-filled card in a
+     row of white ones read as an alert rather than as emphasis. Emphasis there
+     is now a darker hairline and full-ink label — same signal, no colour. */
   bg: "#F2F2F7", // systemGroupedBackground
   card: "#FFFFFF", // secondarySystemGroupedBackground
   card2: "#F9F9FB", // header strip
@@ -53,19 +54,22 @@ const IOS_FONT =
 
 function Frame({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div
-      className="w-full overflow-hidden rounded-[16px] shadow-[0_1px_3px_rgb(0_0_0_/_6%)]"
-      style={{ background: c.bg, fontFamily: IOS_FONT }}
-    >
-      {/* iOS grouped-list header: uppercase footnote in systemGray, sitting on
-          the grouped background rather than in a chrome bar of its own. */}
-      <div className="flex items-center gap-2 px-4 pt-3.5 pb-2.5">
-        <span className="h-1.5 w-1.5 rounded-full" style={{ background: c.accent }} />
-        <span className="text-[10.5px] font-semibold tracking-[0.04em] uppercase" style={{ color: c.ink3 }}>
-          {label}
-        </span>
+    // The label sits outside the panel now, as a caption above it rather than
+    // a header bar inside it — so the panel holds only the exhibit itself and
+    // the whole thing reads as "caption, then artefact" like every other
+    // figure on the page. Square corners for the same reason: the rounded
+    // card read as a UI element in its own right, competing with the interface
+    // it was supposed to be presenting.
+    <div className="flex w-full flex-col gap-2.5" style={{ fontFamily: IOS_FONT }}>
+      <div className="flex items-center">
+        <span style={{ color: c.ink3 }}>{label}</span>
       </div>
-      <div className="px-3 pb-3 sm:px-4 sm:pb-4">{children}</div>
+      <div
+        className="w-full overflow-hidden shadow-[0_1px_3px_rgb(0_0_0_/_6%)]"
+        style={{ background: c.bg }}
+      >
+        <div className="px-3 py-3 sm:px-4 sm:py-4">{children}</div>
+      </div>
     </div>
   );
 }
@@ -247,7 +251,7 @@ function SessionTabsMockup() {
               {["Name", "Case number", "Category *", "Event number"].map((f) => (
                 <span
                   key={f}
-                  className="rounded-[8px] border px-2.5 py-1.5 text-[11px]"
+            className="rounded-[8px] border px-2.5 py-1.5 text-[11.5px]"
                   style={{ borderColor: f.includes("*") ? c.accent : c.line2, background: c.card2, color: c.ink4 }}
                 >
                   {f}
@@ -258,7 +262,7 @@ function SessionTabsMockup() {
         </div>
 
         <div className="rounded-[10px] p-2.5" style={{ background: c.card }}>
-          <div className="mb-2 font-mono text-[9px] tracking-[0.08em] uppercase" style={{ color: c.ink4 }}>
+          <div className="mb-2 font-mono text-[9.5px] tracking-[0.1em] uppercase" style={{ color: c.ink4 }}>
             Session rail
           </div>
           {["D49C3345_00", "D49C3345_02", "D49C3345_05"].map((f, i) => (
@@ -473,7 +477,7 @@ function CaseFileMockup() {
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_210px]">
         <div className="flex flex-col gap-2.5">
           <span
-            className="rounded-[8px] border px-2.5 py-1.5 text-[11.5px]"
+                  className="rounded-[8px] border px-2.5 py-1.5 text-[11px]"
             style={{ borderColor: c.line2, background: c.card, color: c.ink2 }}
           >
             High Street incident — 13 Aug
@@ -750,32 +754,6 @@ function UsageMockup() {
 
 /* ═════════════════════════════ DIAGRAMS ═════════════════════════════ */
 
-function DiaBox({
-  kicker,
-  lines,
-  note,
-  accent,
-}: {
-  kicker: string;
-  lines: string[];
-  note?: string;
-  accent?: boolean;
-}) {
-  return (
-    <div
-      className="flex min-w-0 flex-1 flex-col gap-1 rounded-[12px] border p-3.5"
-      style={{ borderColor: accent ? c.accent : c.line, background: accent ? c.accentBg : c.card }}
-    >
-      <span className="font-mono text-[9.5px] tracking-[0.1em] uppercase" style={{ color: accent ? c.accent : c.ink4 }}>
-        {kicker}
-      </span>
-      {lines.map((l) => (
-        <span key={l} className="text-[12.5px] font-semibold" style={{ color: c.ink }}>{l}</span>
-      ))}
-      {note && <span className="mt-0.5 text-[10.5px]" style={{ color: c.ink3 }}>{note}</span>}
-    </div>
-  );
-}
 
 function Arrow() {
   return (
@@ -783,24 +761,93 @@ function Arrow() {
   );
 }
 
+/**
+ * The ecosystem, as four columns of one panel rather than five cards and three
+ * arrows.
+ *
+ * Nothing is dropped — every surface, note and stage label from the boxed
+ * version is still here. What went is the packaging: five separate bordered
+ * cards, each with its own edge and shadow, plus arrow glyphs between them, all
+ * inside a frame that was already a container. On a phone that stacked into a
+ * column of tall boxes taller than the section it illustrates.
+ *
+ * One panel with hairline dividers says the same sequence — left to right is
+ * the flow — with a quarter of the furniture.
+ */
+const ECOSYSTEM_STAGES: {
+  kicker: string;
+  items: { label: string; note?: string }[];
+  note?: string;
+}[] = [
+  {
+    kicker: "Capture",
+    items: [{ label: "Body-worn (BWC)" }, { label: "In-car video (ICV)" }, { label: "Fixed cameras" }],
+    note: "Field, in motion",
+  },
+  {
+    kicker: "Transfer",
+    items: [
+      { label: "Mobile app", note: "Upload from the field" },
+      { label: "Kiosk / dock", note: "Check-in, check-out" },
+    ],
+  },
+  {
+    kicker: "DEMS",
+    items: [{ label: "Sessions" }, { label: "Cases" }, { label: "Streaming" }, { label: "Devices" }],
+    note: "Desk, with time to think",
+  },
+  {
+    kicker: "Outcome",
+    items: [{ label: "Case briefs" }, { label: "Disclosure" }],
+    note: "Court-defensible",
+  },
+];
+
 function EcosystemDiagram() {
   return (
     <Frame label="The ecosystem · every surface in scope">
-      <div className="flex flex-col gap-2.5 sm:flex-row sm:items-stretch">
-        <DiaBox kicker="Capture" lines={["Body-worn (BWC)", "In-car video (ICV)", "Fixed cameras"]} note="Field, in motion" />
-        <Arrow />
-        <div className="flex min-w-0 flex-1 flex-col gap-2.5">
-          <DiaBox kicker="Transfer" lines={["Mobile app"]} note="Upload from the field" accent />
-          <DiaBox kicker="Transfer" lines={["Kiosk / dock"]} note="Check-in, check-out" />
-        </div>
-        <Arrow />
-        <DiaBox
-          kicker="DEMS"
-          lines={["Sessions", "Cases", "Streaming", "Devices"]}
-          note="Desk, with time to think"
-        />
-        <Arrow />
-        <DiaBox kicker="Outcome" lines={["Case briefs", "Disclosure"]} note="Court-defensible" />
+      <div
+        className="grid grid-cols-1 overflow-hidden rounded-[12px] border sm:grid-cols-4"
+        style={{ borderColor: c.line, background: c.card }}
+      >
+        {ECOSYSTEM_STAGES.map((stage, i) => (
+          <div
+            key={stage.kicker}
+            // Hairline between rows when stacked, between columns on a row.
+            className={`flex min-w-0 flex-col gap-2 p-3.5 ${
+              i === 0 ? "" : "border-t sm:border-t-0 sm:border-l"
+            }`}
+            style={{ borderColor: c.line }}
+          >
+            <span
+
+              style={{ color: c.ink4 }}
+            >
+              {stage.kicker}
+            </span>
+
+            <div className="flex flex-col gap-1.5">
+              {stage.items.map((item) => (
+                <div key={item.label} className="flex flex-col">
+                  <span className="text-[12px]! font-semibold" style={{ color: c.ink }}>
+                    {item.label}
+                  </span>
+                  {item.note && (
+                    <span className="text-[11px]!" style={{ color: c.ink3 }}>
+                      {item.note}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {stage.note && (
+              <span className="mt-auto pt-1 text-[11px]!" style={{ color: c.ink3 }}>
+                {stage.note}
+              </span>
+            )}
+          </div>
+        ))}
       </div>
     </Frame>
   );
@@ -898,34 +945,73 @@ function DataModelDiagram() {
   );
 }
 
+/**
+ * The reframe, as a before/after chain.
+ *
+ * Emphasis is placed by *argument*, not by position. The point of the reframe
+ * is that the burden moves off the end of the chain — "supervisor writes it
+ * all" becomes "supervisor verifies" — so the single strong mark in each row
+ * sits in the same column, and the two read as a direct answer to each other.
+ * An earlier version accented the first After step instead, which put the
+ * emphasis and the problem it resolves in different columns and quietly lost
+ * the comparison.
+ *
+ * Every After step differs from its Before counterpart, so colouring all four
+ * would just be a wash of orange saying nothing. They get a hairline accent
+ * edge instead — enough to read as "these are the new ones" at a glance,
+ * quiet enough that the one resolved step still carries the emphasis.
+ */
 function FlowDiagram() {
-  const rows = [
-    { label: "Before", steps: ["Capture", "End of shift", "Dock upload", "Supervisor writes it all"], badLast: true },
-    { label: "After", steps: ["Capture + describe", "Upload from phone", "AI transcript + tags", "Supervisor verifies"], badLast: false },
+  /** Explicit, so every step carries all three flags — inferring from the
+   *  literals gives a union where each shape only has the key it happens to
+   *  set, and destructuring the other two is then a type error. */
+  type Step = { text: string; bad?: boolean; changed?: boolean; resolves?: boolean };
+  const rows: { label: string; steps: Step[] }[] = [
+    {
+      label: "Before",
+      steps: [
+        { text: "Capture" },
+        { text: "End of shift" },
+        { text: "Dock upload" },
+        { text: "Supervisor writes it all", bad: true },
+      ],
+    },
+    {
+      label: "After",
+      steps: [
+        { text: "Capture + describe", changed: true },
+        { text: "Upload from phone", changed: true },
+        { text: "AI transcript + tags", changed: true },
+        { text: "Supervisor verifies", resolves: true },
+      ],
+    },
   ];
+
   return (
     <Frame label="Reframe · where the documentation burden sits">
       {rows.map((row) => (
         <div key={row.label} className="mb-4 last:mb-0">
-          <div className="mb-2 font-mono text-[9.5px] tracking-[0.1em] uppercase" style={{ color: c.ink4 }}>
+          <div className="mb-2 font-mono text-[9px] tracking-[0.08em] uppercase" style={{ color: c.ink4 }}>
             {row.label}
           </div>
           <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
             {row.steps.map((step, i) => {
               const last = i === row.steps.length - 1;
-              const bad = row.badLast && last;
-              const good = !row.badLast && i === 0;
+              const { bad, changed, resolves } = step;
               return (
-                <div key={step} className="flex min-w-0 flex-1 items-center gap-1.5">
+                <div key={step.text} className="flex min-w-0 flex-1 items-center gap-1.5">
                   <span
-                    className="min-w-0 flex-1 rounded-full border px-3 py-1.5 text-center text-[11.5px] font-medium"
+                    className="min-w-0 flex-1 border px-3 py-1.5 text-center text-[11.5px] font-medium"
                     style={{
-                      borderColor: bad ? c.red : good ? c.accent : c.line,
-                      background: bad ? c.redBg : good ? c.accentBg : c.card,
-                      color: bad ? c.red : good ? c.accent : c.ink2,
+                      borderColor: bad ? c.red : resolves ? c.accent : c.line,
+                      background: bad ? c.redBg : resolves ? c.accentBg : c.card,
+                      color: bad ? c.red : resolves ? c.accent : c.ink2,
+                      // The quiet mark: a 2px accent edge drawn inside the box,
+                      // so it costs no layout and can't shift the row.
+                      boxShadow: changed ? `inset 2px 0 0 ${c.accent}` : undefined,
                     }}
                   >
-                    {step}
+                    {step.text}
                   </span>
                   {!last && <Arrow />}
                 </div>

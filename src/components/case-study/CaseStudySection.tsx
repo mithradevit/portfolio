@@ -1,5 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { CaseStudyImageZoom } from "./CaseStudyImageZoom";
+import { CaseStudyFigure } from "./CaseStudyFigure";
 import {
   AudioWaveform,
   Check,
@@ -22,6 +24,9 @@ import { CaseStudyEmbed } from "./CaseStudyEmbed";
 import { CaseStudyVoices } from "./CaseStudyVoices";
 import { CaseStudyAccordion } from "./CaseStudyAccordion";
 import { CaseStudyFindings } from "./CaseStudyFindings";
+import { CaseStudyProcessMap } from "./CaseStudyProcessMap";
+import { CaseStudySteps } from "./CaseStudySteps";
+import { BODY, CONTENT_HEADING, SECTION_HEADING } from "./typography";
 
 /** Card icons, named by idea rather than glyph so the drawing can change
  *  without the content having to. */
@@ -32,6 +37,10 @@ const gridIcons = {
   imaging: Eye,
   status: Route,
 } as const;
+
+/** The one appearance every card title on a case study uses. `!` throughout
+ *  because the bare-tag rules in globals.css are unlayered. */
+const CARD_TITLE = CONTENT_HEADING;
 
 /**
  * The opening spread: the sentence that says what the work was, and the facts
@@ -49,30 +58,118 @@ const gridIcons = {
 function CaseStudyIntro({
   intro,
   body,
+  matted,
 }: {
   intro: NonNullable<CaseStudySectionType["intro"]>;
   body: string[];
+  matted?: boolean;
 }) {
+  // Without facts there is no second column to hold, so the lead and its prose
+  // take the measure themselves rather than sitting in a half-width track with
+  // nothing beside them.
+  const hasFacts = Boolean(intro.facts?.length);
+
   return (
-    <div className="mt-2 grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12">
-      <div className="flex flex-col gap-5">
-        {/* `text-foreground` and a size well above the body: this is the one
-            sentence a reader who reads nothing else should come away with. */}
-        <p className="text-foreground max-w-[24ch] text-[clamp(1.375rem,2.2vw,1.75rem)]! leading-[1.3] font-serif!">
+    <div
+      className={cn(
+        "grid grid-cols-1 items-start gap-8",
+        // The reference has no extra top margin here: the section's own gap-4
+        // is the whole distance from the label to the display line.
+        hasFacts && "mt-2 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12",
+      )}
+    >
+      {/* Spacing below is lifted from the reference's own markup, measured off
+          rachelchen.tech/projects/openai: the section stacks at `gap-4`, the
+          display line carries `-mb-2` to pull its sub-line up under it, the
+          column row sits at `mt-2`, the row itself is `gap-6`, and each column
+          is `gap-1`. Equal `w-full` flex children, not grid tracks. */}
+      <div className={cn("flex flex-col", hasFacts ? "gap-5" : "gap-4")}>
+        {intro.lead && (
+        <p
+          className={cn(
+            // `!` on the colour: the bare `p` rule in globals.css is unlayered
+            // and was winning, so the display line rendered in the muted body
+            // ink instead of full strength — visibly greyer than the reference.
+            "text-foreground! leading-[1.25] font-serif!",
+            hasFacts
+              ? "max-w-[24ch] text-[clamp(1.375rem,2.2vw,1.75rem)]!"
+              : // Same 32px serif as a section heading — in the reference this
+                // line is an `<h2>`, i.e. the section's display type, not a
+                // size invented for the intro.
+                // No max-width: in the reference the display line runs the
+                // full content measure and wraps against it.
+                "-mb-2 text-[clamp(1.625rem,2.6vw,2rem)]!",
+          )}
+        >
           {markLead(intro.lead)}
         </p>
+        )}
 
-        <div className="flex max-w-[560px] flex-col gap-4">
-          {body.map((paragraph, i) => (
+        {/* With a lead, the prose explains it and the columns subdivide it, so
+            the order is lead → prose → columns. Without one, the columns *are*
+            the statement, and the prose closes the section after them. */}
+        {intro.lead && (
+          <div className={cn("flex flex-col gap-4", hasFacts && "max-w-[560px]")}>
+            {body.map((paragraph, i) => (
             <p key={i} className="text-foreground-light leading-relaxed">
-              {paragraph}
-            </p>
-          ))}
-        </div>
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        )}
+
+        {/* Unboxed: the reference sets these as plain columns, and the ruled,
+            shadowed cards elsewhere on the page are separate objects — this row
+            is a continuation of the sentence above it. */}
+        {intro.columns && intro.columns.length > 0 && (
+          <div className={cn("flex w-full flex-col gap-6 md:flex-row", intro.lead && "mt-2")}>
+            {intro.columns.map((column) => (
+              <div key={column.title} className="flex w-full flex-col gap-1">
+                <h3 className={CONTENT_HEADING}>{column.title}</h3>
+                <p className={`${BODY} mt-1`}>
+                  {column.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* The picture of the problem, between the points and the line that
+            draws the conclusion from them. Zoomable: these are wide strips with
+            small hand-lettered labels, unreadable at column width. */}
+        {intro.image && (
+          <div
+            className={cn(
+              "mt-2",
+              matted && "bg-foreground/[0.045] flex w-full justify-center rounded-[14px] px-4 py-8 sm:px-10 sm:py-12",
+            )}
+          >
+            <CaseStudyImageZoom image={intro.image} />
+          </div>
+        )}
+
+        {/* The conclusion the columns add up to. Serif italic behind an accent
+            rule — the same display face as a lead, so it reads as the section
+            speaking rather than as one more point in the list. */}
+        {intro.insight && (
+          <p className="border-primary/40 text-foreground! mt-4 border-l-2 py-1 pl-4 text-[19px]! leading-[1.45] font-serif! italic">
+            {intro.insight}
+          </p>
+        )}
+
+        {!intro.lead && body.length > 0 && (
+          <div className="mt-1 flex flex-col gap-4">
+            {body.map((paragraph, i) => (
+            <p key={i} className="text-foreground-light leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-col gap-2.5">
-        {intro.facts.map((fact) => (
+      <div className={cn("flex flex-col gap-2.5", !hasFacts && "hidden")}>
+        {(intro.facts ?? []).map((fact) => (
           <div
             key={fact.label}
             className="border-primary/40 bg-foreground/[0.025] flex flex-col gap-1.5 border-l-2 py-3.5 pr-4 pl-4"
@@ -125,9 +222,19 @@ function markLead(lead: string) {
  * unlayered and beats plain utilities. Only case-study sections take this size
  * — `h3` elsewhere (the Fun cards) is a card title and stays where it is.
  */
+/**
+ * Every section is named the same way: the small mono label.
+ *
+ * This used to be a 32px serif line, while sections with an `intro` used the
+ * mono label instead — so two sections of identical rank announced themselves
+ * in different voices, and the serif competed with the display line directly
+ * beneath it. The serif now appears in exactly one role on a case study, the
+ * display sentence that opens a section, which is what makes it read as
+ * emphasis rather than as decoration.
+ */
 function SectionHeading({ children }: { children: ReactNode }) {
   return (
-    <h3 className="text-foreground text-[32px]! leading-[1.2]! tracking-[-0.01em]!">{children}</h3>
+    <h3 className={SECTION_HEADING}>{children}</h3>
   );
 }
 
@@ -142,11 +249,15 @@ export function sectionId(heading: string) {
 export function CaseStudySection({
   section,
   trailing,
+  matted,
 }: {
   section: CaseStudySectionType;
   /** Rendered on the heading's own row, pushed to the right — used for the
    *  outbound link pills on the first section. */
   trailing?: ReactNode;
+  /** This case study's `mattedImages` flag, passed straight through from the
+   *  page — see CaseStudyFigure for what it changes and why it's per-study. */
+  matted?: boolean;
 }) {
   // The grid moves into the aside row instead of sitting under it — so the row
   // itself carries the cards and the standalone grid block below is skipped.
@@ -162,6 +273,12 @@ export function CaseStudySection({
           <SectionHeading>{section.heading}</SectionHeading>
           {trailing}
         </div>
+      ) : section.intro ? (
+        // `<h4 class="!opacity-100 mb-1">Overview</h4>` — the reference's own
+        // markup. An intro section's lead is the display line, so the heading
+        // steps down to the site's label role above it. The heading text is
+        // unchanged, so the left-hand nav still finds it.
+        <h4 className={`${SECTION_HEADING} mb-1`}>{section.heading}</h4>
       ) : (
         <SectionHeading>{section.heading}</SectionHeading>
       )}
@@ -173,6 +290,9 @@ export function CaseStudySection({
       {section.imageLead && section.image && (
         // Leading full-width image: the section opens on the thing itself and
         // the prose reads as its explanation rather than its introduction.
+        matted ? (
+          <CaseStudyFigure image={section.image} bare={section.imageBare} sizes="(min-width: 1024px) 900px, 100vw" />
+        ) : (
         <figure className="flex w-full flex-col gap-3">
           <div
             className={cn(
@@ -188,7 +308,7 @@ export function CaseStudySection({
               width={section.image.width}
               height={section.image.height}
               quality={90}
-              sizes="(min-width: 1024px) 760px, 100vw"
+              sizes="(min-width: 1024px) 900px, 100vw"
               className={cn("h-auto w-full", section.imageBare ? "" : "rounded-[6px]")}
             />
           </div>
@@ -198,9 +318,10 @@ export function CaseStudySection({
             </figcaption>
           )}
         </figure>
+        )
       )}
       {section.intro ? (
-        <CaseStudyIntro intro={section.intro} body={section.body} />
+        <CaseStudyIntro intro={section.intro} body={section.body} matted={matted} />
       ) : section.bodyAside ? (
         // Prose and photograph as one row: the picture is the setting the words
         // describe, so it sits beside them rather than under them. Stacks on a
@@ -219,7 +340,7 @@ export function CaseStudySection({
         >
           <div className="flex flex-col gap-4">
             {section.body.map((paragraph, i) => (
-              <p key={i} className="text-foreground-light leading-relaxed">
+            <p key={i} className="text-foreground-light leading-relaxed">
                 {paragraph}
               </p>
             ))}
@@ -234,10 +355,10 @@ export function CaseStudySection({
                     )}
                   >
                     <div className="flex items-baseline gap-2.5">
-                      <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
+              <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <h4>{item.title}</h4>
+                      <h4 className={CARD_TITLE}>{item.title}</h4>
                     </div>
                     <p className="text-foreground-light text-[13px] leading-[1.55]">{item.body}</p>
                   </div>
@@ -263,9 +384,56 @@ export function CaseStudySection({
             />
           </div>
         </div>
+      ) : section.imageAside && section.image ? (
+        // Prose left, artefact right, as one row. Same idea as `bodyAside` but
+        // it takes the section's own `image` — so the artefact keeps its
+        // caption, which `bodyAside` has no field for.
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-10">
+          <div className="flex flex-col gap-4">
+            {section.body.map((paragraph, i) => (
+            <p key={i} className="text-foreground-light leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+          {/* Zoomable, not static: at half a column these artefacts are texture
+              rather than documents, so the full thing has to be reachable. */}
+          <figure className="flex w-full flex-col gap-3">
+            {matted ? (
+              <div className="bg-foreground/[0.045] flex w-full justify-center rounded-[14px] p-4 sm:p-6">
+                <CaseStudyImageZoom image={section.image} />
+              </div>
+            ) : (
+              <CaseStudyImageZoom image={section.image} />
+            )}
+            {section.image.caption && (
+              <figcaption
+                className={
+                  matted
+                    ? "text-foreground-light mx-auto max-w-[62ch] text-center text-[13px] leading-[1.6]"
+                    : "border-foreground/10 text-foreground-light border-l-2 py-0.5 pl-3 text-[13px] leading-[1.6]"
+                }
+              >
+                {section.image.caption}
+              </figcaption>
+            )}
+          </figure>
+        </div>
+      ) : section.embedAside && section.embed ? (
+        // Prose left, the running thing right.
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-10">
+          <div className="flex flex-col gap-4">
+            {section.body.map((paragraph, i) => (
+            <p key={i} className="text-foreground-light leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+          <CaseStudyEmbed embed={section.embed} />
+        </div>
       ) : (
         section.body.map((paragraph, i) => (
-          <p key={i} className="text-foreground-light max-w-[700px] leading-relaxed">
+            <p key={i} className="text-foreground-light leading-relaxed">
             {paragraph}
           </p>
         ))
@@ -286,7 +454,7 @@ export function CaseStudySection({
       {section.bullets && (
         <ul className="flex list-none flex-col gap-2">
           {section.bullets.map((bullet, i) => (
-            <li key={i} className="text-foreground-light relative max-w-[700px] pl-4 leading-relaxed">
+            <li key={i} className="text-foreground-light relative pl-4 leading-relaxed">
               <span className="absolute left-0">–</span>
               {bullet}
             </li>
@@ -308,7 +476,13 @@ export function CaseStudySection({
               : section.grid.length === 3
                 ? "sm:grid-cols-3"
                 : section.grid.length === 5
-                  ? "sm:grid-cols-2 lg:grid-cols-5"
+                  ? // Three across, not five. Five tracks in this measure gave
+                    // each card ~85px of text — two or three words a line, so
+                    // every card became a vertical ribbon and the row's height
+                    // was set by whichever body was longest. Three columns with
+                    // two wrapping to the next row reads as one group and still
+                    // gives each card a readable measure.
+                    "sm:grid-cols-2 lg:grid-cols-3"
                   : "sm:grid-cols-2",
           )}
         >
@@ -332,7 +506,7 @@ export function CaseStudySection({
                     </span>
                   )}
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
-                    <h4>{item.title}</h4>
+                    <h4 className={CARD_TITLE}>{item.title}</h4>
                     <p className="text-foreground-light text-[13px] leading-[1.55]">{item.body}</p>
                   </div>
                   <span className="text-foreground-light/40 shrink-0 font-mono text-[11px] tracking-[0.08em]">
@@ -353,12 +527,12 @@ export function CaseStudySection({
                   </span>
                 </span>
               ) : (
-              <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
+                      <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
                 {String(i + 1).padStart(2, "0")}
               </span>
               )}
-              <h4>{item.title}</h4>
-              <p className="text-foreground-light text-[13px] leading-[1.55]">{item.body}</p>
+              <h4 className={CARD_TITLE}>{item.title}</h4>
+                    <p className="text-foreground-light text-[13px] leading-[1.55]">{item.body}</p>
               {item.video && <CaseStudyInlineVideo video={item.video} />}
               </>
               )}
@@ -373,7 +547,9 @@ export function CaseStudySection({
           bullets={section.accordion.bullets}
         />
       )}
-      {section.voices && <CaseStudyVoices voices={section.voices} />}
+      {section.voices && (
+        <CaseStudyVoices voices={section.voices} stacked={section.voicesStacked} />
+      )}
       {section.measures && (
         // Before → after, ticked. Green rather than the accent orange: a tick
         // reads as "confirmed" in green almost universally, and the accent is
@@ -409,9 +585,9 @@ export function CaseStudySection({
               key={block.title ?? i}
               className="border-foreground/10 bg-background flex flex-col gap-2.5 rounded-[11px] border p-5 shadow-[0_1px_2px_rgb(50_64_79_/_5%),0_6px_16px_-8px_rgb(50_64_79_/_12%)]"
             >
-              {block.title && <h4 className="text-foreground!">{block.title}</h4>}
+              {block.title && <h4 className={CARD_TITLE}>{block.title}</h4>}
               {block.body.map((paragraph, i) => (
-                <p key={i} className="text-foreground-light text-[13.5px] leading-[1.6]">
+            <p key={i} className="text-foreground-light leading-relaxed">
                   {paragraph}
                 </p>
               ))}
@@ -531,7 +707,22 @@ export function CaseStudySection({
           )}
         <div
           className={cn(
-            "grid grid-cols-1 items-start gap-2",
+            // A rail, not a grid. For a run of scans that belong to one another
+            // — page after page of the same working session — stacking them
+            // full width makes the reader scroll through a section's worth of
+            // paper to reach the next paragraph. On a rail the set stays one
+            // object the height of a card, and the pages are compared by
+            // sliding rather than by remembering.
+            section.imagesScroll
+              ? // Scrollbar hidden: the cards run off the edge, which is the
+                // affordance. A track under a row of three is more furniture
+                // than the row itself.
+                // No negative margin: `-mx-1` pushed the rail 4px past the
+                // content measure on each side, which gave the whole article a
+                // horizontal scroll of 4px.
+                "flex snap-x snap-mandatory items-start gap-4 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              : "grid grid-cols-1 items-start gap-2",
+            !section.imagesScroll &&
             section.images.length > 1 &&
               (section.imagesCols === 4
                 ? "grid-cols-2 lg:grid-cols-4"
@@ -549,15 +740,36 @@ export function CaseStudySection({
           style={section.imagesScale ? { maxWidth: `${section.imagesScale * 100}%` } : undefined}
         >
           {section.images.map((img) => {
-            const sizes =
-              section.imagesCols === 4
+            const sizes = section.imagesScroll
+              ? "300px"
+              : section.imagesCols === 4
                 ? "(min-width: 1024px) 200px, (min-width: 640px) 45vw, 50vw"
                 : section.imagesCols === 1
-                  ? "(min-width: 1024px) 760px, 100vw"
+                  ? "(min-width: 1024px) 900px, 100vw"
                   : "(min-width: 640px) 380px, 100vw";
             return (
-            <figure key={img.src} className="flex w-full flex-col gap-3">
-              {section.imagesBare ? (
+            <figure
+              key={img.src}
+              className={cn(
+                "flex flex-col gap-3",
+                section.imagesScroll
+                  ? section.imagesRailHeight
+                    ? "shrink-0 snap-start"
+                    : "w-[300px] shrink-0 snap-start"
+                  : "w-full",
+              )}
+              style={
+                section.imagesScroll && section.imagesRailHeight
+                  ? { height: section.imagesRailHeight }
+                  : undefined
+              }
+            >
+              {section.imagesScroll ? (
+                // At 300px a 3000px scan is a thumbnail, so the card has to be
+                // openable — otherwise the rail shows that notes exist without
+                // letting anyone read them.
+                <CaseStudyImageZoom image={img} fitHeight={Boolean(section.imagesRailHeight)} />
+              ) : section.imagesBare ? (
                 <Image
                   src={img.src}
                   alt={img.alt}
@@ -591,7 +803,13 @@ export function CaseStudySection({
                 </div>
               )}
               {img.caption && (
-                <figcaption className="border-foreground/10 text-foreground-light border-l-2 py-0.5 pl-3 text-[13px] leading-[1.6]">
+                <figcaption
+                  className={
+                    matted
+                      ? "text-foreground-light text-center text-[13px] leading-[1.6]"
+                      : "border-foreground/10 text-foreground-light border-l-2 py-0.5 pl-3 text-[13px] leading-[1.6]"
+                  }
+                >
                   {img.caption}
                 </figcaption>
               )}
@@ -601,7 +819,10 @@ export function CaseStudySection({
         </div>
         </div>
       )}
-      {section.image && !section.imageLead && (
+      {section.image && !section.imageLead && !section.imageAside && (
+        matted ? (
+          <CaseStudyFigure image={section.image} />
+        ) : (
         <figure className="flex w-full flex-col gap-3">
           {/* Explicit light ground. These are light-mode product screens and
               ink-on-paper sketches — a transparent backing would let the dark
@@ -614,7 +835,7 @@ export function CaseStudySection({
               width={section.image.width}
               height={section.image.height}
               quality={90}
-              sizes="(min-width: 1024px) 760px, 100vw"
+              sizes="(min-width: 1024px) 900px, 100vw"
               className="h-auto w-full rounded-[6px]"
             />
           </div>
@@ -624,9 +845,14 @@ export function CaseStudySection({
             </figcaption>
           )}
         </figure>
+        )
       )}
-      {section.embed && <CaseStudyEmbed embed={section.embed} />}
+      {section.embed && !section.embedAside && <CaseStudyEmbed embed={section.embed} />}
       {section.videos && <CaseStudyVideos videos={section.videos} />}
+      {section.steps && section.steps.length > 0 && <CaseStudySteps steps={section.steps} />}
+      {section.process && section.process.length > 0 && (
+        <CaseStudyProcessMap stages={section.process} label={section.processLabel} />
+      )}
       {section.diagram && <CaseStudyDiagramBlock id={section.diagram} caption={section.diagramCaption} />}
       {section.mockup && <CaseStudyMockupBlock id={section.mockup} caption={section.mockupCaption} />}
       {/* Annotations sit after whichever visual the section carries, so a real
@@ -653,7 +879,7 @@ export function CaseStudySection({
       {/* Closing takeaway. Ruled rather than boxed — it's a change of voice
           within the section, not a separate block of content. */}
       {section.note && (
-        <p className="border-primary/40 text-foreground-light max-w-[700px] border-l-2 py-0.5 pl-4 leading-relaxed">
+        <p className="border-primary/40 text-foreground-light border-l-2 py-0.5 pl-4 leading-relaxed">
           <span className="text-foreground font-medium">{section.note.label}:</span>{" "}
           {section.note.body}
         </p>

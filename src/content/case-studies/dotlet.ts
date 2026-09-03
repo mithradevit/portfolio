@@ -13,12 +13,13 @@ export const dotlet: CaseStudy = {
   team: "Solo — product strategy, UX, interaction design, AI-assisted build",
   skills: ["0→1 Product Design", "AI-Assisted Development", "Interaction Design", "Scoping"],
   hero: {
-    src: "/videos/dotlet.mp4",
-    width: 1350,
-    height: 872,
+    src: "/videos/dotlet-intro.gif",
+    poster: "/videos/dotlet-intro-poster.webp",
+    width: 1918,
+    height: 876,
     // TODO: confirm this describes what the clip actually shows — it is both
     // the caption under the video and the player's accessible name.
-    alt: "Dotlet in use: dots placed on the grid merge into a single smooth shape.",
+    alt: "An intro loop showing the marks made in Dotlet — icons, wordmarks and shapes drawn on the dot grid.",
   },
   links: [
     { label: "Full case study", href: "https://dotlet.netlify.app" },
@@ -33,6 +34,7 @@ export const dotlet: CaseStudy = {
         "The gooey filter engine is the whole product: an SVG feGaussianBlur and feColorMatrix pipeline running live in the browser, turning separate dots into one organic shape as you draw, with no rasterisation until export. The skill the tool asks for is placement, which everyone already has.",
         "I built it solo in 10 days for Config Makeathon 2026, entirely inside Figma Make, and later used it as the live case study for a Friends of Figma workshop on AI-native design workflows.",
       ],
+      embedAside: true,
       embed: {
         src: "https://dotlet.site/",
         title: "Dotlet — the live vector tool",
@@ -40,12 +42,17 @@ export const dotlet: CaseStudy = {
         // sidebar, and at 16:9 the canvas between the header and the palette
         // gets squeezed to a strip.
         ratio: "aspect-[16/10]",
-        caption:
-          "The real tool, running here. Place dots on the grid and they merge as you go — or open it full screen, which is the better window for drawing anything you want to keep.",
+        // The project cover, standing in for a screenshot of the tool: the
+        // resting frame has to show something, or it reads as broken.
+        poster: "/images/projects/dotlet-cover-v2.webp",
+        // No caption. Beside the prose the frame is part of the row, not an
+        // exhibit the words build to — and the launch control and address pill
+        // already say what it is.
       },
     },
     {
       heading: "The Problem",
+      navLabel: "Problem",
       body: [
         "Most vector tools were built for people who already know how to design. Bezier curves, anchor points, node editing — weeks of skill before you can make something that looks intentional. That curve quietly keeps out people who aren't missing creativity, only the tool that meets them where they are.",
       ],
@@ -58,6 +65,7 @@ export const dotlet: CaseStudy = {
     },
     {
       heading: "Ideation and Concept Exploration",
+      navLabel: "Exploration",
       kicker: "Figma Agent",
       body: [
         "Before any spec was written, the Figma design agent was used to explore what this tool could feel like.",
@@ -108,28 +116,6 @@ export const dotlet: CaseStudy = {
           width: 500,
           height: 526,
           alt: "Exploration two: the floating palette, which kept the canvas clear and won out.",
-        },
-      ],
-    },
-    {
-      heading: "IA + Features",
-      body: [
-        "The whole tool is one screen: a fixed header, an infinite canvas, a draggable palette for the tools you reach for constantly, and a fixed right sidebar for everything you set once and adjust. Nothing is nested more than three levels deep, and there is no navigation to learn.",
-      ],
-      images: [
-        {
-          src: "/images/projects/dotlet/ia-1.webp",
-          width: 1392,
-          height: 1240,
-          alt: "Information architecture, top half: DOTLET splits into a fixed header (logo, Icon/Font mode toggle, account menu with file list), the centre canvas (infinite pan and zoom, snap-to-grid nodes, grid overlay, artwork and background layers), and a draggable floating palette (pen, eraser, move and hand tools, undo/redo, clear, export, zoom level).",
-          caption: "Header, canvas, and floating palette — the surfaces in constant use during drawing.",
-        },
-        {
-          src: "/images/projects/dotlet/ia-2.webp",
-          width: 1228,
-          height: 1238,
-          alt: "Information architecture, bottom half: the fixed right sidebar holds Image to Shape, Layers (artwork and background visibility, add layer), Shapes (8 dot types), Effects (smoothness, sharpness, roughness, shadow opacity, outline mode), Colour (dot, background, recent swatches), Grid (size presets, show toggle), and Export (SVG, copy SVG for Figma, PNG at 3x, copy PNG).",
-          caption: "The right sidebar — settings and export, grouped by how often each one is touched.",
         },
       ],
     },
@@ -185,21 +171,65 @@ export const dotlet: CaseStudy = {
           },
         },
         {
-          title: "Tour guide",
-          body: "Shown once, skippable, and before any sign-up is asked for. Anyone made to create an account before they understand what a tool is for usually never finds out, so the walkthrough comes first and the first thing anyone does is draw.",
+          title: "Canvas",
+          body: "Dots and Freehand are two modes of one canvas rather than two tools to pick between, because the choice is about how a mark gets made, not what is being made. Switching mid-drawing keeps the work — nobody should have to decide their technique before they know what they are drawing.",
           video: {
-            src: "/videos/dotlet-tour-guide.mp4",
-            width: 1894,
-            height: 876,
-            // TODO: written from your note that this is the onboarding tour,
-            // not from watching the file.
-            alt: "The first-run walkthrough pointing out the canvas and tools.",
+            src: "/videos/dotlet-canvas.gif",
+            poster: "/videos/dotlet-canvas-poster.webp",
+            width: 1200,
+            height: 675,
+            alt: "The Dotlet canvas with the panel switching between Dots and Freehand modes, alongside image-to-shape, colour and layer controls.",
+          },
+        },
+        {
+          title: "Brush",
+          body: "Pen, taper, calligraphy, pencil and marker, with size, opacity and stability on sliders. Stability is the one that matters: it smooths an unsteady hand as the stroke is drawn, so a shaky line comes out as a clean one without anyone having to redraw it.",
+          video: {
+            src: "/videos/dotlet-brush.gif",
+            poster: "/videos/dotlet-brush-poster.webp",
+            width: 1200,
+            height: 675,
+            alt: "Freehand brush settings — pen, taper, calligraphy, pencil and marker presets with size, opacity and stability sliders — used to draw a spiral.",
+          },
+        },
+        {
+          title: "Color",
+          body: "The panel docks or undocks. Docked, it stays out of the way; undocked, it follows the work so a colour can be judged against the thing it is on rather than against a sidebar. Palettes are saved because most people are making a set, and the second mark has to match the first.",
+          video: {
+            src: "/videos/dotlet-color.gif",
+            poster: "/videos/dotlet-color-poster.webp",
+            width: 1200,
+            height: 675,
+            alt: "The colour panel undocked over the canvas, with hex and HSL fields, sliders, and a layers list beside it.",
+          },
+        },
+        {
+          title: "Select & export",
+          body: "Select, group, undo, redo, then out as SVG or PNG. Vector export is the part that makes the work real — a drawing that can only leave as a flat image is a drawing that cannot be used again, and the whole point is that these are marks someone can carry into their own work.",
+          video: {
+            src: "/videos/dotlet-select-export.gif",
+            poster: "/videos/dotlet-select-export-poster.webp",
+            width: 1200,
+            height: 675,
+            alt: "The toolbar — pen, erase, select, hand, undo, redo, delete, export, compose — with a finished dotted mark selected on the canvas.",
+          },
+        },
+        {
+          title: "File manager",
+          body: "Create, save, rename and organise without leaving the canvas. Files live in local storage, so there is no account between someone and their first drawing — the tool has to be worth signing up for before it asks, not the other way round.",
+          video: {
+            src: "/videos/dotlet-file-manager.gif",
+            poster: "/videos/dotlet-file-manager-poster.webp",
+            width: 1200,
+            height: 675,
+            alt: "The file panel showing local storage with new-file and save controls, and a saved file listed beside the canvas.",
           },
         },
       ],
     },
     {
       heading: "Made in Dotlet",
+      navLabel: "Built with Dotlet",
       body: [
         "Everything below was drawn in the tool itself, with no other software involved at any point. They are here because a feature list only describes what a tool can do, and the marks are what it actually does.",
         "None of them needed a curve to be adjusted by hand. The dots decide where the edges fall, so the person drawing is choosing placement rather than steering geometry — which is the whole reason someone with no vector training can finish one of these at all.",
@@ -237,6 +267,7 @@ export const dotlet: CaseStudy = {
     },
     {
       heading: "What people created with Dotlet",
+      navLabel: "Community Creations",
       body: [
         "Four identities, each one a wordmark drawn on the grid and then put straight onto packaging, posters and social. Ideation to execution ran 50% faster than the same work done conventionally.",
       ],
@@ -295,19 +326,43 @@ export const dotlet: CaseStudy = {
       ],
     },
     {
-      heading: "Version 2 IA + Features",
+      // Both versions live here now — the standalone V1 IA section was folded
+      // into this one, since its two diagrams already appear below as the left
+      // column of the comparison and a second copy said nothing new.
+      heading: "IA V1 + V2",
+      navLabel: "IA V1 + V2",
       body: [
-        "Everything above is the hackathon build. I'm currently building the next set of features — here's a sneak peek, starting with where they sit.",
-        "The single-screen shape holds: header, canvas, palette, right sidebar. What changed is that the canvas now has two modes, and the mode governs the sidebar under it — brush controls belong to Freehand, effects and grid to Dots, colour and layers to both.",
+        "The whole tool is one screen: a fixed header, an infinite canvas, a draggable palette for the tools you reach for constantly, and a fixed right sidebar for everything you set once and adjust. Nothing is nested more than three levels deep, and there is no navigation to learn. That shape is the hackathon build, and it held.",
+        "V2 is what I'm building now. The single-screen shape stays — header, canvas, palette, right sidebar. What changed is that the canvas has two modes, and the mode governs the sidebar under it: brush controls belong to Freehand, effects and grid to Dots, colour and layers to both.",
       ],
+      // Paired side by side rather than one version after the other: the point
+      // of this section is what *changed*, and a change can only be read
+      // against the thing it changed from. Row-major in two columns, so each
+      // row is one surface before and after — header/canvas/palette, then
+      // sidebar.
+      imagesCols: 2,
       images: [
+        {
+          src: "/images/projects/dotlet/ia-1.webp",
+          width: 1392,
+          height: 1240,
+          alt: "Version 1 information architecture, top half: DOTLET splits into a fixed header (logo, Icon/Font mode toggle, account menu with file list), the centre canvas (infinite pan and zoom, snap-to-grid nodes, grid overlay, artwork and background layers), and a draggable floating palette (pen, eraser, move and hand tools, undo/redo, clear, export, zoom level).",
+          caption: "V1 — header, canvas and palette.",
+        },
         {
           src: "/images/projects/dotlet/ia-v2-1.webp",
           width: 720,
           height: 1109,
           alt: "Version 2 information architecture, top half. The header gains a click-to-rename file name that syncs with the Files menu, and a save status of Saved, Saving or Unsaved. The canvas splits into Dots mode — snap-to-grid nodes, gooey merge, dots on artwork plus custom layers — and a new Freehand mode drawing plain geometry with no filter. A shape FAB moves to the left, its colour pickers relocated to the sidebar. The floating palette gains a selection bar that appears only when something is selected, offering a count, group and ungroup, and export selection to SVG or PNG cropped tight; Move is renamed Select; export gains a transparent-background toggle replacing four duplicate alpha options, and splits into SVG vector, SVG editable dots, PNG at 3x and copy PNG.",
           caption:
-            "Header, canvas and palette. The marks reading NEW are the additions; Compose is listed as a stub that does nothing yet.",
+            "V2 — the same surfaces. Marks reading NEW are the additions; Compose is a stub that does nothing yet.",
+        },
+        {
+          src: "/images/projects/dotlet/ia-2.webp",
+          width: 1228,
+          height: 1238,
+          alt: "Version 1 information architecture, bottom half: the fixed right sidebar holds Image to Shape, Layers (artwork and background visibility, add layer), Shapes (8 dot types), Effects (smoothness, sharpness, roughness, shadow opacity, outline mode), Colour (dot, background, recent swatches), Grid (size presets, show toggle), and Export (SVG, copy SVG for Figma, PNG at 3x, copy PNG).",
+          caption: "V1 — the right sidebar, one flat list of settings.",
         },
         {
           src: "/images/projects/dotlet/ia-v2-2.webp",
@@ -315,7 +370,7 @@ export const dotlet: CaseStudy = {
           height: 967,
           alt: "Version 2 information architecture, bottom half: the right sidebar, now dockable, with a canvas mode switch of Dots or Freehand governing everything below it. Brush is Freehand-only — pen, taper, calligraphy, pencil and marker, with size, opacity, stability, nib angle for calligraphy and grain for pencil. Image to Shape is Dots-only. Colour is shared, offering hex with an eyedropper, hue, saturation and lightness, and saved swatches. Layers is shared: a base Layer 1, custom layers that can be selected, renamed, hidden and deleted, background visibility, and add layer. Effects and Grid are Dots-only.",
           caption:
-            "The sidebar, now driven by the canvas mode — each group marked Dots only, Freehand only, or shared.",
+            "V2 — the same sidebar, now driven by canvas mode: each group marked Dots only, Freehand only, or shared.",
         },
       ],
     },
@@ -326,6 +381,7 @@ export const dotlet: CaseStudy = {
       // says the same thing and stays distinct; rename if you had another word
       // in mind.
       heading: "Currently Building",
+      navLabel: "Building Now",
       // TODO(Mithra): Select and Compose is described from what you told me.
       // The other three are written from what the recordings literally show —
       // the toggle, the five brushes, the three sliders, the gradient fills.
@@ -391,6 +447,7 @@ export const dotlet: CaseStudy = {
     },
     {
       heading: "How It Did It",
+      navLabel: "How It Works",
       body: [
         "Writing a full Functional Requirements Document before opening Figma Make was the single decision that made everything else go more smoothly.",
       ],
@@ -439,6 +496,7 @@ export const dotlet: CaseStudy = {
     },
     {
       heading: "Tech stack — what was actually used and why",
+      navLabel: "Tech Stack",
       body: [],
       blocks: [
         {
@@ -486,6 +544,7 @@ export const dotlet: CaseStudy = {
     },
     {
       heading: "Building It",
+      navLabel: "Building",
       body: [
         "Every feature was a scoped, isolated prompt rather than one large request. The first canvas was a fixed 1000×1000 viewBox; it worked but felt bounded, so it was rewritten around a fixed logical cell with infinite pan and zoom, zoom-toward-cursor, and no bounds check at all.",
         "The detail I'd defend hardest is the sound. Every effect is synthesised from scratch with the Web Audio API — the draw sound is pink noise through a bandpass filter, sitting where graphite on paper sits; the eraser is a short sine squeak; saving is a three-note arpeggio with a long decay. It was too loud on the first pass, and the mute preference persists between visits.",
@@ -504,6 +563,7 @@ export const dotlet: CaseStudy = {
     },
     {
       heading: "Built, Then Removed",
+      navLabel: "Fixes",
       body: [
         "A Font Builder — marching-squares tracing into editable bezier paths, exporting a working .ttf — worked in principle but never reached a working state in the time available. Shipping it would have been dishonest about what Dotlet does, so it came out of the app and the documentation, and stayed only as a documented future direction.",
         "An account system with Supabase went the same way, but for a better reason than the configuration problems that surfaced mid-build: requiring a login worked against the premise that anyone can open Dotlet and start creating with nothing in the way.",

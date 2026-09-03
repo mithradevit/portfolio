@@ -63,7 +63,7 @@ export function CaseStudyAccordion({
                   <span aria-hidden className="text-primary shrink-0 text-[13px] leading-none">
                     –
                   </span>
-                  <span className="text-foreground-light max-w-[700px] leading-relaxed">
+                  <span className="text-foreground-light text-[14px]! leading-[1.65]!">
                     {bullet}
                   </span>
                 </li>

@@ -36,7 +36,9 @@ export function buildSystemPrompt(): string {
       const sections = cs.sections
         .map((s) => {
           const parts = [
-            s.intro?.lead.replace(/\*\*/g, ""),
+            s.intro?.lead?.replace(/\*\*/g, ""),
+            s.intro?.insight,
+            ...(s.intro?.columns ?? []).map((c) => `${c.title}: ${c.body}`),
             ...s.body,
             ...(s.bullets ?? []),
             ...(s.findings ?? []).map((f) => `${f.title}: ${f.body}`),

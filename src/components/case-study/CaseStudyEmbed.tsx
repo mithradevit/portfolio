@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { ArrowUpRight, Play } from "lucide-react";
 import type { CaseStudySection } from "@/content/case-studies/types";
 
@@ -110,12 +111,29 @@ export function CaseStudyEmbed({ embed }: { embed: Embed }) {
               type="button"
               onClick={() => setLive(true)}
               data-cursor="pointer"
-              className="group bg-foreground/[0.02] hover:bg-foreground/[0.04] flex h-full w-full flex-col items-center justify-center gap-4 transition-colors"
+              className="group relative flex h-full w-full flex-col items-center justify-center gap-4 overflow-hidden bg-foreground/[0.02] transition-colors hover:bg-foreground/[0.04]"
             >
-              <span className="border-primary/30 bg-primary/10 text-primary flex h-14 w-14 items-center justify-center rounded-full border transition-transform duration-300 group-hover:scale-105">
+              {/* A still of the thing, dimmed, with the control on top. An
+                  empty panel behind a play button reads as a failed embed —
+                  the frame has to show what it is before it is started. */}
+              {embed.poster && (
+                <>
+                  <Image
+                    src={embed.poster}
+                    alt=""
+                    fill
+                    quality={85}
+                    sizes="(min-width: 1024px) 760px, 100vw"
+                    className="object-cover object-top opacity-90 transition-transform duration-500 group-hover:scale-[1.02]"
+                  />
+                  <span className="bg-background/45 absolute inset-0 backdrop-blur-[1px] transition-colors duration-300 group-hover:bg-background/30" />
+                </>
+              )}
+
+              <span className="border-primary/30 bg-primary/10 text-primary relative flex h-14 w-14 items-center justify-center rounded-full border shadow-[0_2px_10px_rgb(50_64_79_/_12%)] backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
                 <Play size={20} fill="currentColor" strokeWidth={0} aria-hidden />
               </span>
-              <span className="text-foreground-light font-mono text-[11px] tracking-[0.12em] uppercase">
+              <span className="text-foreground-light relative font-mono text-[11px] tracking-[0.12em] uppercase">
                 Launch the live tool
               </span>
             </button>

@@ -34,6 +34,13 @@ export type CaseStudyDiagram =
 
 export type CaseStudySection = {
   heading: string;
+  /**
+   * Short one-line stand-in for `heading` in the side rail only — the article
+   * itself always shows the full heading. Falls back to `heading` when unset,
+   * so it's only worth adding once a heading is long enough that the rail
+   * needs to wrap it.
+   */
+  navLabel?: string;
   /** Small mono label under the heading — names the tool or method used. */
   kicker?: string;
   body: string[];
@@ -43,7 +50,15 @@ export type CaseStudySection = {
   flows?: {
     title: string;
     body: string;
-    video: { src: string; width: number; height: number; alt: string };
+    /**
+     * The clip. An `.mp4` plays as a muted looping `<video>`; a `.gif` renders
+     * as an `<img>`, since a GIF can't go in a video element.
+     *
+     * `poster` is the still shown *instead of* a GIF under reduced motion —
+     * that format has no pause, so the only way to honour the preference is to
+     * serve a different file. Unused for video, which can simply be paused.
+     */
+    video: { src: string; width: number; height: number; alt: string; poster?: string };
   }[];
   /**
    * Full-width stacked cards, for material too long for the two-up `grid`.
@@ -103,8 +118,33 @@ export type CaseStudySection = {
    * the lead in the same column, so a section keeps one list of prose.
    */
   intro?: {
-    lead: string;
-    facts: { label: string; value: string }[];
+    /**
+     * Optional. Without it the section opens straight on its `columns` — for a
+     * block like Pain Points, where the points themselves are the statement and
+     * a display sentence above them would only introduce a list that already
+     * introduces itself.
+     */
+    lead?: string;
+    /**
+     * A single line pulled out between the columns and the closing paragraph —
+     * the thing the points add up to. Set in the display serif, italic, behind
+     * an accent rule, so it reads as the conclusion rather than another point.
+     */
+    insight?: string;
+    /**
+     * An illustration set between the columns and the `insight` — the picture
+     * of the problem the points have just described, placed before the line
+     * that draws the conclusion from it.
+     */
+    image?: { src: string; alt: string; width: number; height: number };
+    /** Optional. Omit and the lead takes the full measure — no empty track. */
+    facts?: { label: string; value: string }[];
+    /**
+     * Three (or two) strands of the work, side by side under the lead. Plain
+     * columns, not cards — they continue the opening statement rather than
+     * standing apart from it. Keep bodies to a sentence or two.
+     */
+    columns?: { title: string; body: string }[];
   };
   bodyAside?: { src: string; alt: string; width: number; height: number };
   /**
@@ -117,6 +157,14 @@ export type CaseStudySection = {
   /** Puts `image` at the top of the section, above the prose and any cards —
    *  for a photograph or screen that sets the scene the section then explains. */
   imageLead?: boolean;
+  /**
+   * Sets `image` beside the prose as a two-column row instead of under it.
+   *
+   * For an artefact the words are about rather than an exhibit they lead up to.
+   * Unlike `bodyAside` this uses the section's own `image`, so the caption
+   * survives. Stacks on a phone.
+   */
+  imageAside?: boolean;
   /** Drops the white mat around `image`. Photographs are already their own
    *  edge; the mat exists for ink-on-paper and light-mode screens. */
   imageBare?: boolean;
@@ -133,9 +181,30 @@ export type CaseStudySection = {
   accordion?: { label: string; bullets: string[] };
   /** Users quoted in their own words, rotated one at a time. */
   voices?: CaseStudyVoice[];
+  /**
+   * Show every voice at once — role on the left, quote on the right — instead
+   * of rotating through them one at a time. For a section where the quotes
+   * themselves are the finding and have to be read against each other, rather
+   * than one where the personas are the point.
+   */
+  voicesStacked?: boolean;
   /** Before → after outcomes, ticked. `label` is the measure, `body` the change. */
   measures?: { label: string; body: string }[];
   imagesBare?: boolean;
+  /**
+   * Lays `images` out as a horizontal rail of 300px cards instead of a grid.
+   *
+   * For a run of pages from one working session, where the set is the point and
+   * no single page has to be read in place. Each card opens full size on click,
+   * since at that width a scan is a thumbnail.
+   */
+  imagesScroll?: boolean;
+  /**
+   * Fixes the rail's card height in pixels and lets each card take its own
+   * width from the image's aspect. For a run of wide plates that have to be
+   * compared at a consistent scale rather than fitted to a common column.
+   */
+  imagesRailHeight?: number;
   /** Columns for `images` at desktop width. Defaults to 2. Use 4 for a strip
    *  meant to be read as a run rather than page by page, and 1 for scans
    *  carrying handwriting, where half a column is too narrow to read. */
@@ -193,6 +262,13 @@ export type CaseStudySection = {
      *  not an address, and reads as one. */
     label?: string;
     /**
+     * A still of the tool, shown inside the frame before it is launched.
+     *
+     * Without one the resting state is an empty panel with a play button on it,
+     * which reads as a broken embed rather than as one waiting to be started.
+     */
+    poster?: string;
+    /**
      * Render the frame at the column's own width instead of scaling a 1280px
      * viewport down into it.
      *
@@ -204,6 +280,43 @@ export type CaseStudySection = {
      */
     fluid?: boolean;
   };
+  /**
+   * The working process as a sequence of stages — what happens in each and what
+   * comes out of it. Rendered as a map, so the order is visible; a two-column
+   * list of artefacts says what exists but not what follows what.
+   *
+   * Keep `body` to one sentence and `deliverables` to three items: the stages
+   * sit three across, and anything longer turns the row into a wall.
+   */
+  process?: {
+    icon: "discover" | "define" | "architect" | "validate" | "systemise" | "handoff";
+    title: string;
+    body: string;
+    deliverables: string[];
+  }[];
+  /** Small uppercase label above the process map. */
+  processLabel?: string;
+  /**
+   * Numbered parts of a solution, each with its own artefact beside it.
+   *
+   * Image left, prose right. Until an `image` is supplied the left column holds
+   * a marked placeholder rather than collapsing — the row keeps its shape, and
+   * the gap is visible instead of silently absent.
+   */
+  steps?: {
+    title: string;
+    /** One line under the title, before the list. */
+    body?: string;
+    bullets: { title: string; body: string }[];
+    image?: { src: string; alt: string; width: number; height: number };
+  }[];
+  /**
+   * Sets the section's `embed` beside its prose as a two-column row.
+   *
+   * Only worth it for a frame that survives half the measure — a fixed-layout
+   * app scaled into 440px is a thumbnail of an interface, not an interface.
+   */
+  embedAside?: boolean;
   /** Numbered callouts rendered beside the mockup — the design decision and the
    *  micro-interaction behind each part of the screen. */
   annotations?: { title: string; body: string }[];
@@ -243,6 +356,21 @@ export type CaseStudyVoice = {
 
 export type CaseStudy = {
   slug: string; // must match a slug in content/projects.ts
+  /**
+   * The paragraphs beside the title — what the engagement was, in the reader's
+   * first ten seconds. Sits opposite the title rather than under it so the
+   * opening spread answers "what is this" and "what did she do" at once.
+   * Optional: without it the title takes the full measure as before.
+   */
+  summary?: string[];
+  /**
+   * Opts this case study alone into the grey-mat image treatment — a centred
+   * photo essay presentation (mat, floating card, centred caption) instead of
+   * the site's default full-bleed bordered card. Per-study rather than global:
+   * every other case study is prose-first and the mat would just add empty
+   * grey around images that are already the right width for their column.
+   */
+  mattedImages?: boolean;
   role: string;
   timeline: string;
   /** Where the work happened. Optional — the header drops the column when it
@@ -254,6 +382,12 @@ export type CaseStudy = {
   scope?: string;
   team: string;
   skills: string[];
+  /**
+   * A still directly under the title, before the meta grid — the reference's
+   * opening image. Use when there is no `hero` clip; if both are set the clip
+   * runs and this is ignored, since two openers is one too many.
+   */
+  cover?: { src: string; alt: string; width: number; height: number };
   /** One looping clip directly under the title, before the meta grid — the
    *  thing itself, shown before it is described. Same shape as a section's
    *  `videos` entry, so a clip can be moved up here by cutting and pasting. */

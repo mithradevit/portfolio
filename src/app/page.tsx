@@ -12,6 +12,7 @@ import { LiveTime } from "@/components/home/LiveTime";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { HeroStats } from "@/components/home/HeroStats";
 import { OrbitGallery, type OrbitImage } from "@/components/work/OrbitGallery";
+import { ScrollToHash } from "@/components/motion/ScrollToHash";
 
 // Five personal photos. None carry an `href` — they aren't project work, so
 // linking them into a case study would be a misleading destination.
@@ -165,6 +166,7 @@ export default function HomePage() {
             sections are taller than the viewport and reading them means
             stopping partway, which is exactly where a snap point pulls the
             page out from under the reader. */}
+        <ScrollToHash />
         <ServicesSection />
 
         {/* After Services, which it now reads as the evidence for: Services
@@ -173,7 +175,14 @@ export default function HomePage() {
           <ToolsRow />
         </div>
 
-        <div className="flex flex-col gap-4">
+        {/* `id` is the return address for a case study's Back link, which
+            sends the reader to the grid they came from rather than the top of
+            the page. `scroll-mt-28` keeps the heading clear of the floating
+            header once the jump lands, and ScrollToHash (above) re-runs the
+            jump after this page finishes growing — without it the arrival
+            overshoots, because the browser scrolls before the images below
+            have taken up their space. */}
+        <div id="selected-work" className="flex scroll-mt-28 flex-col gap-4">
           <div className="flex h-8 items-center">
             <ScrambleText as="h4" text="Selected Work" delay={0.25} scrambleOnHover />
           </div>

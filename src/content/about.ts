@@ -12,7 +12,7 @@ export const about = {
   ],
 
   contactPrompt:
-    "Reach out on LinkedIn or by email — I'd love to hear from you.",
+    "I'm open to work. If you're hiring reach out via LinkedIn or email. Or… just say hi?",
 
   /**
    * The About hero. `heading` is the italic serif display line; `intro` is one
@@ -26,8 +26,9 @@ export const about = {
   hero: {
     heading: "About me",
     intro: [
-      "I'm a product designer working where the stakes are real — public safety, healthcare, connected devices. The kind of software where a confusing screen isn't an inconvenience, it's a consequence.",
-      "Based in Bangalore, four years into designing for the edges rather than the average: the officer working under duress, the elderly user meeting technology for the first time, the patient at their most vulnerable moment.",
+      "I'm an India-based designer, and my prefrontal cortex is filled with ideas. I got into design because of psychology. I've always been fascinated by the human brain — how we think, behave, and make decisions.",
+      "That curiosity shapes my design practice today: I look at technology through the lens of human behavior, exploring where people struggle and designing experiences that feel more intuitive.",
+      "I'm spending my 20s aggressively pursuing one idea: what if it all works out?",
     ],
     facts: [
       { label: "Exploring", emoji: "🛠", text: "AI-native design workflows and building my own tools." },

@@ -18,7 +18,7 @@ import { ArrowRight } from "lucide-react";
 function Frame({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="border-foreground/10 bg-foreground/[0.02] flex w-full flex-col gap-3 rounded-[12px] border p-4">
-      <span className="text-primary font-mono text-[11px] tracking-[0.08em] uppercase">
+        <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
         {label}
       </span>
       {children}
@@ -50,7 +50,7 @@ function Layer({
       ].join(" ")}
     >
       <div className="flex shrink-0 items-baseline gap-2.5 sm:w-[132px] sm:flex-col sm:gap-1 lg:w-auto">
-        <span className="text-primary font-mono text-[11px] tracking-[0.08em]">
+      <span className="text-primary font-mono text-[11px] tracking-[0.08em] uppercase">
           {String(index).padStart(2, "0")}
         </span>
         <span className="text-foreground text-[12.5px] font-medium lg:text-[11.5px]">{name}</span>
