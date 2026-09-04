@@ -461,7 +461,16 @@ export function CaseStudySection({
           ))}
         </ul>
       )}
-      {section.findings && <CaseStudyFindings items={section.findings} />}
+      {section.findings && (
+        <div className="flex w-full flex-col">
+          {section.findingsLabel && (
+            <span className="text-primary mb-1 block font-mono text-[11px] tracking-[0.08em] uppercase">
+              {section.findingsLabel}
+            </span>
+          )}
+          <CaseStudyFindings items={section.findings} startClosed={section.findingsStartClosed} />
+        </div>
+      )}
       {section.grid && !asideSpansGrid && (
         // Three cards get their own three-column track rather than wrapping to
         // 2 + 1, which leaves a stranded card on the second row. Anything else
@@ -849,7 +858,9 @@ export function CaseStudySection({
       )}
       {section.embed && !section.embedAside && <CaseStudyEmbed embed={section.embed} />}
       {section.videos && <CaseStudyVideos videos={section.videos} />}
-      {section.steps && section.steps.length > 0 && <CaseStudySteps steps={section.steps} />}
+      {section.steps && section.steps.length > 0 && (
+        <CaseStudySteps steps={section.steps} matted={matted} />
+      )}
       {section.process && section.process.length > 0 && (
         <CaseStudyProcessMap stages={section.process} label={section.processLabel} />
       )}

@@ -86,6 +86,18 @@ export const projects: Project[] = [
     cursorLabel: "case-study",
   },
   {
+    slug: "menopause-health-audit",
+    title:
+      "A menopause health platform was collecting sensitive medical data through a consent flow that couldn't legally hold",
+    company: "Perimenopause & Menopause Care",
+    category: "Health & Wellness · UX Audit",
+    tags: ["Health & Wellness", "UX Audit"],
+    year: "2026",
+    thumbnailColor: "#8B6FA3",
+    aspect: "aspect-[16/9]",
+    cursorLabel: "case-study",
+  },
+  {
     slug: "elderly-care",
     title: "Designing for low-vision users",
     company: "Elderly Care",

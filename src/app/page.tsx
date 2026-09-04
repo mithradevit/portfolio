@@ -169,12 +169,6 @@ export default function HomePage() {
         <ScrollToHash />
         <ServicesSection />
 
-        {/* After Services, which it now reads as the evidence for: Services
-            says what she takes on, Tools says what she takes it on with. */}
-        <div className="snap-section flex min-h-[calc(100dvh-12rem)] w-full flex-col justify-center">
-          <ToolsRow />
-        </div>
-
         {/* `id` is the return address for a case study's Back link, which
             sends the reader to the grid they came from rather than the top of
             the page. `scroll-mt-28` keeps the heading clear of the floating
@@ -187,6 +181,13 @@ export default function HomePage() {
             <ScrambleText as="h4" text="Selected Work" delay={0.25} scrambleOnHover />
           </div>
           <ProjectGrid projects={projects} />
+        </div>
+
+        {/* Last: Services says what she takes on, the work shows it, and Tools
+            is the footnote about what she takes it on with — the detail you
+            read once the case has already been made. */}
+        <div className="snap-section flex min-h-[calc(100dvh-12rem)] w-full flex-col justify-center">
+          <ToolsRow />
         </div>
       </Reveal>
     </div>

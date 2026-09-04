@@ -94,6 +94,15 @@ export type CaseStudySection = {
    * label. This gives every point its own row.
    */
   findings?: { title: string; body: string }[];
+  /**
+   * Small uppercase label above the findings list — names what the rows are.
+   * Without it a set of collapsed rows arrives unannounced, which is fine when
+   * the section heading already says what they are and confusing when it
+   * doesn't (a severity scale sitting under a heading about method, say).
+   */
+  findingsLabel?: string;
+  /** Every finding row starts collapsed; the reader opens what they want. */
+  findingsStartClosed?: boolean;
   mockup?: CaseStudyMockup;
   mockupCaption?: string;
   diagram?: CaseStudyDiagram;

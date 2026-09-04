@@ -10,11 +10,34 @@ import { ChatOpenProvider } from "@/components/chat/ChatOpenContext";
 import { ChatPanel } from "@/components/chat/ChatPanel";
 import { VinylPlayer } from "@/components/layout/VinylPlayer";
 
+/** Shared by the Open Graph and Twitter cards. Deliberately shorter than the
+ *  document title: a link preview truncates, and without an explicit og:title
+ *  scrapers fall back to the first heading — which here is the scrambling one,
+ *  so the card read as spaced-out letters followed by the same words again. */
+const SHARE_TITLE = "Mithra | Senior Product Designer";
+
 export const metadata: Metadata = {
+  // Required for the card image to resolve to an absolute URL — scrapers
+  // cannot follow a relative one.
+  metadataBase: new URL("https://mithradevi.site"),
   title: `${profile.name} | ${profile.title}`,
   description: profile.bio[0],
   authors: [{ name: profile.name }],
   manifest: "/manifest.json",
+  openGraph: {
+    type: "website",
+    siteName: profile.name,
+    title: SHARE_TITLE,
+    description: profile.bio[0],
+    url: "/",
+  },
+  twitter: {
+    // The wide card: the image is a 1200×630 canvas with the photo set whole
+    // inside it, so no platform's crop can cut into the picture itself.
+    card: "summary_large_image",
+    title: SHARE_TITLE,
+    description: profile.bio[0],
+  },
 };
 
 export const viewport: Viewport = {

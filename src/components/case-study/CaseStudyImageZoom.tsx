@@ -30,6 +30,7 @@ export function CaseStudyImageZoom({
   fitHeight?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const isGif = image.src.toLowerCase().endsWith(".gif");
 
   useEffect(() => {
     if (!open) return;
@@ -54,17 +55,30 @@ export function CaseStudyImageZoom({
           fitHeight ? "h-full w-auto" : "w-full"
         } ${className ?? ""}`}
       >
-        <Image
-          src={image.src}
-          alt={image.alt}
-          width={image.width}
-          height={image.height}
-          quality={90}
-          sizes={fitHeight ? "700px" : "(min-width: 1024px) 380px, 100vw"}
-          className={
-            fitHeight ? "h-full w-auto rounded-[6px]" : "h-auto w-full rounded-[6px]"
-          }
-        />
+        {isGif ? (
+          // Next's image optimizer re-encodes through its own pipeline, which
+          // drops a GIF's animation — a plain `<img>` is what keeps it moving.
+          <img
+            src={image.src}
+            alt={image.alt}
+            loading="lazy"
+            className={
+              fitHeight ? "h-full w-auto rounded-[6px]" : "h-auto w-full rounded-[6px]"
+            }
+          />
+        ) : (
+          <Image
+            src={image.src}
+            alt={image.alt}
+            width={image.width}
+            height={image.height}
+            quality={90}
+            sizes={fitHeight ? "700px" : "(min-width: 1024px) 380px, 100vw"}
+            className={
+              fitHeight ? "h-full w-auto rounded-[6px]" : "h-auto w-full rounded-[6px]"
+            }
+          />
+        )}
         {/* Only affordance the thumbnail carries. A permanent icon would sit on
             top of the artefact; this appears when the pointer is over it. */}
         <span className="pointer-events-none absolute right-3 bottom-3 rounded-full bg-[#32404f]/80 px-2.5 py-1 font-mono text-[9.27px] tracking-[0.12em] text-white uppercase opacity-0 transition-opacity duration-200 group-hover:opacity-100">
@@ -93,15 +107,23 @@ export function CaseStudyImageZoom({
           {/* Stops a click on the picture itself from closing — the backdrop is
               the dismiss target, not the thing you came to look at. */}
           <div onClick={(e) => e.stopPropagation()} className="max-w-[1400px]">
-            <Image
-              src={image.src}
-              alt={image.alt}
-              width={image.width}
-              height={image.height}
-              quality={95}
-              sizes="100vw"
-              className="h-auto w-full rounded-[6px] bg-white"
-            />
+            {isGif ? (
+              <img
+                src={image.src}
+                alt={image.alt}
+                className="h-auto w-full rounded-[6px] bg-white"
+              />
+            ) : (
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={image.width}
+                height={image.height}
+                quality={95}
+                sizes="100vw"
+                className="h-auto w-full rounded-[6px] bg-white"
+              />
+            )}
           </div>
         </div>
       )}
