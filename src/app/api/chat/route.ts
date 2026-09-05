@@ -26,11 +26,29 @@ const MAX_MESSAGE_CHARS = 2000;
  * Prompt caching is Anthropic-only here: Gemini's free tier is billed in
  * requests rather than tokens, so there is nothing to save.
  */
+/**
+ * A key that is actually this provider's, or nothing.
+ *
+ * Presence is not enough. Netlify's AI extensions inject an `ANTHROPIC_API_KEY`
+ * of their own — a 366-character JWT for their gateway, not an Anthropic key —
+ * into every deploy. Selecting on presence alone meant production silently
+ * preferred that JWT, failed to authenticate on every message, and looked
+ * identical to a broken site, while local development (where the variable
+ * doesn't exist) worked perfectly.
+ *
+ * Checking the documented prefix costs nothing and turns that class of failure
+ * into a provider we simply skip.
+ */
+function keyFor(name: string, prefix: string): string | undefined {
+  const value = process.env[name]?.trim();
+  return value?.startsWith(prefix) ? value : undefined;
+}
+
 function selectModel(): {
   model: LanguageModel;
   providerOptions?: Parameters<typeof streamText>[0]["providerOptions"];
 } | null {
-  if (process.env.ANTHROPIC_API_KEY) {
+  if (keyFor("ANTHROPIC_API_KEY", "sk-ant-")) {
     return {
       model: anthropic("claude-haiku-4-5"),
       providerOptions: {
@@ -42,10 +60,13 @@ function selectModel(): {
   // requests rather than Gemini's hundreds — and the fastest, since it runs
   // open models on its own hardware. Second only to Anthropic because the
   // prose is blunter. Nothing to configure beyond the key.
-  if (process.env.GROQ_API_KEY) {
+  if (keyFor("GROQ_API_KEY", "gsk_")) {
     return { model: groq("llama-3.3-70b-versatile") };
   }
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+  // No prefix check here: Google has issued at least two key formats (the old
+  // "AIza…" and the current "AQ.…"), so a prefix test would reject valid keys
+  // as Google changes them. Nothing injects a competing variable of this name.
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim()) {
     return {
       // A lite model, and the floating alias rather than a pinned version.
       //
