@@ -318,6 +318,9 @@ export type CaseStudySection = {
     body?: string;
     bullets: { title: string; body: string }[];
     image?: { src: string; alt: string; width: number; height: number };
+    /** A screen recording in place of the still, for a step whose point is a
+     *  sequence rather than a state. Takes precedence over `image`. */
+    video?: { src: string; alt: string; width: number; height: number };
   }[];
   /**
    * Sets the section's `embed` beside its prose as a two-column row.

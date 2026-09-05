@@ -13,7 +13,7 @@ export const dotlet: CaseStudy = {
   team: "Solo — product strategy, UX, interaction design, AI-assisted build",
   skills: ["0→1 Product Design", "AI-Assisted Development", "Interaction Design", "Scoping"],
   hero: {
-    src: "/videos/dotlet-intro.gif",
+    src: "/videos/dotlet-intro.mp4",
     poster: "/videos/dotlet-intro-poster.webp",
     width: 1918,
     height: 876,
@@ -174,7 +174,7 @@ export const dotlet: CaseStudy = {
           title: "Canvas",
           body: "Dots and Freehand are two modes of one canvas rather than two tools to pick between, because the choice is about how a mark gets made, not what is being made. Switching mid-drawing keeps the work — nobody should have to decide their technique before they know what they are drawing.",
           video: {
-            src: "/videos/dotlet-canvas.gif",
+            src: "/videos/dotlet-canvas.mp4",
             poster: "/videos/dotlet-canvas-poster.webp",
             width: 1200,
             height: 675,
@@ -185,7 +185,7 @@ export const dotlet: CaseStudy = {
           title: "Brush",
           body: "Pen, taper, calligraphy, pencil and marker, with size, opacity and stability on sliders. Stability is the one that matters: it smooths an unsteady hand as the stroke is drawn, so a shaky line comes out as a clean one without anyone having to redraw it.",
           video: {
-            src: "/videos/dotlet-brush.gif",
+            src: "/videos/dotlet-brush.mp4",
             poster: "/videos/dotlet-brush-poster.webp",
             width: 1200,
             height: 675,
@@ -196,7 +196,7 @@ export const dotlet: CaseStudy = {
           title: "Color",
           body: "The panel docks or undocks. Docked, it stays out of the way; undocked, it follows the work so a colour can be judged against the thing it is on rather than against a sidebar. Palettes are saved because most people are making a set, and the second mark has to match the first.",
           video: {
-            src: "/videos/dotlet-color.gif",
+            src: "/videos/dotlet-color.mp4",
             poster: "/videos/dotlet-color-poster.webp",
             width: 1200,
             height: 675,
@@ -207,7 +207,7 @@ export const dotlet: CaseStudy = {
           title: "Select & export",
           body: "Select, group, undo, redo, then out as SVG or PNG. Vector export is the part that makes the work real — a drawing that can only leave as a flat image is a drawing that cannot be used again, and the whole point is that these are marks someone can carry into their own work.",
           video: {
-            src: "/videos/dotlet-select-export.gif",
+            src: "/videos/dotlet-select-export.mp4",
             poster: "/videos/dotlet-select-export-poster.webp",
             width: 1200,
             height: 675,
@@ -218,7 +218,7 @@ export const dotlet: CaseStudy = {
           title: "File manager",
           body: "Create, save, rename and organise without leaving the canvas. Files live in local storage, so there is no account between someone and their first drawing — the tool has to be worth signing up for before it asks, not the other way round.",
           video: {
-            src: "/videos/dotlet-file-manager.gif",
+            src: "/videos/dotlet-file-manager.mp4",
             poster: "/videos/dotlet-file-manager-poster.webp",
             width: 1200,
             height: 675,

@@ -32,8 +32,6 @@ export const metadata: Metadata = {
     url: "/",
   },
   twitter: {
-    // The wide card: the image is a 1200×630 canvas with the photo set whole
-    // inside it, so no platform's crop can cut into the picture itself.
     card: "summary_large_image",
     title: SHARE_TITLE,
     description: profile.bio[0],

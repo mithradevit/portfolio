@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { CaseStudySection } from "@/content/case-studies/types";
 import { CaseStudyImageZoom } from "./CaseStudyImageZoom";
 import { CONTENT_HEADING } from "./typography";
+import { StepVideo } from "./StepVideo";
 
 type Step = NonNullable<CaseStudySection["steps"]>[number];
 
@@ -20,7 +21,9 @@ export function CaseStudySteps({ steps, matted }: { steps: Step[]; matted?: bool
   return (
     <ol className="flex list-none flex-col gap-10">
       {steps.map((step, i) => {
-        const media = step.image ? (
+        const media = step.video ? (
+          <StepVideo video={step.video} className={matted ? "max-w-[260px]" : undefined} />
+        ) : step.image ? (
           <CaseStudyImageZoom image={step.image} className={matted ? "max-w-[260px]" : undefined} />
         ) : (
           <div
