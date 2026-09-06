@@ -18,9 +18,14 @@ export function FunProjectsGrid({
 }) {
   const [active, setActive] = useState<FunProject | null>(null);
 
+  // A single card takes the full measure and lays out sideways instead of
+  // sitting in one column with two empty tracks beside it — which reads as a
+  // grid that failed to load rather than a section with one entry.
+  const lone = projects.length === 1;
+
   return (
     <>
-      <div className={`grid w-full ${gridClassName}`}>
+      <div className={`grid w-full ${lone ? "grid-cols-1" : gridClassName}`}>
         {projects.map((project, i) => (
           <button
             key={i}
@@ -29,7 +34,7 @@ export function FunProjectsGrid({
             data-cursor="pointer"
             className="text-left"
           >
-            <FunProjectCard project={project} />
+            <FunProjectCard project={project} wide={lone} index={i} />
           </button>
         ))}
       </div>

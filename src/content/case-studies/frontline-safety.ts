@@ -98,6 +98,348 @@ export const frontlineSafety: CaseStudy = {
       ],
     },
     {
+      heading: "What the System Does",
+      navLabel: "Use Cases",
+      body: [
+        "One record — a shift, a stream, a clip, a case — moving through capture, review, disclosure and retention. These are the jobs the ecosystem has to do; the two sections after this one show how each surface does its share.",
+      ],
+      // TODO(Mithra): four cards still have no crop — Capture & offload, Cases,
+      // Redaction & disclosure, Custody & retention. Add an `image` to any of
+      // them; it bleeds off a corner, so a crop of the real screen is enough
+      // and a full-page export is not needed. Vary `corner` as you go.
+      //
+      // The composition reads as two wide cards per row with two tiles beside
+      // them, so the board has a rhythm rather than eight equal squares.
+      useCases: [
+        {
+          title: "Watch live",
+          span: 2,
+          points: [
+            "See every camera streaming right now, in one rail.",
+            "Tag an incident while it is still happening.",
+            "Notes thread against the stream, not against a file.",
+          ],
+          image: {
+            src: "/images/projects/frontline-safety/bento/watch-live.svg",
+            alt: "",
+            width: 685,
+            height: 386,
+          },
+        },
+        {
+          title: "Capture & offload",
+          span: 2,
+          points: [
+            "Pair a body-worn camera to the phone in three steps.",
+            "Dock a camera and the footage offloads on its own.",
+            "Local storage clears, so no camera fails mid-shift.",
+            "Uploads survive a locked screen and a weak signal.",
+          ],
+          image: {
+            src: "/images/projects/frontline-safety/bento/capture-offload.svg",
+            alt: "",
+            width: 401,
+            height: 400,
+          },
+        },
+        {
+          title: "Describe & transcribe",
+          points: [
+            "A draft description written from the clip's own audio.",
+            "Offered to the officer, never applied for them.",
+            "Searchable transcript, so footage is found by what was said.",
+          ],
+        },
+        {
+          title: "Cases",
+          points: [
+            "Open a case and bundle evidence into one container.",
+            "Add a clip to a case from the stream or the queue.",
+            "Share by permission rather than by USB or FTP.",
+          ],
+        },
+        {
+          title: "Review & triage",
+          span: 2,
+          points: [
+            "A queue ordered by what is missing, not by what is newest.",
+            "Needs review, being reviewed, evidence, archived.",
+            "Exception routing surfaces failed uploads and gaps first.",
+          ],
+          image: {
+            src: "/images/projects/frontline-safety/bento/review-triage.svg",
+            alt: "",
+            width: 671,
+            height: 209,
+          },
+        },
+        {
+          title: "Fleet & device health",
+          span: 2,
+          points: [
+            "Which cameras are offline, full, or reporting a fault.",
+            "A fix action on the row that reports the problem.",
+            "The same fleet on a map when the question is where.",
+          ],
+          image: {
+            src: "/images/projects/frontline-safety/bento/fleet.svg",
+            alt: "",
+            width: 611,
+            height: 333,
+          },
+        },
+        {
+          title: "Redaction & disclosure",
+          points: [
+            "Blur a bystander without touching the original file.",
+            "The interface states plainly that the raw file stays locked.",
+            "Export a court-ready package, not a folder of clips.",
+          ],
+        },
+        {
+          title: "Custody & retention",
+          points: [
+            "Every view, tag and edit written to a ledger no one can edit.",
+            "Retention clocks visible before a file ages out, not after.",
+            "An audit trail a court will accept as the record.",
+          ],
+        },
+      ],
+    },
+    {
+      heading: "The Mobile App",
+      navLabel: "Mobile",
+      body: [
+        "The phone is the surface an officer actually holds during a shift, so it carries the parts of the system that have to work one-handed, at speed, and often in the open.",
+        "Grouped by the question each run of screens answers — starting a shift, keeping the camera working, knowing who is nearby, and describing footage before the detail goes cold.",
+      ],
+      // The decisions behind the screens, moved here from a separate solution
+      // section. Kept next to the surface they apply to: an argument about
+      // one-handed capture reads as an argument when the screens it produced
+      // are directly above it, and as a list of claims when it is three
+      // sections away from them.
+      steps: [
+        {
+          title: "Zero-friction capture",
+          body: "Officers under adrenaline cannot navigate complex UI. The capture experience was rebuilt for the worst-case scenario.",
+          bullets: [
+            {
+              title: "Resilient duress flows",
+              body: "Engineered the mobile app to bypass locked screens and OS battery-savers, so a hardware duress press pings dispatch instantly, even in low-connectivity zones.",
+            },
+            {
+              title: "Automated cruisers",
+              body: "Integrated Computer-Aided Dispatch (CAD) metadata directly into the capture sequence, eliminating manual typing in the vehicle.",
+            },
+            {
+              title: "Biometric handoffs",
+              body: "Replaced manual check-ins with one-tap palm-vein authentication at the kiosk, with visual LED feedback when a body-worn camera is paired and ready.",
+            },
+          ],
+        },
+      ],
+      imagesRailHeight: 560,
+      imageGroups: [
+        {
+          label: "Starting a shift · pair a camera, then get the footage off it",
+          images: [
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-01.svg",
+            alt: "Start your shift, step one of three: pick up a camera. A list of available body-worn cameras with battery and free storage, each marked Ready or Charging.",
+            width: 482,
+            height: 954,
+            caption: "Pairing is framed as step 1 of 3, so an officer knows how much is left before they start.",
+          },
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-02.svg",
+            alt: "Today: on shift since 09:41, the paired camera shown with battery at 82 percent, 9.4 GB storage and four clips, above a warning that three clips are still on the camera with an Upload button.",
+            width: 482,
+            height: 954,
+            caption: "The home screen leads with the one thing that can still go wrong — footage not yet backed up.",
+          },
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-03.svg",
+            alt: "Upload 3 clips: a sheet listing each clip with its size, totalling 403 MB, uploading straight to DEMS over 4G, with a note that it keeps going if the phone is locked.",
+            width: 482,
+            height: 954,
+            caption: "Upload states the total and promises to survive a locked screen — the two things that decide whether it gets done.",
+          },
+          ],
+        },
+        {
+          label: "When the camera misbehaves · recovery without a call to IT",
+          images: [
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-04.svg",
+            alt: "Camera status: an alert that the camera stopped responding with a Fix it button, then battery, free storage, signal and GPS state, followed by three recovery actions.",
+            width: 482,
+            height: 954,
+            caption: "The device page answers “is it working” before it offers anything else.",
+          },
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-05.svg",
+            alt: "Restart the camera: three numbered steps — hold the side button for eight seconds, wait for the green light, tap to reconnect — with a Reconnect button and a This didn't work escape.",
+            width: 482,
+            height: 954,
+            caption: "A numbered sequence with an admission built in: “This didn't work” routes to a human.",
+          },
+          ],
+        },
+        {
+          label: "Who is nearby · situational awareness on one map",
+          images: [
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-06.svg",
+            alt: "The live map zoomed out across the metropolitan area with clustered officer avatars, a status pill reading you're not streaming, and a list showing four officers within two kilometres.",
+            width: 482,
+            height: 954,
+            caption: "Clustering keeps the map readable when a dozen officers are on shift.",
+          },
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-07.svg",
+            alt: "The live map at street level with a single officer pinned at 1.6 kilometres, and an Officers near you list filtered by All, Live and Near me.",
+            width: 482,
+            height: 954,
+            caption: "Distance sits on the pin, so the map answers “how far” without a tap.",
+          },
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-08.svg",
+            alt: "The live map with a second officer marked in accent at 390 metres, indicating a stream in progress, alongside the nearby officers list.",
+            width: 482,
+            height: 954,
+            caption: "One accent marker for the state that changes what a responder does next.",
+          },
+          ],
+        },
+        {
+          label: "Describing footage · the step that decides whether evidence is findable",
+          images: [
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-11.svg",
+            alt: "The Clips list: seven clips held on the camera and in the cloud, filtered by All, Not described and Uploading. Rows show duration, time and state — one uploading at 64 percent, two uploaded, one flagged Not described.",
+            width: 482,
+            height: 954,
+            caption: "The list leads with what is missing: “Not described” is a filter, not a badge to hunt for.",
+          },
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-10.svg",
+            alt: "Describe this clip: the footage with its location and timestamp, a What happened field prompting that a colleague should understand this without watching it, four category chips, an optional notice number, and Save and upload.",
+            width: 482,
+            height: 954,
+            caption: "The prompt sets the standard — write it so a colleague never has to watch the footage.",
+          },
+          {
+            src: "/images/projects/frontline-safety/mobile/screen-09.svg",
+            alt: "The same screen with a panel suggested from the audio, offering a draft description of the incident with accept and dismiss controls.",
+            width: 482,
+            height: 954,
+            caption: "Drawn from the audio, offered rather than applied — the officer accepts or dismisses, and the record stays theirs.",
+          },
+          ],
+        },
+      ],
+    },
+    {
+      heading: "The Web App",
+      navLabel: "Web",
+      body: [
+        "The desk surface is where footage stops being a file on a camera and becomes evidence attached to a case. It is used by the people who never attend the incident — supervisors watching a shift run, evidence technicians clearing a review queue, administrators keeping a fleet of cameras working.",
+        "Same system, different posture: the phone is one-handed and mid-incident, the web app is two-handed and after the fact. Grouped, again, by the question each run of screens answers.",
+      ],
+      // Both desk-side arguments, moved here from a separate solution section:
+      // triage is what the console is for, and disclosure is what it has to
+      // survive. Neither belongs beside the mobile screens.
+      steps: [
+        {
+          title: "Triage over chronology",
+          body: "Supervisors no longer scroll through 500 routine traffic stops to find one critical incident.",
+          bullets: [
+            {
+              title: "Exception-based routing",
+              body: "The dashboard prioritises files by missing metadata, impending retention deletion, or flagged hardware anomalies — a camera that failed to upload, for instance.",
+            },
+            {
+              title: "Automated ingestion",
+              body: "Docking a camera offloads the footage, clears local device storage to prevent mid-shift storage failure, and routes the data to the correct case file.",
+            },
+          ],
+        },
+        {
+          title: "The secure workspace",
+          body: "Speed is irrelevant if the evidence is thrown out of court.",
+          bullets: [
+            {
+              title: "Cases as containers",
+              body: "Instead of downloading and exporting via USB or FTP, evidence is bundled into secure, shareable containers governed by strict backend permissions.",
+            },
+            {
+              title: "Non-destructive redaction",
+              body: "A layered video workspace: blurring a bystander's face applies a visual mask, and the interface says plainly that the original raw file stays locked and untouched.",
+            },
+            {
+              title: "Immutable audit trails",
+              body: "Every view, tag and redaction is logged to an un-editable ledger, turning a messy workflow into a court-defensible document.",
+            },
+          ],
+        },
+      ],
+      imageGroups: [
+        {
+          // One across. These are 1280px-wide dashboards whose whole content
+          // is dense tables and stat rows; at phone-screen scale they would be
+          // pictures of tables rather than tables.
+          columns: 1,
+          label: "Watching a shift run · live streams, tagged while they happen",
+          images: [
+            {
+              src: "/images/projects/frontline-safety/web/screen-01.svg",
+              alt: "Watch live: a body-camera stream playing at the centre marked LIVE with seven watching, credited to an officer and camera with the street location beneath it. Share link and Add to case sit beside tag chips reading Incident and Evidence. A Cameras rail on the right lists four live cameras with their officer and location, and a Notes from this stream panel below carries two timestamped notes from colleagues.",
+              width: 1280,
+              height: 1026,
+              caption:
+                "Tags and notes sit on the stream itself, so the context is captured while someone is still watching rather than reconstructed hours later.",
+            },
+          ],
+        },
+        {
+          columns: 1,
+          label: "The fleet · which cameras need attention, and where they are",
+          images: [
+            {
+              src: "/images/projects/frontline-safety/web/screen-02.svg",
+              alt: "Cameras, list view. Four stat cards across the top: offline count, fleet status as a percentage dial, cameras needing attention, and clips waiting to upload. Below, a Cameras closest to full bar chart ranking cameras by percentage of storage used, and a Needs attention list where each row states the fault and offers a Fix action. An All cameras table runs underneath with columns for assigned officer, type, status, storage used, waiting to upload and last seen.",
+              width: 1280,
+              height: 925,
+              caption:
+                "Every card names a number someone has to act on. The Fix action is on the row that reports the fault, not behind a settings page.",
+            },
+            {
+              src: "/images/projects/frontline-safety/web/screen-03.svg",
+              alt: "The same Cameras page switched to map view, keeping the four stat cards. A satellite map fills the page with coloured pins, filtered by all cameras, body cameras or in-car, and a legend distinguishing recording now, online and idle, and offline or no signal.",
+              width: 1280,
+              height: 1032,
+              caption:
+                "Map and list are one page with two views, because the same question — is this fleet healthy — gets asked both ways.",
+            },
+          ],
+        },
+        {
+          columns: 1,
+          label: "From footage to case · the review queue",
+          images: [
+            {
+              src: "/images/projects/frontline-safety/web/screen-04.svg",
+              alt: "Recordings: a queue of captured footage with tabs for all, needs review, being reviewed, evidence and archived, each carrying a count. Filters for search, date, officer and status sit above a table listing each recording by name and reference, when it was captured, the camera and officer, a status chip, and its clip count, with play, download and open actions on every row.",
+              width: 1280,
+              height: 974,
+              caption:
+                "The tabs are the workflow: a recording moves left to right from needs review to evidence, and the counts show where the backlog is.",
+            },
+          ],
+        },
+      ],
+    },
+    {
       heading: "Research",
       body: [
         "The assumed pain points and the real ones diverged sharply, which is why the fieldwork was not negotiable. Interviews ran across the full chain — officers, supervisors, investigators, evidence technicians, administrators, device-maintenance staff and judiciary users — because each of them inherits the previous role's shortcuts.",
@@ -234,6 +576,7 @@ export const frontlineSafety: CaseStudy = {
       body: [
         "Five findings did most of the work in reshaping the product. None of them were what the team expected going in.",
       ],
+      findingsAside: true,
       image: {
         src: "/images/projects/frontline-safety/findings.webp",
         alt: "A findings board. The lead panel reads 'Documenting video was harder than capturing it' beside an officer at a patrol car and an incident form warning that recall is fading and detail is missing. Four numbered panels follow: end-of-day offload, showing a kiosk upload in progress over a risk window of loss, damage and delay; device faults handled alone, showing a camera error with restart, check connection and call supervisor as the only options; supervisors inheriting what officers did not do, showing 127 incomplete submissions with missing field counts; and no shared definition of handled, showing three supervisors on one file — reviewed, in review, and never opened.",
@@ -309,81 +652,12 @@ export const frontlineSafety: CaseStudy = {
         "The same lifecycle, redistributed. Documentation moves to the moment of capture where recall is highest, AI handles the transcription and tagging pass, and the supervisor arrives to verify rather than to write.",
     },
     {
-      heading: "The Solution: A Trust-First Ecosystem",
-      navLabel: "The Solution",
-      body: [
-        "The ecosystem was redesigned to automate data tagging in the field, surface critical anomalies at the desk, and lock down the chain of custody for the courtroom.",
-      ],
-      // TODO(Mithra): each step's left column is a marked placeholder until you
-      // send the artefact for it. Drop the files into
-      // public/images/projects/frontline-safety/ and add an `image` to the step.
-      steps: [
-        {
-          title: "Zero-Friction Capture (Mobile & Hardware)",
-          body: "Officers under adrenaline cannot navigate complex UI. The capture experience was rebuilt for the worst-case scenario.",
-          bullets: [
-            {
-              title: "Resilient duress flows",
-              body: "Engineered the mobile app to bypass locked screens and OS battery-savers, so a hardware duress press pings dispatch instantly, even in low-connectivity zones.",
-            },
-            {
-              title: "Automated cruisers",
-              body: "Integrated Computer-Aided Dispatch (CAD) metadata directly into the capture sequence, eliminating manual typing in the vehicle.",
-            },
-            {
-              title: "Biometric handoffs",
-              body: "Replaced manual check-ins with one-tap palm-vein authentication at the kiosk, with visual LED feedback when a body-worn camera is paired and ready.",
-            },
-          ],
-        },
-        {
-          title: "Triage Over Chronology (Web Dashboard)",
-          body: "Supervisors no longer scroll through 500 routine traffic stops to find one critical incident.",
-          bullets: [
-            {
-              title: "Exception-based routing",
-              body: "The dashboard prioritises files by missing metadata, impending retention deletion, or flagged hardware anomalies — a camera that failed to upload, for instance.",
-            },
-            {
-              title: "Automated ingestion",
-              body: "Docking a camera offloads the footage, clears local device storage to prevent mid-shift storage failure, and routes the data to the correct case file.",
-            },
-          ],
-        },
-        {
-          title: "The Secure Workspace (Investigation & Disclosure)",
-          body: "Speed is irrelevant if the evidence is thrown out of court.",
-          bullets: [
-            {
-              title: "Cases as containers",
-              body: "Instead of downloading and exporting via USB or FTP, evidence is bundled into secure, shareable containers governed by strict backend permissions.",
-            },
-            {
-              title: "Non-destructive redaction",
-              body: "A layered video workspace: blurring a bystander's face applies a visual mask, and the interface says plainly that the original raw file stays locked and untouched.",
-            },
-            {
-              title: "Immutable audit trails",
-              body: "Every view, tag and redaction is logged to an un-editable ledger, turning a messy workflow into a court-defensible document.",
-            },
-          ],
-        },
-      ],
-    },
-    {
       heading: "Designing Across the Ecosystem",
       navLabel: "Ecosystem",
       body: [
         "The surfaces are not three versions of the same app. The mobile app exists to close the gap between capture and documentation; the kiosk exists to guarantee a controlled handover; the console exists to make sense of everything after the fact.",
         "What holds them together is the object model, not the layout. A session created on a device, described on a phone, edited on the console and shared into a case is one record moving through four contexts — and the design work was mostly about making each handoff survivable.",
       ],
-      image: {
-        src: "/images/projects/frontline-safety/live.webp",
-        alt: "Watch live: a streaming player with a LIVE badge, the officer and location, removable Incident and Evidence tags, a team notes thread, and a rail of currently streaming cameras.",
-        width: 1280,
-        height: 1026,
-        caption: "Watch live — tagging happens during the incident, not after it.",
-      },
       diagram: "user-flows",
       diagramCaption:
         "Five flows carry almost all real usage. Each one crosses at least two surfaces, which is why cross-surface blueprints mattered more here than any single screen.",
@@ -394,13 +668,6 @@ export const frontlineSafety: CaseStudy = {
         "Transcription turned scrub for ten minutes into a query. Transcript lines are navigational — selecting one moves the playhead — so finding the moment a suspect mentions a vehicle stopped meaning real-time scrubbing.",
         "The trust design matters more than the capability. Automated output is framed as assistive, not authoritative: it carries a visible caveat to check against the audio before evidentiary use, it is labelled as auto-generated at the point of reading, and it never enters the record as fact. AI prepares, organises and surfaces; the human decides.",
       ],
-      image: {
-        src: "/images/projects/frontline-safety/transcript.webp",
-        alt: "The Transcript tab: a Find a word search, a caveat telling the reader to check it against the audio, and speaker-labelled lines with timestamps.",
-        width: 1280,
-        height: 1033,
-        caption: "The shipped Transcript tab.",
-      },
       mockup: "transcript",
       annotations: [
         { title: "The caveat sits above the results", body: "Not in a tooltip and not in a help page. It is the first thing read, because by the time someone is scanning lines they have already started trusting them." },
@@ -477,11 +744,14 @@ export const frontlineSafety: CaseStudy = {
         { value: "9", label: "Design principles authored and applied in order of precedence across two years" },
       ],
       image: {
-        src: "/images/projects/frontline-safety/storage.webp",
+        src: "/images/projects/frontline-safety/impact.svg",
         alt: "Storage: tiles for stored, streamed, deleted on schedule and kept as evidence, a streamed-versus-stored line chart by month, and a table with month-on-month change.",
-        width: 1280,
-        height: 1291,
+        width: 1050,
+        height: 708,
         caption: "The shipped Storage screen.",
+        // No white plate or stroke around this one — the export carries its own
+        // ground and edge, and the card drew a second frame just inside it.
+        bare: true,
       },
       mockup: "usage",
       mockupCaption:

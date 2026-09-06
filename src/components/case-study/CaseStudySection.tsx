@@ -20,6 +20,7 @@ import { CaseStudyVideos } from "./CaseStudyBanner";
 import { CaseStudyFlow } from "./CaseStudyFlow";
 import { CaseStudyInlineVideo } from "./CaseStudyInlineVideo";
 import { CaseStudyPins } from "./CaseStudyPins";
+import { CaseStudyUseCases } from "./CaseStudyUseCases";
 import { CaseStudyEmbed } from "./CaseStudyEmbed";
 import { CaseStudyVoices } from "./CaseStudyVoices";
 import { CaseStudyAccordion } from "./CaseStudyAccordion";
@@ -401,16 +402,16 @@ export function CaseStudySection({
           <figure className="flex w-full flex-col gap-3">
             {matted ? (
               <div className="bg-foreground/[0.045] flex w-full justify-center rounded-[14px] p-4 sm:p-6">
-                <CaseStudyImageZoom image={section.image} />
+                <CaseStudyImageZoom image={section.image} bare={section.image.bare} />
               </div>
             ) : (
-              <CaseStudyImageZoom image={section.image} />
+              <CaseStudyImageZoom image={section.image} bare={section.image.bare} />
             )}
             {section.image.caption && (
               <figcaption
                 className={
                   matted
-                    ? "text-foreground-light mx-auto max-w-[62ch] text-center text-[13px] leading-[1.6]"
+                    ? "text-foreground-light max-w-[62ch] text-[13px] leading-[1.6]"
                     : "border-foreground/10 text-foreground-light border-l-2 py-0.5 pl-3 text-[13px] leading-[1.6]"
                 }
               >
@@ -462,13 +463,39 @@ export function CaseStudySection({
         </ul>
       )}
       {section.findings && (
-        <div className="flex w-full flex-col">
-          {section.findingsLabel && (
-            <span className="text-primary mb-1 block font-mono text-[11px] tracking-[0.08em] uppercase">
-              {section.findingsLabel}
-            </span>
+        // `findingsAside` sets the artefact beside the list as an even two-up
+        // instead of under it, so the board and the findings it summarises are
+        // read together rather than one after the other. `items-start` keeps
+        // the image at the top of its column — stretched, a short list would
+        // pull a tall board out of alignment with the first finding.
+        <div
+          className={
+            section.findingsAside && section.image
+              ? "grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-10"
+              : "flex w-full flex-col"
+          }
+        >
+          <div className="flex w-full flex-col">
+            {section.findingsLabel && (
+              <span className="text-primary mb-1 block font-mono text-[11px] tracking-[0.08em] uppercase">
+                {section.findingsLabel}
+              </span>
+            )}
+            <CaseStudyFindings items={section.findings} />
+          </div>
+          {section.findingsAside && section.image && (
+            <figure className="flex w-full flex-col gap-3">
+              {/* No mat and no plate: at half a column the artefact needs every
+                  pixel of that width, and a tinted surround would spend it on
+                  framing. */}
+              <CaseStudyImageZoom image={section.image} bare />
+              {section.image.caption && (
+                <figcaption className="text-foreground-light text-[13px] leading-[1.6]">
+                  {section.image.caption}
+                </figcaption>
+              )}
+            </figure>
           )}
-          <CaseStudyFindings items={section.findings} startClosed={section.findingsStartClosed} />
         </div>
       )}
       {section.grid && !asideSpansGrid && (
@@ -682,11 +709,76 @@ export function CaseStudySection({
           ))}
         </div>
       )}
+      {section.useCases && <CaseStudyUseCases items={section.useCases} />}
       {section.pins && <CaseStudyPins pins={section.pins} />}
       {section.flows && (
         <div className="flex flex-col gap-3">
           {section.flows.map((flow) => (
             <CaseStudyFlow key={flow.title} flow={flow} />
+          ))}
+        </div>
+      )}
+      {section.imageGroups && (
+        // Screens clubbed by what they answer. Each group is its own labelled
+        // surface holding its own rail, so a reader meets "who is nearby" as a
+        // set of three rather than as frames six to eight of eleven.
+        <div className="flex w-full flex-col gap-6">
+          {/* No panel behind a rail and no mat around each screen: the exports
+              already carry a device frame, a radius and a shadow, so a tinted
+              card behind them draws a second frame around the first. The label
+              and the run of screens are the whole group. */}
+          {section.imageGroups.map((group) => (
+            // The same grey mat the case study's other exhibits sit on, so a
+            // run of screens reads as one plate rather than as loose phones on
+            // the page ground.
+            <div
+              key={group.label}
+              className="bg-foreground/[0.045] flex flex-col gap-4 rounded-[14px] p-5 sm:p-6"
+            >
+              {/* Body ink, not accent: it is the group's heading, and an
+                  accent label on every group turned the section into a row of
+                  orange lines competing with the screens under them. */}
+              <span className="text-foreground block font-mono text-[13px] tracking-[0.06em] uppercase">
+                {group.label}
+              </span>
+              {/* A grid that fits, not a rail that scrolls. A group is two or
+                  three screens — few enough to sit side by side and be
+                  compared at a glance, which is the whole reason they are
+                  grouped. Sizing by column width rather than a fixed height is
+                  what removes the overflow. */}
+              {/* Always three columns, even where a group has only two
+                  screens. Sizing the track to the group's own count made a
+                  two-screen group render its phones half as wide again as
+                  every other group's, so the same device changed size down the
+                  page. The empty third slot is the cost of one phone size
+                  throughout. */}
+              {/* One column for landscape captures: a 1280px dashboard shown a
+                  third of a column wide is a picture of a table rather than a
+                  table anyone can read. Phones stay at the three-up default. */}
+              <div
+                className={
+                  group.columns === 1
+                    ? "grid grid-cols-1 gap-6"
+                    : group.columns === 2
+                      ? "grid grid-cols-1 gap-3 sm:grid-cols-2"
+                      : "grid grid-cols-2 gap-3 sm:grid-cols-3"
+                }
+              >
+                {group.images.map((img) => (
+                  <figure key={img.src} className="flex min-w-0 flex-col gap-3">
+                    <CaseStudyImageZoom image={img} bare />
+                    {img.caption && (
+                      // Three lines, clamped: captions of uneven length left
+                      // the screens above them sitting on different baselines,
+                      // and a fixed depth is what keeps the row square.
+                      <figcaption className="text-foreground-light line-clamp-3 text-[13px] leading-[1.6]">
+                        {img.caption}
+                      </figcaption>
+                    )}
+                  </figure>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}
@@ -815,7 +907,7 @@ export function CaseStudySection({
                 <figcaption
                   className={
                     matted
-                      ? "text-foreground-light text-center text-[13px] leading-[1.6]"
+                      ? "text-foreground-light text-[13px] leading-[1.6]"
                       : "border-foreground/10 text-foreground-light border-l-2 py-0.5 pl-3 text-[13px] leading-[1.6]"
                   }
                 >
@@ -828,9 +920,9 @@ export function CaseStudySection({
         </div>
         </div>
       )}
-      {section.image && !section.imageLead && !section.imageAside && (
+      {section.image && !section.imageLead && !section.imageAside && !section.findingsAside && (
         matted ? (
-          <CaseStudyFigure image={section.image} />
+          <CaseStudyFigure image={section.image} bare={section.image.bare} />
         ) : (
         <figure className="flex w-full flex-col gap-3">
           {/* Explicit light ground. These are light-mode product screens and

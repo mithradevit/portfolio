@@ -65,16 +65,18 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
               // browser then picks a variant smaller than the slot and
               // upscales it.
               sizes="(min-width: 1024px) 56vw, 100vw"
-              className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-[1.02]"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
             />
           ) : (
             <div
-              className="absolute inset-0 transition-transform duration-300 ease-in-out group-hover:scale-[1.02]"
+              className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.05]"
               style={{ backgroundColor: project.thumbnailColor, opacity: 0.35 }}
             />
           )}
-          <div className="bg-background/0 group-hover:bg-background/20 absolute inset-0 transition-colors duration-300 ease-in-out" />
-
+          {/* No wash on hover. The scale is the whole affordance: a tint over
+              the artwork dulls the one thing the card is there to show, and on
+              a screenshot-heavy grid it read as the image dimming rather than
+              as the card responding. */}
 
         </motion.div>
 
@@ -84,6 +86,11 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
               with the first line of the title rather than floating above it.
               `items-start` keeps it pinned there when the title wraps to three
               lines. */}
+          {/* Title and impact are one group, so the card still has two blocks
+              — statement at the top, metadata at the bottom — and the flex
+              `justify-between` keeps putting all its slack between them
+              instead of splitting the title from its own outcome line. */}
+          <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between gap-6">
             {/* Geist, not the serif the bare `h3` rule sets. The `!` is
                 required: that rule is unlayered and beats a plain utility. */}
@@ -94,6 +101,15 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
             <span className="text-primary shrink-0 pt-1.5 font-mono text-[11px] tracking-[0.12em] tabular-nums">
               ({String(index + 1).padStart(2, "0")})
             </span>
+          </div>
+
+            {/* Held at body weight and a shorter measure than the title: it is
+                the second line of one statement, not a second heading. */}
+            {project.impact && (
+              <p className="text-foreground-light max-w-[52ch] text-[13.5px]! leading-[1.55]!">
+                {project.impact}
+              </p>
+            )}
           </div>
 
           {/* Tags and year on one bottom-anchored line, so the slack on a tall

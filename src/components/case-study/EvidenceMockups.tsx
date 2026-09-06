@@ -30,9 +30,15 @@ const c = {
   card2: "#F9F9FB", // header strip
   card3: "#E9E9EB", // tertiarySystemFill — pills, tracks
   ink: "#000000", // label
-  ink2: "#6C6C70", // secondaryLabel
-  ink3: "#8E8E93", // systemGray
-  ink4: "#AEAEB2", // systemGray2
+  // Darker than Apple's own secondary scale, and tilted a hair warm.
+  // The stock values (#6C6C70 / #8E8E93 / #AEAEB2) are pure neutral greys
+  // tuned for a phone held at arm's length; shrunk into a mockup on a page
+  // they lose contrast against the white card and the whole surface reads
+  // ashy — transcript lines and captions in particular went hazy. These sit
+  // one step down the scale so the text holds its weight at mockup size.
+  ink2: "#4B4A4E", // secondaryLabel
+  ink3: "#67666B", // systemGray
+  ink4: "#8E8D92", // systemGray2
   line: "#E5E5EA", // systemGray5 — hairline separator
   line2: "#D1D1D6", // systemGray4
   accent: "#F4600B",
@@ -48,9 +54,16 @@ const c = {
   purple: "#AF52DE", // systemPurple
 };
 
-/** SF first — the whole point of an iOS surface is that it is set in SF. */
+/**
+ * Geist, the site's own sans, with the system stack behind it.
+ *
+ * These were set in SF on the reasoning that an iOS-style surface should be
+ * set in SF. In practice it meant the mockups rendered in a different typeface
+ * from every word around them, which reads as a foreign object dropped into
+ * the page rather than as an artefact of the same body of work.
+ */
 const IOS_FONT =
-  '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", system-ui, sans-serif';
+  'var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
 
 function Frame({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -293,33 +306,76 @@ function TranscriptMockup() {
     { who: "Speaker 2", at: "01:02", text: "I think the car was a dark blue hatchback, but I could not see the plate.", mark: "car" },
     { who: "Speaker 1", at: "01:15", text: "That is helpful. I am recording this on my body camera.", mark: null },
   ];
+  const hits = lines.filter((l) => l.mark).length;
   return (
     <Frame label="Transcript · auto-generated, speaker-diarized, caveated">
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <Chip tone="blue">Auto generated</Chip>
+      {/* The search field leads, because the section's whole claim is that
+          transcription turned scrubbing into a query. A transcript rendered as
+          a plain list of lines illustrates the transcription and not the
+          argument — the field and its hit count are the argument. */}
+      <div className="mb-2.5 flex items-center gap-2">
+        <div
+          className="flex flex-1 items-center gap-2 rounded-[8px] border px-2.5 py-1.5"
+          style={{ borderColor: c.line2, background: c.card }}
+        >
+          <svg viewBox="0 0 16 16" aria-hidden className="h-3 w-3 shrink-0" style={{ color: c.ink4 }}>
+            <circle cx="7" cy="7" r="4.25" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M10.2 10.2 14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+          <span className="text-[12px]" style={{ color: c.ink }}>
+            car
+          </span>
+          {/* A caret, so the field reads as one someone has just typed into
+              rather than as a label that happens to sit in a box. */}
+          <span aria-hidden className="ml-px block h-3 w-px" style={{ background: c.accent }} />
+          <span className="ml-auto font-mono text-[10.5px]" style={{ color: c.ink3 }}>
+            {hits} results
+          </span>
+        </div>
         <span
-          className="ml-auto rounded-[8px] border px-2.5 py-1 text-[11px]"
+          className="shrink-0 rounded-[8px] border px-2.5 py-1.5 text-[11px]"
           style={{ borderColor: c.line2, background: c.card, color: c.ink2 }}
         >
-          Download transcript
+          Download
         </span>
       </div>
-      <p className="mb-3 text-[12px]" style={{ color: c.ink3 }}>
-        Written automatically. Check it against the audio before using it in a case — selecting a line moves the playhead
-        to that moment.
-      </p>
+
+      {/* The caveat sits directly above the lines, which is the point the
+          annotation beside this mockup makes — by the time someone is scanning
+          results they have already started trusting them. */}
+      <div className="mb-2 flex items-start gap-2">
+        <Chip tone="blue">Auto generated</Chip>
+        <p className="text-[11.5px] leading-[1.45]" style={{ color: c.ink3 }}>
+          Check against the audio before evidentiary use. Selecting a line moves the playhead.
+        </p>
+      </div>
+
       <div className="flex flex-col">
         {lines.map((l, i) => {
           const parts = l.mark ? l.text.split(l.mark) : [l.text];
+          // One line is shown selected — the state that carries the
+          // navigational claim. Previously every matching row was washed in
+          // accent, which read as four alerts rather than as two search hits
+          // and one current position.
+          const selected = i === 0;
           return (
             <div
               key={i}
-              className="grid grid-cols-[68px_1fr] gap-3 rounded-[10px] px-2.5 py-2"
-              style={{ background: l.mark ? c.accentBg : "transparent" }}
+              className="grid grid-cols-[62px_1fr] gap-3 px-2.5 py-2"
+              style={{
+                background: selected ? c.card : "transparent",
+                borderRadius: selected ? 8 : 0,
+                boxShadow: selected ? `inset 2px 0 0 ${c.accent}` : undefined,
+                borderTop: i === 0 ? undefined : `1px solid ${c.line}`,
+              }}
             >
-              <div>
-                <div className="text-[11px] font-semibold" style={{ color: c.ink }}>{l.who}</div>
-                <div className="font-mono text-[10px]" style={{ color: c.ink4 }}>{l.at}</div>
+              <div className="flex flex-col">
+                <span className="text-[11px] font-medium" style={{ color: c.ink }}>
+                  {l.who}
+                </span>
+                <span className="font-mono text-[10px]" style={{ color: c.ink4 }}>
+                  {l.at}
+                </span>
               </div>
               <p className="text-[12.5px] leading-[1.55]" style={{ color: c.ink2 }}>
                 {l.mark
@@ -327,7 +383,18 @@ function TranscriptMockup() {
                       <span key={j}>
                         {part}
                         {j < parts.length - 1 && (
-                          <mark style={{ background: "rgba(244,96,11,.2)", color: "inherit", borderRadius: 3, padding: "0 2px" }}>
+                          // The hit itself is the only thing marked. A word
+                          // highlight is what a search result looks like; a
+                          // filled row is what an error looks like.
+                          <mark
+                            style={{
+                              background: "rgba(244,96,11,.18)",
+                              color: c.ink,
+                              borderRadius: 3,
+                              padding: "0 2px",
+                              fontWeight: 500,
+                            }}
+                          >
                             {l.mark}
                           </mark>
                         )}
@@ -931,10 +998,11 @@ function DataModelDiagram() {
               border: `1px solid ${r.accent ? c.accent : r.depth === 0 ? c.line : "transparent"}`,
             }}
           >
-            <span
-              className="text-[11.5px] font-semibold"
-              style={{ color: r.accent ? c.accent : c.ink }}
-            >
+            {/* Normal weight. Geist's semibold is heavier than SF's at this
+                size, and a whole tree set in it read as bolded rather than as
+                labelled — the ink colour against the grey note beside it is
+                already carrying the distinction. */}
+            <span className="text-[11.5px]" style={{ color: r.accent ? c.accent : c.ink }}>
               {r.label}
             </span>
             {r.note && <span className="text-[10.5px]" style={{ color: c.ink3 }}>{r.note}</span>}

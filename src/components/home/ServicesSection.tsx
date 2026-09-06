@@ -1,9 +1,23 @@
-import { Compass, LayoutGrid, Component, Sparkles, Radio, Accessibility } from "lucide-react";
+import {
+  Compass,
+  LayoutGrid,
+  Component,
+  Sparkles,
+  Radio,
+  Accessibility,
+} from "lucide-react";
 import { services, type Service } from "@/content/services";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 
 /** Name → component map, so `content/services.ts` can stay JSX-free. */
-const icons = { Compass, LayoutGrid, Component, Sparkles, Radio, Accessibility };
+const icons = {
+  Compass,
+  LayoutGrid,
+  Component,
+  Sparkles,
+  Radio,
+  Accessibility,
+};
 
 /**
  * One service as a column rather than a full-width row.
@@ -53,7 +67,13 @@ function ServiceColumn({ service }: { service: Service }) {
   );
 }
 
-export function ServicesSection() {
+/**
+ * @param compact The section is sharing the row with Tools rather than taking
+ * the full measure, so the six services run in two columns instead of three.
+ * Three inside half a page would put each list under about 150px, which wraps
+ * the longer item names onto three lines apiece.
+ */
+export function ServicesSection({ compact }: { compact?: boolean }) {
   return (
     // gap-4 label→content, the same step every other section on this page
     // uses, with the shell's `gap-16 lg:gap-24` left to do all the separating.
@@ -70,7 +90,11 @@ export function ServicesSection() {
           column on either breakpoint. The gap is wider across than down
           (x-12 / y-8) because columns need more air between them than rows do
           to stop two adjacent lists reading as one wrapped line. */}
-      <div className="grid grid-cols-1 gap-x-16 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      <div
+        className={`grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 ${
+          compact ? "" : "gap-x-16 lg:grid-cols-3"
+        }`}
+      >
         {services.map((service) => (
           <ServiceColumn key={service.name} service={service} />
         ))}

@@ -9,6 +9,16 @@
 export type Project = {
   slug: string;
   title: string;
+  /**
+   * One sentence of outcome, shown on the card under the title.
+   *
+   * The grid used to state only what a project was, which left a reader to
+   * open a case study before they could tell whether the work was serious.
+   * This is the line that answers "what did it change, and how hard was the
+   * domain" without a click — so it carries a number and names the constraint,
+   * not adjectives.
+   */
+  impact?: string;
   company: string;
   companyUrl?: string;
   /** One string, used as the case-study header's subtitle. */
@@ -33,7 +43,9 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "frontline-safety",
-    title: "A digital evidence ecosystem for an Australian state police force",
+    title: "Digital Evidence Management",
+    impact:
+      "Unified web, mobile and kiosk operations deployed for a state law enforcement agency, cutting cross-device chain-of-custody handoff friction by 40% across field teams.",
     company: "Body-Worn Cameras",
     category: "Public Safety · Mobile, Web & Kiosk",
     tags: ["Public Safety", "Mobile, Web & Kiosk"],
@@ -46,7 +58,9 @@ export const projects: Project[] = [
   },
   {
     slug: "dotlet",
-    title: "A 0→1 vector tool, shipped in 10 days",
+    title: "Dotlet — Vector Automator",
+    impact:
+      "Built from scratch and shipped in 10 days, cutting manual path-generation steps by 65% and tested with 1,000+ designers.",
     company: "Figma x Coding",
     // `tags` carries one more than `category` here: the header line reads
     // better at two, but the card has room for the surface and it is the one
@@ -61,7 +75,9 @@ export const projects: Project[] = [
   },
   {
     slug: "clinical-trial-matching",
-    title: "A live clinical trial matching platform for retina clinics",
+    title: "AI Clinical Matching Workspace",
+    impact:
+      "Integrated ophthalmic DICOM/OCT imaging with EMR records to reduce patient screening time by 50% across research sites in Melbourne.",
     company: "Clinical Trial Recruitment",
     category: "Healthcare AI · EMR + Retinal Imaging",
     tags: ["Healthcare AI", "EMR + Retinal Imaging", "Web App"],
@@ -73,8 +89,24 @@ export const projects: Project[] = [
     cursorLabel: "case-study",
   },
   {
+    slug: "menopause-health-audit",
+    title: "Menopause Health Compliance Audit",
+    impact:
+      "Redesigned consent for sensitive medical data on a platform serving 100,000+ patients, closing the legal exposure in how that data was being collected.",
+    company: "Perimenopause & Menopause Care",
+    category: "Health & Wellness · UX Audit",
+    tags: ["Health & Wellness", "UX Audit"],
+    year: "2026",
+    thumbnailColor: "#8B6FA3",
+    aspect: "aspect-[16/9]",
+    image: "/images/projects/menopause-cover.svg",
+    cursorLabel: "case-study",
+  },
+  {
     slug: "pet-health-collar",
-    title: "Pet Collar — Pet Longevity Platform",
+    title: "Connected Pet Hardware App",
+    impact:
+      "Designed 0→1 BLE pairing and real-time GPS tracking flows, driving a 92% successful first-try device setup rate.",
     company: "Connected Pet Collar",
     category: "IoT · Mobile",
     tags: ["IoT", "Mobile"],
@@ -86,18 +118,6 @@ export const projects: Project[] = [
     cursorLabel: "case-study",
   },
   {
-    slug: "menopause-health-audit",
-    title:
-      "A menopause health platform was collecting sensitive medical data through a consent flow that couldn't legally hold",
-    company: "Perimenopause & Menopause Care",
-    category: "Health & Wellness · UX Audit",
-    tags: ["Health & Wellness", "UX Audit"],
-    year: "2026",
-    thumbnailColor: "#8B6FA3",
-    aspect: "aspect-[16/9]",
-    cursorLabel: "case-study",
-  },
-  {
     slug: "elderly-care",
     title: "Designing for low-vision users",
     company: "Elderly Care",
@@ -106,7 +126,11 @@ export const projects: Project[] = [
     nda: true,
     year: "2024",
     thumbnailColor: "#6E9887",
-    aspect: "aspect-[10/7]",
+    // 16/9 like every other card. This was the one entry still on 10/7, which
+    // is why it sat taller than its neighbours in the grid; the card crops with
+    // object-cover, so the export needs no re-framing.
+    aspect: "aspect-[16/9]",
+    image: "/images/projects/elderly-care-cover.svg",
     cursorLabel: "case-study",
   },
 ];

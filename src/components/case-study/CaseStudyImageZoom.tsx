@@ -24,13 +24,23 @@ export function CaseStudyImageZoom({
   /** Size the thumbnail by its container's height instead of its width — for a
    *  rail where every card has to be the same height and its own width. */
   fitHeight,
+  /** No mat, border or padding. For artwork that already carries its own frame
+   *  — a device mockup exported with its bezel and shadow — where the card
+   *  would be a second frame drawn around the first. */
+  bare,
 }: {
   image: Img;
   className?: string;
   fitHeight?: boolean;
+  bare?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const isGif = image.src.toLowerCase().endsWith(".gif");
+  // Vector artwork goes through untouched. The optimiser rasterises and
+  // re-encodes whatever it is handed, which on a UI export means the type and
+  // hairlines it exists to keep sharp are the first things to go — and an SVG
+  // is already the smallest, sharpest form of that screen at any size.
+  const isVector = image.src.toLowerCase().endsWith(".svg");
 
   useEffect(() => {
     if (!open) return;
@@ -51,9 +61,11 @@ export function CaseStudyImageZoom({
         onClick={() => setOpen(true)}
         data-cursor="pointer"
         aria-label={`Open full size: ${image.alt}`}
-        className={`group relative block cursor-zoom-in overflow-hidden rounded-[14px] border border-[#EDEDF0] bg-white p-2 sm:p-3 ${
-          fitHeight ? "h-full w-auto" : "w-full"
-        } ${className ?? ""}`}
+        className={`group relative block cursor-zoom-in ${
+          // No hairline: the artwork carries its own edge, and a stroke plus the
+          // mat behind it drew two borders a few pixels apart.
+          bare ? "" : "overflow-hidden rounded-[14px] bg-white p-2 sm:p-3"
+        } ${fitHeight ? "h-full w-auto" : "w-full"} ${className ?? ""}`}
       >
         {isGif ? (
           // Next's image optimizer re-encodes through its own pipeline, which
@@ -73,6 +85,7 @@ export function CaseStudyImageZoom({
             width={image.width}
             height={image.height}
             quality={90}
+            unoptimized={isVector}
             sizes={fitHeight ? "700px" : "(min-width: 1024px) 380px, 100vw"}
             className={
               fitHeight ? "h-full w-auto rounded-[6px]" : "h-auto w-full rounded-[6px]"
@@ -120,6 +133,7 @@ export function CaseStudyImageZoom({
                 width={image.width}
                 height={image.height}
                 quality={95}
+                unoptimized={isVector}
                 sizes="100vw"
                 className="h-auto w-full rounded-[6px] bg-white"
               />

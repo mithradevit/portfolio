@@ -70,13 +70,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="flex min-h-screen flex-col">
+      <body className="min-h-screen">
         <MotionConfig reducedMotion="user">
           <ChatOpenProvider>
             <CustomCursor />
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            {/* Everything the chat pushes aside lives in one shell, so the
+                header, the article and the footer move together as a single
+                page rather than three elements that each happen to reflow.
+                The shell owns the min-height column that used to be on the
+                body — the panel is a sibling of it, not inside it, so its own
+                width is never affected by the inset it causes. */}
+            <div className="site-shell flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
             {/* The nav carries a chat button at every breakpoint now, so the
                 old fixed mobile button would be a second entry point for the
                 same panel. */}

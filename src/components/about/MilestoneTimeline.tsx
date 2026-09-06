@@ -29,14 +29,6 @@ const TICK_MAX = 36; // px, tallest tick at dead centre
 const ARC_DEPTH = 0.6; // 0 = flat ruler, 1 = strong curve
 const SNAP_MS = 420;
 
-/**
- * Vertical gap between the two label rows, in px.
- *
- * Must comfortably exceed a line of label text *plus* the arc's own vertical
- * drop, which differs between neighbours and so eats into the stagger toward
- * the edges. At 26 that margin ran out and adjacent labels grazed each other.
- */
-const ROW_DROP = 42;
 
 export type TimelineItem = {
   /** Sits under the ruler. */
@@ -191,7 +183,7 @@ function Timeline({ items, hint, label }: { items: TimelineItem[]; hint: string;
         aria-label={label}
         // overflow-hidden, not just the mask: the mask hides off-track items
         // visually but they still occupy layout and widen the page.
-        className={`relative h-[320px] touch-pan-y overflow-hidden select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`relative h-[330px] touch-pan-y overflow-hidden select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
         style={{
           // Edge vignette — the ruler should dissolve rather than being cut.
           maskImage: "linear-gradient(to right, transparent, #000 14%, #000 86%, transparent)",
@@ -200,7 +192,7 @@ function Timeline({ items, hint, label }: { items: TimelineItem[]; hint: string;
         }}
       >
         {/* Minor ticks. */}
-        <div className="absolute inset-x-0 top-[146px]" aria-hidden>
+        <div className="absolute inset-x-0 top-[92px]" aria-hidden>
           {ticks.map((tick, i) => {
             const { height, drop, opacity } = arcAt(tick.normalized);
             return (
@@ -234,47 +226,18 @@ function Timeline({ items, hint, label }: { items: TimelineItem[]; hint: string;
                 onClick={() => goTo(i)}
                 aria-current={isActive ? "true" : undefined}
                 data-cursor="pointer"
-                className="absolute top-[146px] -translate-x-1/2 cursor-pointer bg-transparent"
+                className="absolute top-[92px] -translate-x-1/2 cursor-pointer bg-transparent"
                 style={{ left: x, opacity: Math.max(0.15, opacity) }}
               >
                 <span className="sr-only">
                   {item.title}, {item.year}
                 </span>
 
-                {/* Labels alternate between two rows. A single row can only
-                    hold STEP-worth of text before neighbours collide, and
-                    certificate names are far longer than that; staggering
-                    gives each label two steps of clear width. */}
-                <span
-                  aria-hidden
-                  className="absolute bottom-[26px] left-1/2 block max-w-[320px] truncate"
-                  style={{
-                    transform: `translate(-50%, ${drop - (i % 2 === 0 ? ROW_DROP : 0)}px)`,
-                  }}
-                >
-                  <span
-                    className={`text-[13px] transition-colors duration-300 ${
-                      isActive
-                        ? "text-foreground"
-                        : item.kind === "role"
-                          ? "text-foreground/70"
-                          : "text-foreground-light"
-                    }`}
-                  >
-                    {item.title}
-                  </span>
-                </span>
-
-                {/* Leader line down to the ruler, so a staggered label still
-                    reads as belonging to its own tick. */}
-                {i % 2 === 0 ? (
-                  <span
-                    aria-hidden
-                    className="bg-foreground/15 absolute left-1/2 w-px -translate-x-1/2"
-                    style={{ top: drop - ROW_DROP + 4, height: ROW_DROP - 2 }}
-                  />
-                ) : null}
-
+                {/* Only the year rides the ruler now. The course name and
+                    who gave it read as one block under the needle instead of
+                    as a staggered field of truncated labels — sixteen names
+                    across a scale could never all be legible at once, and the
+                    one that matters is the one currently selected. */}
                 <span
                   aria-hidden
                   className={`absolute left-1/2 w-px -translate-x-1/2 transition-colors duration-300 ${
@@ -287,9 +250,13 @@ function Timeline({ items, hint, label }: { items: TimelineItem[]; hint: string;
                   style={{ top: drop, height: item.kind === "role" ? height : height * 0.55 }}
                 />
 
+                {/* Above the ruler, not below it: the years are the only thing
+                    labelling the scale now, and reading order runs year →
+                    tick → the block under the needle. `bottom` rather than
+                    `top` so the label sits clear of the tick's own height. */}
                 <span
                   aria-hidden
-                  className="absolute top-[52px] left-1/2 font-mono text-[12px] whitespace-nowrap"
+                  className="absolute bottom-[14px] left-1/2 font-mono text-[11px] tracking-[0.1em] whitespace-nowrap uppercase"
                   style={{ transform: `translate(-50%, ${drop}px)` }}
                 >
                   <span className={isActive ? "text-primary" : "text-foreground-light"}>
@@ -300,15 +267,16 @@ function Timeline({ items, hint, label }: { items: TimelineItem[]; hint: string;
             );
           })}
 
-        {/* Needle. Pinned to the centre — the scale moves under it. */}
+        {/* Needle. Pinned to the centre — the scale moves under it. No glow:
+            a 2px accent rule against a page of hairlines is already the
+            highest-contrast mark here, and the bloom only softened its edge. */}
         <div
           aria-hidden
-          className="bg-primary absolute top-[136px] left-1/2 h-[56px] w-[2px] -translate-x-1/2"
-          style={{ boxShadow: "0 0 12px 1px var(--primary)" }}
+          className="bg-primary absolute top-[82px] left-1/2 h-[56px] w-[2px] -translate-x-1/2"
         />
 
         {/* Description, swapped as the active item changes. */}
-        <div className="absolute inset-x-0 top-[248px] flex justify-center px-6">
+        <div className="absolute inset-x-0 top-[176px] flex justify-center px-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
@@ -316,12 +284,25 @@ function Timeline({ items, hint, label }: { items: TimelineItem[]; hint: string;
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.28, ease: "easeOut" }}
-              className="flex max-w-[52ch] flex-col items-center gap-2 text-center"
+              className="flex max-w-[52ch] flex-col items-center text-center"
             >
+              {/* Three ranks, three spacings. The provider is a label, so it
+                  sits tight under nothing and close above the name it belongs
+                  to (6px). The name is the heading — the thing the reader
+                  stopped here to read — and takes the largest step before the
+                  description (12px), which is what separates a title from its
+                  body rather than making three lines read as one block. */}
               {items[active].meta ? (
-                <h4 className="text-primary!">{items[active].meta}</h4>
+                <h4 className="text-primary! mb-1.5 font-mono text-[11px]! tracking-[0.12em] uppercase">
+                  {items[active].meta}
+                </h4>
               ) : null}
-              <p>{items[active].description}</p>
+              <h3 className="max-w-[34ch] text-[19px] leading-[1.3] tracking-[-0.01em]">
+                {items[active].title}
+              </h3>
+              <p className="text-foreground-light mt-3 max-w-[52ch] text-[14px]! leading-[1.6]!">
+                {items[active].description}
+              </p>
             </motion.div>
           </AnimatePresence>
         </div>

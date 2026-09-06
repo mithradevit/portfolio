@@ -13,9 +13,12 @@ type Step = NonNullable<CaseStudySection["steps"]>[number];
  * because the point is comparison between parts, not variety. On a phone the
  * image sits above its text.
  *
- * A row whose image hasn't arrived yet keeps its left column and shows a marked
- * placeholder. Collapsing to full-width prose would hide the gap and quietly
- * change the layout back once the file lands.
+ * A row with no image runs full width instead. The left column used to hold a
+ * marked placeholder, on the reasoning that a visible gap is honest about work
+ * still to come — but these steps now sit inside the Mobile and Web sections,
+ * directly under runs of real screens, and a dashed empty box beneath actual
+ * product shots reads as something failing to load rather than as a note to
+ * self. The prose stands on its own until a file arrives.
  */
 export function CaseStudySteps({ steps, matted }: { steps: Step[]; matted?: boolean }) {
   return (
@@ -25,18 +28,7 @@ export function CaseStudySteps({ steps, matted }: { steps: Step[]; matted?: bool
           <StepVideo video={step.video} className={matted ? "max-w-[260px]" : undefined} />
         ) : step.image ? (
           <CaseStudyImageZoom image={step.image} className={matted ? "max-w-[260px]" : undefined} />
-        ) : (
-          <div
-            className={
-              matted
-                ? "border-foreground/15 text-foreground-light/50 flex aspect-[9/19] w-full max-w-[260px] items-center justify-center border border-dashed"
-                : "border-foreground/15 text-foreground-light/50 flex aspect-[4/3] w-full items-center justify-center border border-dashed"
-            }
-            aria-hidden
-          >
-            <span className="font-mono text-[10px] tracking-[0.14em] uppercase">Image to come</span>
-          </div>
-        );
+        ) : null;
 
         const notes = (
           <div className="flex flex-col gap-3">
@@ -74,12 +66,23 @@ export function CaseStudySteps({ steps, matted }: { steps: Step[]; matted?: bool
               // a caption floating beside it. The image is capped narrow
               // (these are phone-shaped captures) so it doesn't fight the
               // notes column for width the way a full-bleed screenshot would.
-              <div className="bg-foreground/[0.045] grid grid-cols-1 items-start gap-6 rounded-[14px] p-4 sm:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)] sm:gap-8 sm:p-6">
+              // Single column when there is no artefact yet: a two-track grid
+              // with one empty track leaves the notes stranded in a narrow
+              // column beside nothing.
+              <div
+                className={`bg-foreground/[0.045] grid grid-cols-1 items-start gap-6 rounded-[14px] p-4 sm:gap-8 sm:p-6 ${
+                  media ? "sm:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)]" : ""
+                }`}
+              >
                 {media}
                 {notes}
               </div>
             ) : (
-              <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-10">
+              <div
+                className={`grid grid-cols-1 items-start gap-6 lg:gap-10 ${
+                  media ? "lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]" : ""
+                }`}
+              >
                 {media}
                 {notes}
               </div>

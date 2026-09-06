@@ -21,7 +21,7 @@ import { ScrambleText } from "@/components/ui/ScrambleText";
 
 function ToolPill({ tool }: { tool: Tool }) {
   return (
-    <div className="group border-foreground/10 hover:border-primary/40 flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 transition-colors duration-300">
+<div className="group border-foreground/10 hover:border-primary/40 flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 transition-colors duration-300">
       <ToolIcon tool={tool} />
       <span className="text-foreground-light group-hover:text-foreground font-mono text-[12px] tracking-wide whitespace-nowrap uppercase transition-colors duration-300">
         {tool.name}
@@ -30,7 +30,13 @@ function ToolPill({ tool }: { tool: Tool }) {
   );
 }
 
-export function ToolsRow() {
+/**
+ * @param compact Sharing the row with Services, so each category label sits
+ * above its pills instead of in a 200px column beside them — that column
+ * would take a third of the width here and leave the pills wrapping every
+ * two.
+ */
+export function ToolsRow({ compact }: { compact?: boolean }) {
   return (
     // gap-4 and a 32px header row, matching Experience, Selected Work and
     // Skills. Every section on this page uses the same label→content step, so
@@ -51,7 +57,11 @@ export function ToolsRow() {
           return (
             <div
               key={category.id}
-              className="grid grid-cols-1 gap-3 lg:grid-cols-[200px_1fr] lg:items-start lg:gap-6"
+              className={`grid grid-cols-1 gap-3 ${
+                compact
+                  ? ""
+                  : "lg:grid-cols-[200px_1fr] lg:items-start lg:gap-6"
+              }`}
             >
               {/* Staggered off each label's own arrival, so the five decode
                   in sequence down the column as the section comes up. */}
@@ -61,7 +71,7 @@ export function ToolsRow() {
                 delay={0.12 + i * 0.09}
                 scrambleInView
                 scrambleOnHover
-                className="lg:pt-1.5"
+                className={compact ? undefined : "lg:pt-1.5"}
               />
               <div className="flex flex-wrap gap-2">
                 {group.map((tool) => (

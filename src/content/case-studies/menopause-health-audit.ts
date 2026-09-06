@@ -1,4 +1,4 @@
-// Self-initiated UX audit of a live menopause health platform. Written from
+﻿// Self-initiated UX audit of a live menopause health platform. Written from
 // Mithradevi's own audit document (Miyara-Case-Study-FINAL.md, Sep 2026).
 //
 // The product's real name is withheld throughout, per her explicit
@@ -18,8 +18,12 @@ export const menopauseHealthAudit: CaseStudy = {
   // Grey-mat treatment for the two redesigned-screen captures in "The
   // Redesign" — see CaseStudySteps' `matted` branch.
   mattedImages: true,
+  // The shortlist is Overview, The User, The Redesign — what the work was, who
+  // it was for, and what it became. Everything below the star is the account of
+  // how it got there.
+  starAfter: 3,
   role: "Lead Product Designer",
-  timeline: "2 weeks, 2026",
+  timeline: "1 week, 2026",
   team: "Solo",
   scope: "UX audit, IA restructure, visual identity, design system",
   skills: ["UX Audit", "Accessibility (WCAG 2.1)", "Design Systems", "Health & Wellness"],
@@ -28,7 +32,7 @@ export const menopauseHealthAudit: CaseStudy = {
     {
       heading: "Overview",
       intro: {
-        lead: "A menopause health platform was collecting sensitive medical data through a consent flow that couldn't legally hold — and showing women clinical results they had no way to interpret.",
+        lead: "I audited an entire menopause app end-to-end and completely redesigned it to solve critical usability, legal, and clarity failures.",
         columns: [
           {
             title: "The product",
@@ -36,16 +40,22 @@ export const menopauseHealthAudit: CaseStudy = {
           },
           {
             title: "What I did",
-            body: "I audited 19 screens, prioritised 13 critical and major issues, and redesigned the four flows carrying the most risk.",
+            body: "I audited and redesigned an app completely, evaluating 19 screens, prioritising 13 critical and major issues, and restructuring the four highest-risk user flows.",
           },
         ],
         insight:
           "The app calculates a perimenopause stage and generates a health score. That makes clarity a clinical requirement, not a design preference — an unreadable score either generates anxiety or gets misinterpreted and carried into a doctor's appointment.",
       },
-      body: [],
-      slot: {
-        label: "Hero image",
-        text: "Home screen, before and after, full bleed.",
+      body: [
+        "By systematically evaluating 19 screens, diagnosing and prioritising 13 major issues, and completely rebuilding the four core user journeys — the legal consent handoff, the 17-step medical intake, the health score results screen, and the daily symptom logger — this project reflects a comprehensive approach to taking charge of a complex, high-stakes product from initial audit to final execution.",
+      ],
+      image: {
+        src: "/images/projects/menopause-health-audit/hero.svg",
+        alt: "The redesigned home screen of the menopause platform.",
+        width: 1600,
+        height: 900,
+        // No white plate: the export carries its own ground and edge.
+        bare: true,
       },
     },
     {
@@ -73,6 +83,103 @@ export const menopauseHealthAudit: CaseStudy = {
           },
         ],
       },
+    },
+    {
+      heading: "The Redesign",
+      body: [],
+      steps: [
+        {
+          title: "Home",
+          body: "The original carried three separate entry points to the AI companion, a generic “+” icon where every other tab used a descriptive one, action cards whose “+” implied create rather than navigate, and a community banner that read as an ad inside a health context.",
+          video: {
+            src: "/videos/menopause-home.mp4",
+            alt: "The redesigned home screen: a single AI-companion card, labelled tracking icon, a health score reading 78 out of 100 with stage and recency, and a streak module.",
+            width: 432,
+            height: 924,
+          },
+          bullets: [
+            { title: "Consolidated the AI companion", body: "From three placements to one persistent card — freeing the space the health assessment result actually needed." },
+            { title: "Replaced the generic + with a labelled icon", body: "New users had no reason to associate a plus sign with the full tracking area." },
+            { title: "Gave the score meaning", body: "“78/100 · Perimenopause Stage 2 · Last updated May 16” — score, interpretation and recency in one block, with a single primary CTA replacing two identically-weighted buttons." },
+            { title: "Added a streak module", body: "The original had a passive empty state on the weekly score — a screen that asked for daily logging while giving no feedback for having done it." },
+            { title: "Rebuilt the community banner in brand palette", body: "Same feature, no longer reading as an advertisement." },
+          ],
+        },
+        {
+          title: "Tracking",
+          body: "The original symptom logger was a flat 16-row grid of symptom names against Mild/Moderate/Severe columns that didn't align to the dots beneath them, with severity conveyed by colour alone and a Log Symptom CTA that stayed active with nothing selected.",
+          video: {
+            src: "/videos/menopause-tracking.mp4",
+            alt: "The redesigned symptom tracker: symptoms grouped into clinical categories with severity shown as colour plus icon, aligned column headers, and a month view.",
+            width: 432,
+            height: 912,
+          },
+          bullets: [
+            { title: "Grouped symptoms into clinical categories", body: "Vasomotor, Physical/Body Changes — replacing an undifferentiated wall with scannable sections." },
+            { title: "Rebuilt severity as colour + icon", body: "A check, a warning, a critical marker, each its own hue — severity no longer depends on colour perception." },
+            { title: "Aligned column headers to their dots", body: "The Mild/Moderate/Severe labels now sit directly above what they describe." },
+            { title: "Gated the CTA on input", body: "The button now reflects whether there is anything to log." },
+            { title: "Surfaced the month view", body: "Week-only context made cross-month patterns invisible — in a product diagnosed by pattern, that was the wrong default." },
+          ],
+        },
+        {
+          title: "Library",
+          body: "The original was a text list with six arbitrary pastel card backgrounds carrying no semantic meaning, half-cropped cards with no scroll affordance, and identical “For You” sections duplicated across both tabs.",
+          video: {
+            src: "/videos/menopause-library.mp4",
+            alt: "The redesigned library: programmes tagged by category, a recommendation carousel with editorial thumbnails, and explicit Previous/Next pagination inside a programme.",
+            width: 378,
+            height: 776,
+          },
+          bullets: [
+            { title: "Replaced arbitrary pastels with a semantic tag system", body: "Pelvic Health, Mental Wellness, Mindfulness — colour now indicates category rather than decorating randomly." },
+            { title: "Introduced content thumbnails", body: "Editorial imagery replaced icon-and-arrow rows, making the library scannable rather than readable." },
+            { title: "Added explicit Previous/Next pagination", body: "In place of half-visible cards with no swipe affordance." },
+            { title: "De-duplicated “For You”", body: "Into a single Recommendations block." },
+          ],
+        },
+        {
+          title: "The assessment flow",
+          body: "The most consequential change isn't visible in any single screen. The original ran profile → consent checkbox → CTA → legal text.",
+          bullets: [
+            { title: "Reordered to disclosure → consent → gated CTA", body: "The reader sees what she's agreeing to before she's asked to agree to it." },
+            { title: "Added a time estimate before the 17-step sequence", body: "The single highest-impact intervention available on multi-step completion rates, and one the original omitted entirely." },
+          ],
+        },
+        {
+          title: "Insights",
+          body: "Tracking produced data the product never turned back into anything the user could act on. A score, a calendar of dots, and no answer to the question she was logging for: is this getting better or worse?",
+          video: {
+            src: "/videos/menopause-insights.mp4",
+            alt: "The insights screen: a weekly summary with a direction of travel, a four-week symptom trend chart, a correlation callout, a monthly logging report, and personalised tips.",
+            width: 382,
+            height: 780,
+          },
+          bullets: [
+            { title: "Led with direction, not volume", body: "“14 symptoms logged · night sweats most frequent · overall severity improving compared to last week” — the count is context for the verdict, not the verdict itself." },
+            { title: "Plotted symptoms over four weeks", body: "One line per indicator against a shared axis. The product diagnoses by pattern, so the pattern is the primary visual." },
+            { title: "Made one correlation explicit", body: "“Hot flashes are 3× more likely on days you sleep less than 6.5 hours.” Stated as a finding drawn from her own logs, with a route to the reading behind it." },
+            { title: "Reported consistency separately from health", body: "A monthly logging figure sits in its own module, so an incomplete month reads as incomplete data rather than as a worse result." },
+            { title: "Attached tips to what was logged", body: "Each carries the category it came from, so a recommendation is traceable to the symptom that prompted it." },
+          ],
+        },
+        {
+          title: "The AI companion",
+          body: "Three entry points on the home screen led to an assistant with no history and no evident grounding — every session started from nothing, and nothing in the reply indicated what it was based on.",
+          video: {
+            src: "/videos/menopause-chat.mp4",
+            alt: "The AI companion: a named assistant answering a question about sleep quality, with a chat history panel listing previous conversations.",
+            width: 382,
+            height: 772,
+          },
+          bullets: [
+            { title: "Gave the assistant a name and a stated role", body: "Labelled in the header as the AI companion, so its answers read as guidance from a feature rather than as clinical advice from the product." },
+            { title: "Grounded replies in her own data", body: "Answers open by naming what they draw on — logged symptoms and tracking history — so the reader can judge them." },
+            { title: "Added chat history", body: "Previous conversations persist by topic and date. A recurring symptom is a returning question, and the original made her ask it from scratch each time." },
+            { title: "Collapsed three entry points into one", body: "A single persistent route in, consistent across screens, replacing the placements that competed on home." },
+          ],
+        },
+      ],
     },
     {
       heading: "Approach",
@@ -191,103 +298,6 @@ export const menopauseHealthAudit: CaseStudy = {
       ],
     },
     {
-      heading: "The Redesign",
-      body: [],
-      steps: [
-        {
-          title: "Home",
-          body: "The original carried three separate entry points to the AI companion, a generic “+” icon where every other tab used a descriptive one, action cards whose “+” implied create rather than navigate, and a community banner that read as an ad inside a health context.",
-          video: {
-            src: "/videos/menopause-home.mp4",
-            alt: "The redesigned home screen: a single AI-companion card, labelled tracking icon, a health score reading 78 out of 100 with stage and recency, and a streak module.",
-            width: 432,
-            height: 924,
-          },
-          bullets: [
-            { title: "Consolidated the AI companion", body: "From three placements to one persistent card — freeing the space the health assessment result actually needed." },
-            { title: "Replaced the generic + with a labelled icon", body: "New users had no reason to associate a plus sign with the full tracking area." },
-            { title: "Gave the score meaning", body: "“78/100 · Perimenopause Stage 2 · Last updated May 16” — score, interpretation and recency in one block, with a single primary CTA replacing two identically-weighted buttons." },
-            { title: "Added a streak module", body: "The original had a passive empty state on the weekly score — a screen that asked for daily logging while giving no feedback for having done it." },
-            { title: "Rebuilt the community banner in brand palette", body: "Same feature, no longer reading as an advertisement." },
-          ],
-        },
-        {
-          title: "Tracking",
-          body: "The original symptom logger was a flat 16-row grid of symptom names against Mild/Moderate/Severe columns that didn't align to the dots beneath them, with severity conveyed by colour alone and a Log Symptom CTA that stayed active with nothing selected.",
-          video: {
-            src: "/videos/menopause-tracking.mp4",
-            alt: "The redesigned symptom tracker: symptoms grouped into clinical categories with severity shown as colour plus icon, aligned column headers, and a month view.",
-            width: 432,
-            height: 912,
-          },
-          bullets: [
-            { title: "Grouped symptoms into clinical categories", body: "Vasomotor, Physical/Body Changes — replacing an undifferentiated wall with scannable sections." },
-            { title: "Rebuilt severity as colour + icon", body: "A check, a warning, a critical marker, each its own hue — severity no longer depends on colour perception." },
-            { title: "Aligned column headers to their dots", body: "The Mild/Moderate/Severe labels now sit directly above what they describe." },
-            { title: "Gated the CTA on input", body: "The button now reflects whether there is anything to log." },
-            { title: "Surfaced the month view", body: "Week-only context made cross-month patterns invisible — in a product diagnosed by pattern, that was the wrong default." },
-          ],
-        },
-        {
-          title: "Library",
-          body: "The original was a text list with six arbitrary pastel card backgrounds carrying no semantic meaning, half-cropped cards with no scroll affordance, and identical “For You” sections duplicated across both tabs.",
-          video: {
-            src: "/videos/menopause-library.mp4",
-            alt: "The redesigned library: programmes tagged by category, a recommendation carousel with editorial thumbnails, and explicit Previous/Next pagination inside a programme.",
-            width: 378,
-            height: 776,
-          },
-          bullets: [
-            { title: "Replaced arbitrary pastels with a semantic tag system", body: "Pelvic Health, Mental Wellness, Mindfulness — colour now indicates category rather than decorating randomly." },
-            { title: "Introduced content thumbnails", body: "Editorial imagery replaced icon-and-arrow rows, making the library scannable rather than readable." },
-            { title: "Added explicit Previous/Next pagination", body: "In place of half-visible cards with no swipe affordance." },
-            { title: "De-duplicated “For You”", body: "Into a single Recommendations block." },
-          ],
-        },
-        {
-          title: "The assessment flow",
-          body: "The most consequential change isn't visible in any single screen. The original ran profile → consent checkbox → CTA → legal text.",
-          bullets: [
-            { title: "Reordered to disclosure → consent → gated CTA", body: "The reader sees what she's agreeing to before she's asked to agree to it." },
-            { title: "Added a time estimate before the 17-step sequence", body: "The single highest-impact intervention available on multi-step completion rates, and one the original omitted entirely." },
-          ],
-        },
-        {
-          title: "Insights",
-          body: "Tracking produced data the product never turned back into anything the user could act on. A score, a calendar of dots, and no answer to the question she was logging for: is this getting better or worse?",
-          video: {
-            src: "/videos/menopause-insights.mp4",
-            alt: "The insights screen: a weekly summary with a direction of travel, a four-week symptom trend chart, a correlation callout, a monthly logging report, and personalised tips.",
-            width: 382,
-            height: 780,
-          },
-          bullets: [
-            { title: "Led with direction, not volume", body: "“14 symptoms logged · night sweats most frequent · overall severity improving compared to last week” — the count is context for the verdict, not the verdict itself." },
-            { title: "Plotted symptoms over four weeks", body: "One line per indicator against a shared axis. The product diagnoses by pattern, so the pattern is the primary visual." },
-            { title: "Made one correlation explicit", body: "“Hot flashes are 3× more likely on days you sleep less than 6.5 hours.” Stated as a finding drawn from her own logs, with a route to the reading behind it." },
-            { title: "Reported consistency separately from health", body: "A monthly logging figure sits in its own module, so an incomplete month reads as incomplete data rather than as a worse result." },
-            { title: "Attached tips to what was logged", body: "Each carries the category it came from, so a recommendation is traceable to the symptom that prompted it." },
-          ],
-        },
-        {
-          title: "The AI companion",
-          body: "Three entry points on the home screen led to an assistant with no history and no evident grounding — every session started from nothing, and nothing in the reply indicated what it was based on.",
-          video: {
-            src: "/videos/menopause-chat.mp4",
-            alt: "The AI companion: a named assistant answering a question about sleep quality, with a chat history panel listing previous conversations.",
-            width: 382,
-            height: 772,
-          },
-          bullets: [
-            { title: "Gave the assistant a name and a stated role", body: "Labelled in the header as the AI companion, so its answers read as guidance from a feature rather than as clinical advice from the product." },
-            { title: "Grounded replies in her own data", body: "Answers open by naming what they draw on — logged symptoms and tracking history — so the reader can judge them." },
-            { title: "Added chat history", body: "Previous conversations persist by topic and date. A recurring symptom is a returning question, and the original made her ask it from scratch each time." },
-            { title: "Collapsed three entry points into one", body: "A single persistent route in, consistent across screens, replacing the placements that competed on home." },
-          ],
-        },
-      ],
-    },
-    {
       heading: "Visual Identity",
       body: [
         "The palette wasn't ugly. It was non-semantic — and that distinction drove the entire visual system.",
@@ -321,9 +331,13 @@ export const menopauseHealthAudit: CaseStudy = {
           ],
         },
       ],
-      slot: {
-        label: "Brand imagery",
-        text: "Product photography and lifestyle portraits — the art direction described above, unphotographed here.",
+      image: {
+        src: "/images/projects/menopause-health-audit/visual-identity.svg",
+        alt: "Brand imagery for the redesign: product photography and lifestyle portraits in the art direction described above.",
+        width: 2400,
+        height: 1350,
+        // No white plate: the export carries its own ground and edge.
+        bare: true,
       },
     },
     {

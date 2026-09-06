@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { sectionId } from "./CaseStudySection";
 import { CONTENT_HEADING } from "./typography";
+import { StarMark } from "@/components/ui/StarMark";
 
 /**
  * Sticky section index for a case study.
@@ -17,9 +18,26 @@ import { CONTENT_HEADING } from "./typography";
 type NavItem = { heading: string; navLabel?: string };
 
 /** The least clearance to the article we're willing to show the rail at. */
+/**
+ * How many entries sit above the star by default — the shortlist a reader short
+ * on time should see before the full account begins.
+ *
+ * Five suits the evidence case study (Overview, Pain Points, Use Cases, Mobile,
+ * Web). Any case study whose shortlist is a different length passes its own
+ * `starAfter`, because the right number is a fact about that study's structure,
+ * not a constant.
+ */
+const DEFAULT_STAR_AFTER = 5;
+
 const MIN_CLEARANCE = 16;
 
-export function CaseStudyNav({ items }: { items: NavItem[] }) {
+export function CaseStudyNav({
+  items,
+  starAfter = DEFAULT_STAR_AFTER,
+}: {
+  items: NavItem[];
+  starAfter?: number;
+}) {
   const headings = items.map((i) => i.heading);
   const navRef = useRef<HTMLElement>(null);
 
@@ -228,11 +246,18 @@ export function CaseStudyNav({ items }: { items: NavItem[] }) {
         }`}
       >
         <ul className="flex list-none flex-col gap-2.5">
-          {items.map(({ heading, navLabel }) => {
+          {items.map(({ heading, navLabel }, i) => {
             const id = sectionId(heading);
             const isActive = active === id;
             return (
               <li key={heading}>
+                {/* A star after the third entry, marking where the shortlist
+                    ends and the full account begins. A rule would read as a
+                    section break in a list that has no sections; the mark says
+                    "everything above is the short version" without a label. */}
+                {i === starAfter && (
+                  <StarMark className="text-primary mt-1.5 mb-3 block h-[11px] w-[11px]" />
+                )}
                 <a
                   href={`#${id}`}
                   data-cursor="pointer"

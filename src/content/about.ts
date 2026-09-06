@@ -11,8 +11,10 @@ export const about = {
     "Photography",
   ],
 
-  contactPrompt:
-    "I'm open to work. If you're hiring reach out via LinkedIn or email. Or… just say hi?",
+  // Short because the block around it already carries the rest: the status
+  // label says she is open to work, and the two buttons say by what route.
+  // Spelling either out again in the sentence was the same fact three times.
+  contactPrompt: "If you're hiring — or you just want to say hi.",
 
   /**
    * The About hero. `heading` is the italic serif display line; `intro` is one

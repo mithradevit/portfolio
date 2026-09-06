@@ -101,8 +101,6 @@ export type CaseStudySection = {
    * doesn't (a severity scale sitting under a heading about method, say).
    */
   findingsLabel?: string;
-  /** Every finding row starts collapsed; the reader opens what they want. */
-  findingsStartClosed?: boolean;
   mockup?: CaseStudyMockup;
   mockupCaption?: string;
   diagram?: CaseStudyDiagram;
@@ -174,11 +172,28 @@ export type CaseStudySection = {
    * survives. Stacks on a phone.
    */
   imageAside?: boolean;
+  /**
+   * Sets `image` beside the `findings` list as an even two-up, rather than
+   * under it. For a board that *is* the findings — read alongside them instead
+   * of after them. Stacks on a phone, and drops the grey mat: at half a column
+   * the artefact needs the width more than it needs a frame.
+   */
+  findingsAside?: boolean;
   /** Drops the white mat around `image`. Photographs are already their own
    *  edge; the mat exists for ink-on-paper and light-mode screens. */
   imageBare?: boolean;
   /** A real image (sketch, photo, exported artefact) rendered above the diagram/mockup. */
-  image?: { src: string; alt: string; width: number; height: number; caption?: string };
+  image?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    caption?: string;
+    /** Drops the white plate the image normally sits on. For exports that
+     *  already carry their own ground and edge, where the plate draws a second
+     *  frame just inside the first. */
+    bare?: boolean;
+  };
   /** Several stills, stacked full width in order. Use for diagrams that were
    *  captured in parts and read top to bottom. */
   images?: { src: string; alt: string; width: number; height: number; caption?: string }[];
@@ -223,6 +238,61 @@ export type CaseStudySection = {
   imagesSurface?: boolean;
   /** Small uppercase label on that surface. Only used with `imagesSurface`. */
   imagesLabel?: string;
+  /**
+   * Screens grouped by what they answer, each group its own labelled rail.
+   *
+   * For a surface with more screens than one rail can carry as a single idea —
+   * a mobile app's whole shift, say. One rail of eleven reads as a filmstrip
+   * the reader has to sort themselves; four labelled rails say what each run
+   * is for before the first image is looked at. Rendered in place of
+   * `images` when present.
+   */
+  /**
+   * A masonry board of what the product actually does — one card per capability,
+   * each a short title over a few one-line points, some carrying a screenshot
+   * that bleeds off the card's bottom edge.
+   *
+   * This is the map, not the tour: it sits above the surface-by-surface
+   * walkthroughs so a reader who never scrolls further still knows the scope of
+   * the system. Cards are deliberately uneven — a capability with four points
+   * and a screen earns more room than one with two.
+   */
+  useCases?: {
+    title: string;
+    points: string[];
+    /**
+     * How many of the four columns this card takes at desktop width. Default 1.
+     *
+     * The composition is authored here rather than derived from content length,
+     * because which capabilities deserve the room is an editorial call — the
+     * two that carry a screenshot want the width, and the rest read fine as
+     * quarter-width tiles.
+     */
+    span?: 1 | 2;
+    /**
+     * Sits under the card's points, shown whole at the card's width.
+     *
+     * Not cropped or bled off an edge by the layout: these exports are already
+     * framed as the crop they are meant to be, and clipping them a second time
+     * cut content that had been deliberately kept in frame.
+     */
+    image?: { src: string; alt: string; width: number; height: number };
+  }[];
+  imageGroups?: {
+    label: string;
+    /**
+     * How many screens sit across one row, at every width above a phone.
+     * Defaults to 3, which suits portrait phone screens.
+     *
+     * Fixed rather than derived from the group's own length: a group of two
+     * rendered two-up while its neighbour renders three-up would show the same
+     * device at two different sizes down one page. Landscape desktop captures
+     * want 1 — a 1280px-wide dashboard in a third of a column is a thumbnail
+     * of a table, not a screen anyone can read.
+     */
+    columns?: 1 | 2 | 3;
+    images: { src: string; alt: string; width: number; height: number; caption?: string }[];
+  }[];
   /** Fraction of the column the image set may occupy, e.g. 0.7 for 70%. Use
    *  when tall artefacts would otherwise outweigh the prose around them. */
   imagesScale?: number;
@@ -383,6 +453,15 @@ export type CaseStudy = {
    * grey around images that are already the right width for their column.
    */
   mattedImages?: boolean;
+  /** How many nav entries sit above the star — this study's shortlist. Omit to
+   *  take the nav's default. */
+  starAfter?: number;
+  /**
+   * The write-up isn't finished. Closes the page with an animated note instead
+   * of simply stopping, so a short case study reads as in progress rather than
+   * as one that had nothing more to say. Optional string overrides the wording.
+   */
+  building?: boolean | string;
   role: string;
   timeline: string;
   /** Where the work happened. Optional — the header drops the column when it

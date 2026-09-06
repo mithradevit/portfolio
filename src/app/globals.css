@@ -103,16 +103,57 @@ html {
   }
 }
 
-/* Page lock while the chat panel is open, phones only — there the panel fills
-   the screen, so a swipe that misses the message list scrolls the page behind
-   it and closing the chat drops the reader somewhere they never chose to be.
-   Above 768px the panel is a 400px rail with the page visibly beside it, and
-   freezing that page would be wrong.
+/* How much horizontal room the open chat takes out of the page. Zero by
+   default — below the dock breakpoint the panel is an overlay drawer and the
+   page keeps its full width underneath it.
+
+   The width is fluid rather than a fixed 400px: on a 1280px laptop a rigid
+   rail leaves the article a cramped column, and on a 2560px display it reads
+   as a sliver taped to the edge. `clamp` keeps it legible at both ends and
+   proportional in between. It is a custom property, not a utility, because
+   both the panel and the page shift have to agree on one number — two
+   hardcoded widths drift apart the first time either is touched. */
+:root {
+  --chat-width: clamp(360px, 26vw, 460px);
+  --chat-ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* The page shell yields room instead of being covered. Padding rather than a
+   transform or a width change: a transform would drag `position: sticky`
+   children out of alignment with the viewport they stick to, and animating
+   `width` re-runs layout on every frame of the transition.
+
+   The inset is toggled here rather than by zeroing `--chat-width` when the
+   chat is shut, because the panel measures itself from that same variable —
+   zeroing it would collapse the panel to nothing on the way out instead of
+   letting it slide off the edge at full width. */
+.site-shell {
+  padding-inline-end: 0;
+  transition: padding-inline-end 320ms var(--chat-ease);
+}
+
+@media (min-width: 1024px) {
+  html.chat-open .site-shell {
+    padding-inline-end: var(--chat-width);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-shell {
+    transition: none;
+  }
+}
+
+/* Page lock while the chat panel is open, below the dock breakpoint only —
+   there the panel fills the screen, so a swipe that misses the message list
+   scrolls the page behind it and closing the chat drops the reader somewhere
+   they never chose to be. At 1024px and up the page is docked beside the
+   panel, visibly readable, and freezing it would be wrong.
 
    `position: fixed` rather than `overflow: hidden`: iOS Safari ignores
    overflow on the body and keeps scrolling anyway. Snapping is disabled too,
    or the locked page fights the snap points on the way back. */
-@media (max-width: 768px) {
+@media (max-width: 1023.98px) {
   html.chat-open {
     scroll-snap-type: none;
   }

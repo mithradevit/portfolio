@@ -4,6 +4,7 @@ import type { CaseStudy } from "./types";
 
 export const petHealthCollar: CaseStudy = {
   slug: "pet-health-collar",
+  building: true,
   role: "Senior User Experience Designer",
   timeline: "2025 – 2026",
   team: "Hardware & Software Teams",

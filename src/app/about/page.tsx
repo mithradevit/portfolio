@@ -3,6 +3,7 @@ import { leadership } from "@/content/fun-projects";
 import { FunProjectsGrid } from "@/components/fun/FunProjectsGrid";
 import { profile } from "@/content/profile";
 import { InterestList } from "@/components/about/InterestList";
+import { ContactCTA } from "@/components/about/ContactCTA";
 import { PhotoGrid } from "@/components/about/PhotoGrid";
 import { ProfileWindow } from "@/components/about/ProfileWindow";
 import { ArcCarousel } from "@/components/about/ArcCarousel";
@@ -42,12 +43,12 @@ export default function AboutPage() {
               </div>
               <InterestList interests={about.interests} />
             </div>
-            <p className="text-foreground-light text-[15px]">
-              {about.contactPrompt}{" "}
-              <a href={`mailto:${profile.email}`} data-cursor="pointer" className="text-primary">
-                {profile.email}
-              </a>
-            </p>
+            <ContactCTA
+              user={profile.email.split("@")[0]}
+              domain={profile.email.split("@")[1]}
+              linkedin={profile.socials.linkedin}
+              prompt={about.contactPrompt}
+            />
           </div>
 
           {/* Compact: this row is about the interests list, not the graph —

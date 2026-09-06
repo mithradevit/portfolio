@@ -51,9 +51,13 @@ export function CaseStudyFigure({
         <div
           className={cn(
             "w-full overflow-hidden",
+            // No stroke around the artwork. These are boards and maps that
+            // already have their own white ground and their own edge; a
+            // hairline plus a drop shadow drew a second edge just inside the
+            // mat's, which read as a card floating on a card.
             bare
               ? "rounded-[6px]"
-              : "rounded-[8px] border border-[#EDEDF0] bg-white p-1.5 shadow-[0_1px_3px_rgb(0_0_0/0.05),0_10px_28px_-10px_rgb(0_0_0/0.12)] sm:p-2",
+              : "rounded-[8px] bg-white p-1.5 sm:p-2",
           )}
         >
           <Image
@@ -69,7 +73,7 @@ export function CaseStudyFigure({
       </div>
 
       {image.caption && (
-        <figcaption className="text-foreground-light mx-auto max-w-[62ch] text-center text-[13px] leading-[1.6]">
+        <figcaption className="text-foreground-light max-w-[62ch] text-[13px] leading-[1.6]">
           {image.caption}
         </figcaption>
       )}

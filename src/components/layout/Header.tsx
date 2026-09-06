@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { Sparkles } from "lucide-react";
 import { navItems } from "@/content/nav";
+import { StarMark } from "@/components/ui/StarMark";
 import { cn } from "@/lib/cn";
 import { useChatOpen } from "@/components/chat/ChatOpenContext";
 import { ThemeToggle } from "./ThemeToggle";
@@ -111,6 +111,10 @@ const focusReveal =
 export function Header() {
   const pathname = usePathname();
   const { open, setOpen } = useChatOpen();
+  // Tracked in state rather than with a `group-hover:` class because the
+  // rotation lives in a Motion transition, not in CSS — there is no utility
+  // that can reach a transition's duration.
+  const [chatHover, setChatHover] = useState(false);
   const { visible, hold } = useProximityReveal();
 
   return (
@@ -169,15 +173,42 @@ export function Header() {
         <button
           type="button"
           onClick={() => setOpen(!open)}
+          onPointerEnter={() => setChatHover(true)}
+          onPointerLeave={() => setChatHover(false)}
           data-cursor="pointer"
           aria-label="Open MithraLLM chat"
           aria-expanded={open}
           className={cn(
-            "text-foreground-light hover:text-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-200",
+            "text-foreground-light hover:text-foreground flex h-8 items-center justify-center rounded-full transition-colors duration-200",
+            // Square while it is only an icon, then a pill once the label is
+            // there. A fixed `w-8` would crop the word rather than grow.
+            "w-8 lg:w-auto lg:gap-1.5 lg:px-3",
             open && "bg-foreground/[0.08] text-foreground",
           )}
         >
-          <Sparkles size={15} strokeWidth={1.5} />
+          {/* Mithra's own star, turning. Sparkles is the house style for "AI"
+              on every product shipped in the last two years and says nothing
+              about whose assistant this is; her mark does, and it already
+              carries that job elsewhere on the site. Slow and linear — 14s, no
+              easing, so there is no pulse at the seam — and quicker on hover to
+              acknowledge the pointer. `MotionConfig reducedMotion="user"`
+              holds it still for anyone who asked the OS for less motion. */}
+          <motion.span
+            aria-hidden
+            className="text-primary flex items-center justify-center"
+            animate={{ rotate: 360 }}
+            transition={{ duration: chatHover ? 4 : 14, repeat: Infinity, ease: "linear" }}
+          >
+            <StarMark className="block h-[13px] w-[13px]" />
+          </motion.span>
+          {/* Desktop only. The pill already carries four page links plus the
+              theme and cursor toggles, and on a phone or tablet a seventh
+              segment with a word in it is what pushes the nav to wrap. The
+              icon reads on its own there; the aria-label names it either way,
+              so nothing is lost to a screen reader. */}
+          <span className="hidden font-mono text-[13px] tracking-[0.06em] uppercase lg:inline">
+            MithraLLM
+          </span>
         </button>
 
         <ThemeToggle />

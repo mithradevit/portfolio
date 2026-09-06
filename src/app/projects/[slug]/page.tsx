@@ -5,6 +5,7 @@ import { CaseStudyHeader } from "@/components/case-study/CaseStudyHeader";
 import { CaseStudyLinks } from "@/components/case-study/CaseStudyLinks";
 import { CaseStudySection } from "@/components/case-study/CaseStudySection";
 import { CaseStudyNav } from "@/components/case-study/CaseStudyNav";
+import { CaseStudyBuilding } from "@/components/case-study/CaseStudyBuilding";
 import { Reveal } from "@/components/motion/Reveal";
 
 export function generateStaticParams() {
@@ -32,6 +33,7 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
       <Reveal className="mx-auto flex w-full max-w-[2000px] flex-col">
         <CaseStudyNav
           items={caseStudy.sections.map((s) => ({ heading: s.heading, navLabel: s.navLabel }))}
+          starAfter={caseStudy.starAfter}
         />
 
         {/* Bottom padding lets the final section scroll up into the nav's
@@ -72,6 +74,11 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
               }
             />
           ))}
+          {caseStudy.building && (
+            <CaseStudyBuilding
+              note={typeof caseStudy.building === "string" ? caseStudy.building : undefined}
+            />
+          )}
         </div>
       </Reveal>
     </div>

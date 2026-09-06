@@ -20,18 +20,13 @@ type Item = NonNullable<CaseStudySection["findings"]>[number];
  * two findings should be able to hold both open; an accordion that snaps shut
  * behind you only earns that when the list is too long to scroll.
  */
-export function CaseStudyFindings({
-  items,
-  startClosed,
-}: {
-  items: Item[];
-  startClosed?: boolean;
-}) {
-  // The first is open on arrival so the pattern is legible without a click —
-  // a stack of closed rows reads as a table of contents, not as content.
-  // `startClosed` is for lists whose titles already carry the point, where the
-  // open row is detail the reader asks for rather than the thing itself.
-  const [open, setOpen] = useState<number[]>(startClosed ? [] : [0]);
+export function CaseStudyFindings({ items }: { items: Item[] }) {
+  // Everything starts closed. The first row used to open on arrival so the
+  // pattern would be legible without a click, but each title is a complete
+  // sentence carrying its own finding — so the list already reads as content
+  // rather than as a table of contents, and one row hanging open just made the
+  // set look ragged. The plus is a clear enough invitation on its own.
+  const [open, setOpen] = useState<number[]>([]);
 
   const toggle = (i: number) =>
     setOpen((prev) => (prev.includes(i) ? prev.filter((n) => n !== i) : [...prev, i]));

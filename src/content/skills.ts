@@ -254,7 +254,7 @@ export const certifications = [
     note: "The first of the seven. Started it the month I moved into a full design seat — formalising what the internship had taught by doing.",
   },
   {
-    name: "UI / UX",
+    name: "User Interface Designing",
     issuer: "Great Learning",
     issued: "2022-11",
     note: "First structured UX training, taken five months into the internship to put names to what I was already doing.",

@@ -223,7 +223,10 @@ export function SkillsGraph() {
       {/* Scrolls inside its own box on phones. Scaling a 1200px graph down to a
           375px screen would render the labels at ~2px; better to keep them
           legible and let the reader pan. */}
-      <div className="border-foreground/10 w-full overflow-x-auto rounded-lg border sm:overflow-hidden">
+      {/* No frame: the graph is mostly air, and a box drawn around it reads as
+          a card holding a diagram rather than as the section itself. The
+          scroll container stays — it is what keeps the labels legible. */}
+      <div className="w-full overflow-x-auto sm:overflow-hidden">
         <svg
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           className="h-auto w-full min-w-[820px] sm:min-w-0"

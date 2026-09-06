@@ -1,0 +1,18 @@
+/**
+ * Mithra's star, inlined so it takes `currentColor` and costs no request.
+ *
+ * Lives here rather than in the one component that first needed it: it is the
+ * site's own mark, and it now appears in two unrelated places (the case-study
+ * index, and the MithraLLM control in the header). A second copy of a 650-char
+ * path is a second thing to update when the mark changes.
+ */
+export const STAR_PATH =
+  "M30.5162 4.02991C32.384 -1.34346 39.9832 -1.34345 41.851 4.02991L46.5685 17.6015C47.3924 19.972 49.6046 21.5792 52.1136 21.6303L66.4788 21.9231C72.1663 22.039 74.5146 29.2662 69.9814 32.703L58.5318 41.3835C56.532 42.8996 55.6871 45.5002 56.4138 47.9022L60.5744 61.6548C62.2217 67.0998 56.0739 71.5665 51.4044 68.3172L39.6107 60.1104C37.5508 58.677 34.8164 58.677 32.7565 60.1104L20.9628 68.3172C16.2933 71.5665 10.1454 67.0998 11.7928 61.6548L15.9534 47.9022C16.6801 45.5002 15.8352 42.8996 13.8354 41.3835L2.38578 32.703C-2.14741 29.2662 0.200873 22.039 5.88842 21.9231L20.2536 21.6303C22.7626 21.5792 24.9748 19.972 25.7987 17.6015L30.5162 4.02991Z";
+
+export function StarMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 73 70" aria-hidden className={className}>
+      <path d={STAR_PATH} fill="currentColor" />
+    </svg>
+  );
+}
